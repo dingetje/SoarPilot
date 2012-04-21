@@ -1,10 +1,10 @@
 #include "soarForm.h"
 
 // version information
-VERSION ID 1 "4.6.0"
+VERSION ID 1 "4.6.1"
 
 STRING ID help_main "Welcome to: SoaringPilot\n"\
-  "4.6.0 Final\n"\
+  "4.6.1 April 2012 Final\n"\
   "For info/help contact:\n"\
   "www.soaringpilot.org\n"\
   "or\n"\

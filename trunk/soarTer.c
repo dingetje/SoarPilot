@@ -354,3 +354,83 @@ Boolean GetTerrainBounds(double *pointlat, double *pointlon, Int8 corner)
 	}
 }
 
+Boolean loadtskterrain(TaskData *tertsk)
+{
+	Int16 x,z;
+	double origelev, tgtelev;
+	double tersum;
+
+	tskoffterrain = false;
+
+	// clear terrain array
+	if ((prevnumtskter > 0) && (tskterheights != NULL)) {
+		// free previous array
+		FreeMem((void *)&tskterheights);
+		tskterheights = NULL;
+	}
+
+	// load terrain on task
+	if (data.config.usefgterrain) {
+//		HostTraceOutputTL(appErrorClass, "Load Task Terrain....");
+
+		// calculate array size
+		numtskter = 0;
+		for (x = 0; x < tertsk->numwaypts; x++) {
+//			HostTraceOutputTL(appErrorClass, "Task Terrain Index %s", DblToStr(numtskter,0));
+			if ((tertsk->waypttypes[x] & CONTROL) == 0) numtskter += (Int32)(tertsk->distances[x] * TERGRID)+1;
+//			HostTraceOutputTL(appErrorClass, "Task Terrain Points %s", DblToStr(numtskter,0));
+			tertsk->terrainidx[x] = numtskter;
+		}
+		tertsk->terrainidx[x] = numtskter;
+
+		// allocate new size array
+		if (AllocMem((void *)&tskterheights, (numtskter+1)*sizeof(double))) {
+			MemSet(tskterheights, (numtskter+1)*sizeof(double), 0);
+			prevnumtskter = numtskter;
+
+			// load terrain array for each leg
+//			HostTraceOutputTL(appErrorClass, "Loading Task Terrain.....");
+			tskoffterrain = false;
+			for (x = 0; x < tertsk->numwaypts-1; x++) {
+				while (tertsk->waypttypes[x] & CONTROL) x++;
+				z = x + 1;
+				while (tertsk->waypttypes[z] & CONTROL) z++;
+//				HostTraceOutputTL(appErrorClass, "Load Terrain From %s", tertsk->wayptnames[x]);
+//				HostTraceOutputTL(appErrorClass, "Load Terrain To %s", tertsk->wayptnames[z]);
+//				HostTraceOutputTL(appErrorClass, "start Terrain Points %s", DblToStr((tertsk->terrainidx[x]),0));
+//				HostTraceOutputTL(appErrorClass, "Task Terrain Points %s", DblToStr((tertsk->terrainidx[z]-tertsk->terrainidx[x]),0));
+				if ((tertsk->targetlats[x] == tertsk->wayptlats[x]) && (tertsk->targetlons[x] == tertsk->wayptlons[x])) {
+					origelev = tertsk->elevations[x];
+				} else {
+					origelev = 0.0;
+				}
+				if ((tertsk->targetlats[z] == tertsk->wayptlats[z]) && (tertsk->targetlons[z] == tertsk->wayptlons[z])) {
+					tgtelev = tertsk->elevations[z];
+				} else {
+					tgtelev = 0.0;
+				}
+				tskoffterrain = tskoffterrain | !loadterrain(&tskterheights[tertsk->terrainidx[x]], (tertsk->terrainidx[z]-tertsk->terrainidx[x]),
+										tertsk->targetlats[x], tertsk->targetlons[x], origelev, tertsk->targetlats[z], tertsk->targetlons[z], tgtelev);
+			}
+
+			tersum = 0.0;
+			for (x = 0; x < numtskter; x++) {
+//					HostTraceOutputTL(appErrorClass, "Task Terrain Height %s", DblToStr(tskterheights[x],0));
+					tersum += (Int16)tskterheights[x];
+			}
+//			HostTraceOutputT(appErrorClass, "Total Task Terrain Height %s", DblToStr(numtskter,0));
+//			HostTraceOutputTL(appErrorClass, " : %s", DblToStr(tersum,0));
+
+			// check full task for terrain crash
+			tskcrash = false;
+		} else {
+			// AllocMeme failed
+			tskoffterrain = true;
+		}
+	} else {
+		tskcrash = false;
+		return(true);
+	}
+
+	return(!tskoffterrain);
+}
