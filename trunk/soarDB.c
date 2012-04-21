@@ -1361,6 +1361,13 @@ Boolean OpenAllDatabases(void)
 		data.config.autoIGCxfer = false;
 		data.config.declaretoSD = false;
 		data.config.MCbutton = NORMAL;
+		// AGM: default preferred BT GPS address is 00:00:00:00:00 -> search BT devices
+		data.config.BTAddr[0] = 0;
+		data.config.BTAddr[1] = 0;
+		data.config.BTAddr[2] = 0;
+		data.config.BTAddr[3] = 0;
+		data.config.BTAddr[4] = 0;
+		data.config.BTAddr[5] = 0;
 		OpenDBAddRecord(config_db, sizeof(ConfigFlight), &data.config, true);
 
 		// IGC info

@@ -118,5 +118,5 @@ UInt16 ScrToFrmID(Int16 selectitem) SMTH;
 Int16 FrmIDToScr(UInt16 frmID) SMTH;
 double CalcVxc(double MCVal, double *Vstf) SMTH;
 void outputlog(Char *output_char, Boolean crlf) SMTH;
-
+UInt32 StrHToI(Char *pHexaString) SMTH;
 #endif

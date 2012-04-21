@@ -5384,8 +5384,19 @@ Boolean form_set_port_event_handler(EventPtr event)
 					SysStringByIndex(form_set_port_speed_table, data.config.nmeaspeed, tempchar, 7);
 					XferInit(tempchar, NFC, data.config.nmeaxfertype);
 				}
-				if ((data.config.nmeaxfertype == USEBT) && data.config.echoNMEA)
-					XferInitAlt(4800, NFC, USESER);
+				// AGM: minor change here to reset preferred BT address in config
+				if (data.config.nmeaxfertype == USEBT) {
+					if (data.config.echoNMEA) {
+						XferInitAlt(4800, NFC, USESER);
+					}
+					// reset BT address in config to (re)enable BT search
+					data.config.BTAddr[5] = 0;
+					data.config.BTAddr[4] = 0;
+					data.config.BTAddr[3] = 0;
+					data.config.BTAddr[2] = 0;
+					data.config.BTAddr[1] = 0;
+					data.config.BTAddr[0] = 0;
+				}
 				closeperformed = true;
 
 				// Free memory for nmea dropdown list
