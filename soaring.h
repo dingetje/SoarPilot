@@ -120,6 +120,8 @@
 #define FTPERMB		27.96 // ft per mb near sea level for QNH corrections
 #define MBPERIN		33.86388 // mb per in of mercury
 #define INPERMB		0.029529989 // inches of mercury per millibar
+#define FPNM		6076.131 // Feet per Nautical Mile
+#define NMPR		3437.74 // Nautical Miles per Radian
 
 #define GRAVITY_CONST	9.80665 // standard gravity constant
 

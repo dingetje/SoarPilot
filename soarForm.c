@@ -102,6 +102,7 @@ extern Boolean logactive;
 extern EWMRData *ewmrdata;
 extern Boolean recordevent;
 extern UInt32 lastevent;
+extern Boolean tskoffterrain;
 
 // External variables used by new polar code
 extern Int16 		numOfPolars;
@@ -9680,6 +9681,8 @@ Boolean form_question_event_handler(EventPtr event)
 							EvtAddEventToQueue(&newEvent);
 							break;
 						case Qacttaskchg:
+							// re-load task terrain
+							tskoffterrain = !loadtskterrain(&data.task);
 							// copy active task back to record first record in task db
 							OpenDBUpdateRecord(task_db, sizeof(TaskData), &data.task, 0);
 							set_task_changed = false;

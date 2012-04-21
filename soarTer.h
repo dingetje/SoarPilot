@@ -27,4 +27,5 @@ void CleanUpTerrainData() SMTH;
 Boolean loadterrain(double *terheights, Int32 numter, double origlat, double origlon, double origelev, double tgtlat, double tgtlon, double tgtelev) SMTH;
 Boolean terraincrash(double *terheights, Int32 numter, double origlat, double origlon, double tgtlat, double tgtlon, double origalt, double tgtaalt, Boolean reset) SMTH;
 Boolean tskterraincrash(double *terheights, Int16 activetskway, double startalt) SMTH;
+Boolean loadtskterrain(TaskData *tertsk) SMTH;
 #endif

@@ -20,10 +20,6 @@
 #ifndef	RAD2DEG
 #define	RAD2DEG	((double)57.29577951308)
 #endif
-// Nautical Miles per Radian
-#define  NMPR  3437.74
-// Feet per Nautical Mile
-#define  FPNM  6076.131
 
 // screen defines for ease and central location
 #define  WIDTH_MIN		0

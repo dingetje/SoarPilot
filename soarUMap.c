@@ -853,7 +853,6 @@ double MidCoordLinearInterp(double coord1, double coord2)
 void RangeBearingToLatLon(double fromLat, double fromLon, double rng, double truebrg, double *toLat, double *toLon)
 {
 /*
-	double dLon;
 	double plat = 0.0, plon = 0.0;
 	double tlat = 0.0, tlon = 0.0;
 	double radtruebrg;
@@ -865,18 +864,12 @@ void RangeBearingToLatLon(double fromLat, double fromLon, double rng, double tru
 	radtruebrg = DegreesToRadians(nice_brg(truebrg));
 	radrng = rng/NMPR;
 
-	tlat = Asin(Sin(plat) * Cos(radrng) + Cos(plat) * Sin(radrng) * Cos(radtruebrg));
-	dLon = Atan2(Sin(radtruebrg) * Sin(radrng) * Cos(plat), Cos(radrng) - Sin(plat) * Sin(*toLat));
-	tlon = Fmod(plon-dLon+PI, TWOPI) - PI;
+	tlat = asin((sin(plat)*cos(radrng)) + (cos(plat)*sin(radrng)*cos(radtruebrg)));
+	tlon = plon + atan2(sin(radtruebrg)*sin(radrng)*cos(plat), cos(radrng) - (sin(plat)*sin(tlat)));
 
-	*toLat = RadiansToDegrees (tlat);
-	*toLon = RadiansToDegrees (tlon);
+	*toLat = nice_brg(RadiansToDegrees(tlat));
+	*toLon = nice_brg(RadiansToDegrees(tlon));
 */
-	double	plat = 0.0, plon = 0.0;
-	double	tlat = 0.0, tlon = 0.0;
-	double	x_ad;
-	double	y_ad;
-	double  temprng, tempbrg;
 /*
 // NOT WORKING!
 	// calculate an endpoint given a startpoint, bearing and distance
@@ -938,7 +931,15 @@ void RangeBearingToLatLon(double fromLat, double fromLon, double rng, double tru
 	HostTraceOutputT(appErrorClass, "New =|%s|", DblToStr(*toLat, 5));
 	HostTraceOutputTL(appErrorClass, ": |%s|", DblToStr(*toLon, 5));
 */
-// current method
+
+
+// current method - bit of a fudge
+	double	plat = 0.0, plon = 0.0;
+	double	tlat = 0.0, tlon = 0.0;
+	double	x_ad;
+	double	y_ad;
+	double  temprng, tempbrg;
+
 	if (isnan(fromLat) || isnan(fromLon))
 		return;
 
@@ -947,13 +948,13 @@ void RangeBearingToLatLon(double fromLat, double fromLon, double rng, double tru
 
 	truebrg = nice_brg(truebrg);
 
-	x_ad = Fabs(Sin(DegreesToRadians(truebrg)) * rng / NMPR) / data.input.coslat;
-	y_ad = Fabs(Cos(DegreesToRadians(truebrg)) * rng / NMPR);
+	x_ad = Fabs(sin(DegreesToRadians(truebrg)) * rng / NMPR) / cos(plat);
+	y_ad = Fabs(cos(DegreesToRadians(truebrg)) * rng / NMPR);
 
 	// temp fix to improve accuracy
 	LatLonToRangeBearingEll(fromLat, fromLon, RadiansToDegrees(plat + y_ad), RadiansToDegrees(plon + x_ad), &temprng, &tempbrg);
-	x_ad *= rng/temprng;
-	y_ad *= rng/temprng;
+	x_ad *= (rng/temprng)*(rng/temprng);
+	y_ad *= (rng/temprng)*(rng/temprng);
 
 	if (truebrg <= 90.0 || truebrg >= 270.0)
 		tlat = plat + y_ad;

@@ -111,6 +111,7 @@ extern Int32 prevnumtskter;
 extern Int32 numtskter;
 extern Boolean tskoffterrain;
 extern Boolean tskcrash;
+extern Boolean terrainvalid;
 extern Int32  rxrecs;
 extern char rxtype[15];
 extern DateTimeType curtime;
@@ -310,59 +311,8 @@ void refresh_task_details(Int16 action)
 						StrCopy(data.activetask.declaredtg, SecondsToDateOrTimeString(TimGetSeconds(), tempchar, 4, data.config.timezone*-1));
 					}
 
-					// clear terrain array
-					if ((prevnumtskter > 0) && (tskterheights != NULL)) {
-						// free previous array
-						FreeMem((void *)&tskterheights);
-						tskterheights = NULL;
-					}
-
 					// load terrain on task
-					if (data.config.usefgterrain) {
-
-						// calculate array size
-						numtskter = 0;
-						for (x = 0; x < tsk->numwaypts; x++) {
-//							HostTraceOutputTL(appErrorClass, "Task Terrain Index %s", DblToStr(numtskter,0));
-							if ((tsk->waypttypes[x] & CONTROL) == 0) numtskter += (Int32)(tsk->distances[x] * TERGRID)+1;
-//							HostTraceOutputTL(appErrorClass, "Task Terrain Points %s", DblToStr(numtskter,0));
-							tsk->terrainidx[x] = numtskter;
-						}
-						tsk->terrainidx[x] = numtskter;
-
-						// allocate new size array
-						if (AllocMem((void *)&tskterheights, (numtskter+1)*sizeof(double))) {
-							MemSet(tskterheights, (numtskter+1)*sizeof(double), 0);
-							prevnumtskter = numtskter;
-
-							// load terrain array for each leg
-//							HostTraceOutputTL(appErrorClass, "Loading Task Terrain.....");
-							tskoffterrain = false;
-							for (x = 0; x < tsk->numwaypts-1; x++) {
-								while (tsk->waypttypes[x] & CONTROL) x++;
-								z = x + 1;
-								while (tsk->waypttypes[z] & CONTROL) z++;
-//								HostTraceOutputTL(appErrorClass, "Load Terrain From %s", tsk->wayptnames[x]);
-//								HostTraceOutputTL(appErrorClass, "Load Terrain To %s", tsk->wayptnames[z]);
-//								HostTraceOutputTL(appErrorClass, "start Terrain Points %s", DblToStr((tsk->terrainidx[x]),0));
-//								HostTraceOutputTL(appErrorClass, "Task Terrain Points %s", DblToStr((tsk->terrainidx[z]-tsk->terrainidx[x]),0));
-								tskoffterrain = tskoffterrain | !loadterrain(&tskterheights[tsk->terrainidx[x]], (tsk->terrainidx[z]-tsk->terrainidx[x]), tsk->wayptlats[x], tsk->wayptlons[x], tsk->elevations[x], tsk->wayptlats[z], tsk->wayptlons[z], tsk->elevations[z]);
-							}
-
-//							HostTraceOutputTL(appErrorClass, "Terrain Heights.....");
-							//for (x = 0; x < numtskter; x++) {
-//								HostTraceOutputTL(appErrorClass, "Task Terrain Height %s", DblToStr(tskterheights[x],0));
-							//}
-
-							// check full task for terrain crash
-							tskcrash = false;
-						} else {
-							// AllocMeme failed
-							tskoffterrain = true;
-						}
-					} else {
-						tskcrash = false;
-					}
+					tskoffterrain = !loadtskterrain(tsk);
 
 					// copy task
 //					HostTraceOutputTL(appErrorClass, "Copy to data.task");
@@ -2995,6 +2945,7 @@ void HandleTask(Int16 action)
 
 //************* TSKNONE
 		x = activetskway;
+		glidingtoheight = ELEVATION;
 		if (tasknotfinished && !taskonhold && (activetskway >= 0)) {
 			if (data.config.AATmode == AAT_MTURN_ON) {
 				// update range / bearing to target in current area
@@ -3023,9 +2974,13 @@ void HandleTask(Int16 action)
 				// check if gliging to min finish height
 				glidingtoheight = FINISHHEIGHT;
 				data.inuseWaypoint.elevation = data.activetask.finishheight;
+			} else if ((data.task.waypttypes[x] & AREA)
+					&& (LatLonToRange2(data.task.targetlats[x],data.task.targetlons[x],data.task.wayptlats[x],data.task.wayptlons[x]) > 0.25)) {
+				// gliding to area target elevation
+				data.inuseWaypoint.elevation = GetTerrainElev(data.inuseWaypoint.lat, data.inuseWaypoint.lon);
+				if (!terrainvalid) data.inuseWaypoint.elevation = data.task.elevations[x];
 			} else {
-				// gliding to normal elevation
-				glidingtoheight = ELEVATION;
+				// gliding to normal waypoint elevation
 				data.inuseWaypoint.elevation = data.task.elevations[x];
 			}
 			data.input.destination_elev = data.inuseWaypoint.elevation;
@@ -3040,8 +2995,6 @@ void HandleTask(Int16 action)
 			data.inuseWaypoint.arearadius = data.task.arearadii[x];
 			data.inuseWaypoint.arearadius2 = data.task.arearadii2[x];
 			data.input.destination_valid = true;
-		} else {
-			glidingtoheight = ELEVATION;
 		}
 		InuseWaypointCalcEvent();
 
@@ -3136,30 +3089,18 @@ Boolean InSectorTest(double leftbrg, double rightbrg, double inrng, double outrn
 		return(true);
 	}
 
+	// Determine if currently within the defined range limits
+	if (currng >= inrng && currng <= outrng) {
+		withinrng = true;
+//		HostTraceOutputTL(appErrorClass, "IST:withinrng =|%hd|", (Int16)withinrng);
+	} else {
+		return(false);
+	}
+
 	if (leftbrg != rightbrg) {
 		recipbrg = RecipCse(curbrg);
 //		HostTraceOutputTL(appErrorClass, "IST:recipbrg =|%s|", DblToStr(recipbrg, 1));
 
-// OLD METHOD
-/*		// Determine if currently within the defined bearing limits
-		if (leftbrg < 180.0) {
-			if (recipbrg >= leftbrg && recipbrg <= rightbrg) {
-				withinbrg = true;
-//				HostTraceOutputTL(appErrorClass, "IST:withinbrg1 =|%hd|", (Int16)withinbrg);
-			}
-		} else if (rightbrg < 360.0 && rightbrg > leftbrg) {
-			if (recipbrg >= leftbrg && recipbrg <= rightbrg) {
-				withinbrg = true;
-//				HostTraceOutputTL(appErrorClass, "IST:withinbrg2 =|%hd|", (Int16)withinbrg);
-			}
-		} else {
-			if (recipbrg >= leftbrg || recipbrg <= rightbrg) {
-				withinbrg = true;
-//				HostTraceOutputTL(appErrorClass, "IST:withinbrg3 =|%hd|", (Int16)withinbrg);
-			}
-		}
-*/
-// NEW METHOD
 		if (leftbrg > rightbrg) {
 			rightbrg += 360.0;
 		}
@@ -3174,20 +3115,7 @@ Boolean InSectorTest(double leftbrg, double rightbrg, double inrng, double outrn
 //		HostTraceOutputTL(appErrorClass, "IST:withinbrg4 =|%hd|", (Int16)withinbrg);
 	}
 
-	// Determine if currently within the defined range limits
-	if (currng >= inrng && currng <= outrng) {
-		withinrng = true;
-//		HostTraceOutputTL(appErrorClass, "IST:withinrng =|%hd|", (Int16)withinrng);
-	}
-	if (withinbrg && withinrng) {
-//		HostTraceOutputTL(appErrorClass, "IST:return(true)");
-//		HostTraceOutputTL(appErrorClass, "IST:--------------------------------");
-		return(true);
-	} else {
-//		HostTraceOutputTL(appErrorClass, "IST:return(false)");
-//		HostTraceOutputTL(appErrorClass, "IST:--------------------------------");
-		return(false);
-	}
+	return(withinbrg);
 }
 
 // Doesn't matter whether bearings are true or magnectic
@@ -4478,8 +4406,7 @@ void HandleTaskAutoZoom(double range, double radius, Boolean reset)
 //		HostTraceOutputTL(appErrorClass, "ct %s", DblToStr(ct,0));
 		ct++;
 	}
-	// do once - progressive zoom in
-//	HandleTaskAutoZoom2(range, radius, reset);
+	return;
 }
 
 // new method - based on range to target point
@@ -4555,21 +4482,21 @@ Boolean HandleTaskAutoZoom2(double range, double radius, Boolean reset)
 					actualmapscale = curmapscale * data.input.disconst;
 					savemapscale = 0.0;
 					tempscale = 100;
-					data.input.logpollint = data.config.slowlogint;
 //					HostTraceOutputTL(appErrorClass, "Zoom Out Reset");
 				}
 			}
 		}
-
 //		HostTraceOutputTL(appErrorClass, "Zoom act %s", DblToStr(curmapscale,1));
 
 //		// Change the logger interval to fast if getting close to the task point
-//		if (range <= radius * 1.5) {
-//			data.input.logpollint = data.config.fastlogint;
-//		} else {
-//			data.input.logpollint = data.config.slowlogint;
-//		}
+		if (range > radius + 0.5) {
+			// more than 0.5nm away, so set to slow logging
+			data.input.logpollint = data.config.slowlogint;
+		} else {
+			data.input.logpollint = data.config.fastlogint;
+		}
 	}
+
 	return(zoomchg);
 }
 
@@ -6074,7 +6001,7 @@ Boolean form_waypoint_sector_event_handler(EventPtr event)
 	double sect1, sect2;
 	double truecse, xfactor, yfactor;
 	Int16 y;
-	static Boolean origmanualzoomchg;
+	static Boolean origmanualzoomchg, targetmoved;
 	
 #define zoomfactor 3.0
 #define buttonsize 30
@@ -6232,6 +6159,7 @@ Boolean form_waypoint_sector_event_handler(EventPtr event)
 				data.config.sectormaporient = NORTHUP;
 				data.input.curmaporient = NORTHUP;
 			}
+			targetmoved = false;
 			UpdateMap2(false, sectorlat, sectorlon, sectorscale, false, tsktoedit, false);
 
 			handled=true;
@@ -6279,12 +6207,21 @@ Boolean form_waypoint_sector_event_handler(EventPtr event)
 //					question->type = Qacttaskchg;
 //					FrmPopupForm(form_question);
 //				}
+ 				// load terrain on task
+				tskoffterrain = !loadtskterrain(tsktoedit);
 			} else if (!gototskwpt) {
 				// restore edittsk prior to changes
 				MemMove(temptsk, edittsk, sizeof(TaskData));
 			}
 			gototskwpt = false;
 			goingtomenu = false;
+			break;
+		case nilEvent:
+			if (targetmoved) {
+				// load terrain on task if target point has changed in  active task
+				if (activetasksector) tskoffterrain = !loadtskterrain(tsktoedit);
+				targetmoved = false;
+			}
 			break;
 		case ctlSelectEvent:
 			PlayKeySound();
@@ -6303,6 +6240,7 @@ Boolean form_waypoint_sector_event_handler(EventPtr event)
 					}
 					tsktoedit->aataimtype = AATusr;
 					updatemap = true;
+   					targetmoved = true;
 					break;
 				case form_waypoint_sector_min:
 //					HostTraceOutputTL(appErrorClass, "Min");
@@ -6317,6 +6255,7 @@ Boolean form_waypoint_sector_event_handler(EventPtr event)
 					}
 					tsktoedit->aataimtype = AATusr;
 					updatemap = true;
+					targetmoved = true;
 					break;
 				case form_waypoint_sector_center:
 //					HostTraceOutputTL(appErrorClass, "Center");
@@ -6338,6 +6277,7 @@ Boolean form_waypoint_sector_event_handler(EventPtr event)
 					}
 					tsktoedit->aataimtype = AATusr;
 					updatemap = true;
+ 					targetmoved = true;
 					break;
 				default:
 					break;
@@ -6533,7 +6473,7 @@ Boolean form_waypoint_sector_event_handler(EventPtr event)
 					//}
 					tsktoedit->aataimtype = AATusr;
 					updatemap = true;
-//					if (taskIndex == 0) set_task_changed = true;
+					targetmoved = true;
 					handled=true;
 				}
 
@@ -6569,11 +6509,12 @@ Boolean form_waypoint_sector_event_handler(EventPtr event)
 						} else {
 							temprng = tsktoedit->arearadii2[selectedTaskWayIdx];
 						}
-      						RangeBearingToLatLonLinearInterp(tsktoedit->wayptlats[selectedTaskWayIdx], tsktoedit->wayptlons[selectedTaskWayIdx], temprng, nice_brg(tempbrg+180), &tsktoedit->targetlats[selectedTaskWayIdx], &tsktoedit->targetlons[selectedTaskWayIdx]);
+						RangeBearingToLatLonLinearInterp(tsktoedit->wayptlats[selectedTaskWayIdx], tsktoedit->wayptlons[selectedTaskWayIdx], temprng, nice_brg(tempbrg+180), &tsktoedit->targetlats[selectedTaskWayIdx], &tsktoedit->targetlons[selectedTaskWayIdx]);
 					}
 					tsktoedit->aataimtype = AATusr;
 //					if (taskIndex == 0) set_task_changed = true;
 					updatemap = true;
+					targetmoved = true;
 					handled=true;
 				}
 
@@ -6609,11 +6550,12 @@ Boolean form_waypoint_sector_event_handler(EventPtr event)
 						} else {
 							temprng = tsktoedit->arearadii2[selectedTaskWayIdx];
 						}
-      						RangeBearingToLatLonLinearInterp(tsktoedit->wayptlats[selectedTaskWayIdx], tsktoedit->wayptlons[selectedTaskWayIdx], temprng, nice_brg(tempbrg+180), &tsktoedit->targetlats[selectedTaskWayIdx], &tsktoedit->targetlons[selectedTaskWayIdx]);
+						RangeBearingToLatLonLinearInterp(tsktoedit->wayptlats[selectedTaskWayIdx], tsktoedit->wayptlons[selectedTaskWayIdx], temprng, nice_brg(tempbrg+180), &tsktoedit->targetlats[selectedTaskWayIdx], &tsktoedit->targetlons[selectedTaskWayIdx]);
 					}
 					tsktoedit->aataimtype = AATusr;
 //					if (taskIndex == 0) set_task_changed = true;
 					updatemap = true;
+					targetmoved = true;
 					handled=true;
 				}
 
@@ -6648,11 +6590,12 @@ Boolean form_waypoint_sector_event_handler(EventPtr event)
 						} else {
 							temprng = tsktoedit->arearadii2[selectedTaskWayIdx];
 						}
-      						RangeBearingToLatLonLinearInterp(tsktoedit->wayptlats[selectedTaskWayIdx], tsktoedit->wayptlons[selectedTaskWayIdx], temprng, nice_brg(tempbrg+180), &tsktoedit->targetlats[selectedTaskWayIdx], &tsktoedit->targetlons[selectedTaskWayIdx]);
+						RangeBearingToLatLonLinearInterp(tsktoedit->wayptlats[selectedTaskWayIdx], tsktoedit->wayptlons[selectedTaskWayIdx], temprng, nice_brg(tempbrg+180), &tsktoedit->targetlats[selectedTaskWayIdx], &tsktoedit->targetlons[selectedTaskWayIdx]);
 					}
 					tsktoedit->aataimtype = AATusr;
 //					if (taskIndex == 0) set_task_changed = true;
 					updatemap = true;
+					targetmoved = true;
 					handled=true;
 				}
 
@@ -6683,11 +6626,12 @@ Boolean form_waypoint_sector_event_handler(EventPtr event)
 						} else {
 							temprng = tsktoedit->arearadii2[selectedTaskWayIdx];
 						}
-      						RangeBearingToLatLonLinearInterp(tsktoedit->wayptlats[selectedTaskWayIdx], tsktoedit->wayptlons[selectedTaskWayIdx], temprng, nice_brg(tempbrg+180), &tsktoedit->targetlats[selectedTaskWayIdx], &tsktoedit->targetlons[selectedTaskWayIdx]);
+						RangeBearingToLatLonLinearInterp(tsktoedit->wayptlats[selectedTaskWayIdx], tsktoedit->wayptlons[selectedTaskWayIdx], temprng, nice_brg(tempbrg+180), &tsktoedit->targetlats[selectedTaskWayIdx], &tsktoedit->targetlons[selectedTaskWayIdx]);
 					}
 					tsktoedit->aataimtype = AATusr;
 //					if (taskIndex == 0) set_task_changed = true;
 					updatemap = true;
+					targetmoved = true;
 					handled=true;
 				}
 
