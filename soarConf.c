@@ -597,6 +597,17 @@ void OutputConfig()
 	TxData(output_char, data.config.xfertype);
 //	HostTraceOutputTL(appErrorClass, "%s", output_char);
 
+	// AGM: preferred BT GPS address
+	StrCopy(output_char, "BTGPSADDR,");
+	for (i=0; i<6; i++) {
+		StrCat(output_char, Dec2Hex(data.config.BTAddr[i]));
+		if (i<5) {
+			StrCat(output_char,":");
+		}		
+	}
+	StrCatEOL(output_char, data.config.xfertype);
+	TxData(output_char, data.config.xfertype);
+
 	return;
 }
 
@@ -607,12 +618,14 @@ void config_parser(Char *serinp, UInt32 length, Boolean reset)
 	Char tempchar[PARSELEN];
 	static Boolean skip = false;
 	static Boolean polar1=false;
+	Boolean btgpsaddr=false;
 	Int8 curxfertype;
 	CAIAddData *caidata;
 	MemHandle record_handle;
 	MemPtr record_ptr;
 	Int16 polaridx;
 	Int8 i;
+	Int8 pos;
 	static Boolean lineoverflow = false;
 	
 	if (reset) {
@@ -1797,7 +1810,6 @@ void config_parser(Char *serinp, UInt32 length, Boolean reset)
 						data.config.leftaction = (Int8)StrAToI(tempchar);
 						if ((data.config.leftaction < 0) || (data.config.leftaction > 4)) data.config.leftaction = 1;
 					}
-
 				}
 
 				if (StrCompare(tempchar, "MCBUTTON") == 0) {
@@ -1809,10 +1821,38 @@ void config_parser(Char *serinp, UInt32 length, Boolean reset)
 						if ((data.config.MCbutton < 0) || (data.config.MCbutton > 1)) data.config.leftaction = 0;
 					}
 				}
+				// AGM: get preferred BT GPS address
+				if (StrCompare(tempchar, "BTGPSADDR") == 0) {
+//					HostTraceOutputTL(appErrorClass, "BTGPSADDR record");
+					btgpsaddr=true;
+					if (GetField(buf, 1, tempchar)) {
+//						HostTraceOutputTL(appErrorClass, tempchar);
+						// BT Address is 6 hexadecimal 2 char. numbers
+						// separated with a colon, like so:
+						//           1111111
+						// 12345678901234567
+						// 00:00:00:00:00:00
+						if (StrLen(tempchar)==17) {
+							pos=1;
+							for(i=0; i<6; i++) {
+								data.config.BTAddr[i]=(UInt8) StrHToI(Mid(tempchar,2,pos));
+								pos += 3;
+							}
+						}
+					}
+				}
 			}
 			next=0;
 		}
 		skip = false;
+	}
+	// no preferred BT GPS address?
+	if (!btgpsaddr)
+	{
+		// then set address to 00:00:00:00:00:00
+		for (i=0; i<6; i++) {
+			data.config.BTAddr[i] = 0;
+		}
 	}
 	set_unit_constants();
 	// check logger on / off speeds

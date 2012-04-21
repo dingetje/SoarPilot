@@ -6,6 +6,7 @@
 #include <VFSMgr.h>
 #include <DLServer.h>
 #include <SmsLib.h>
+
 #include "soaring.h"
 #include "soarIO.h"
 #include "soarUtil.h"
@@ -15,6 +16,7 @@
 #include "soarGar.h"
 #include "soarMath.h"
 #include "soarUMap.h"
+#include "soarBT.h" // AGM: for prefered BT GPS connection feature
 
 #ifdef TREOSUPPORT
 	#include <HsExt.h>
@@ -54,7 +56,6 @@ Char transfer_filename[30];
 Int8 io_file_type = NO_FILE_TYPE;
 Int8 io_type = IO_NONE;
 Int8 xfrdialog = XFRXFR;
-
 Char *filelist = NULL;
 Int16 numfilesfound = 0;
 
@@ -1319,7 +1320,69 @@ Boolean OpenPortNew (UInt32 baudrate, Int8 xfertype)
 	} else if (device.romVersion >= SYS_VER_40) {
 		if (xfertype == USEBT) {
 //			HostTraceOutputTL(appErrorClass, "Using BTportID");
-			error = SrmOpen(BTportID, baudrate, &serial_ref);
+//			original BT open code
+//			error = SrmOpen(BTportID, baudrate, &serial_ref);
+			{
+				// AGM: new feature, dedicated BT GPS connection
+				// BT address is taken from config file, no GUI
+				// if not found use address 00:00:00:00:00:00
+				// which will popup the BT search dialog, just like
+				// in the old code. Selected device can be saved
+				// in config file by using Transfer > Configuration
+				SrmOpenConfigType config; 
+				BtVdOpenParams btParams; 
+				UInt8 NoConfig = 0; 
+				config.function = 0;                              // must be zero 
+				config.drvrDataP = (MemPtr)&btParams; 
+				config.drvrDataSize = sizeof(BtVdOpenParams); 
+				 
+				btParams.role = btVdClient;                       // we are the client side 
+				
+				// BT address in config is 00:00:00:00:00?
+				NoConfig = data.config.BTAddr[5] == 0 &&
+							data.config.BTAddr[4] == 0 &&
+							data.config.BTAddr[3] == 0 &&
+							data.config.BTAddr[2] == 0 &&
+							data.config.BTAddr[1] == 0 &&
+							data.config.BTAddr[0] == 0;
+							 
+				if (NoConfig) {
+					// let user select a BT device
+					Err err = BT_FindDevice();
+					if (!err) {
+						extern UInt8 BTAddress[6];
+						// copy selected address in config
+						// swap address bytes because it is swapped again below
+						// this is due to be able to use human readable BT address
+						// in the config file.
+						data.config.BTAddr[5] = BTAddress[0];
+						data.config.BTAddr[4] = BTAddress[1];
+						data.config.BTAddr[3] = BTAddress[2];
+						data.config.BTAddr[2] = BTAddress[3];
+						data.config.BTAddr[1] = BTAddress[4];
+						data.config.BTAddr[0] = BTAddress[5];
+					}
+				}
+				
+				// Set preferred BT address from config
+				btParams.u.client.remoteDevAddr.address[0] = data.config.BTAddr[5]; // remote device addr byte 1 
+				btParams.u.client.remoteDevAddr.address[1] = data.config.BTAddr[4]; // remote device addr byte 2 
+				btParams.u.client.remoteDevAddr.address[2] = data.config.BTAddr[3]; // remote device addr byte 3 
+				btParams.u.client.remoteDevAddr.address[3] = data.config.BTAddr[2]; // remote device addr byte 4 
+				btParams.u.client.remoteDevAddr.address[4] = data.config.BTAddr[1]; // remote device addr byte 5 
+				btParams.u.client.remoteDevAddr.address[5] = data.config.BTAddr[0]; // remote device addr byte 6 
+				btParams.u.client.method = btVdUseChannelId; 
+				btParams.u.client.u.channelId = 0x53; //??
+
+				// by using SrmExtOpen the BT lib is not needed and
+				// BT connection acts like a regular RS232 serial link
+				error = SrmExtOpen( 
+						BTportID, 			// type of port == RFCOMM 
+						&config,            // port configuration params 
+						sizeof(config),     // size of port config params 
+						&serial_ref         // receives the id of this virtual serial port instance 
+				);
+ 			}
 		} else if (xfertype == USEST) {
 //			HostTraceOutputTL(appErrorClass, "Using STporID for StyleTap Support");
 			error = SrmOpen(data.config.stcurdevcreator, baudrate, &serial_ref);

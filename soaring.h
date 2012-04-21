@@ -199,7 +199,7 @@
 #define docCreator		'REAd'
 
 // Database Version Numbers
-#define CONFIGDBVER	11.0
+#define CONFIGDBVER	12.0
 
 #define LOGGERDBVER	6.0	// should keep task, logger and flight databases the same
 #define FLIGHTDBVER	6.0	//
@@ -542,6 +542,7 @@ typedef struct ConfigFlight {
 	Boolean    autoIGCxfer;
 	Boolean    declaretoSD;
 	Int8       MCbutton;
+	UInt8      BTAddr[6]; // AGM: preferred BT GPS address
 } ConfigFlight;
 
 /* GPS, Calculated & Transient Global Data*/

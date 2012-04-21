@@ -2673,3 +2673,15 @@ void outputlog(Char *output_char, Boolean crlf) {
 		if (crlf) TxData(tempchar, USEVFS);
 	}
 }
+
+UInt32 StrHToI(Char *pHexaString) {
+	UInt32 value = 0;
+//	HostTraceOutputTL(appErrorClass, pHexaString);
+    while (*pHexaString) {
+		value = value << 4;
+		value += Hex2Dec(*pHexaString);
+		pHexaString++;
+	}
+//	HostTraceOutputTL(appErrorClass, " -> %ld", value);
+    return value;
+}

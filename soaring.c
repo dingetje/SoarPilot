@@ -3996,7 +3996,7 @@ Boolean CardEnabledDevice()
 	return(true);
 }
 
-// Determines if the device is capable of taking a memory card
+// Determines if the device is BlueTooth capable
 Boolean BTEnabledDevice() 
 {
 	UInt32 btVersion;
