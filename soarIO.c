@@ -6,7 +6,6 @@
 #include <VFSMgr.h>
 #include <DLServer.h>
 #include <SmsLib.h>
-
 #include "soaring.h"
 #include "soarIO.h"
 #include "soarUtil.h"
