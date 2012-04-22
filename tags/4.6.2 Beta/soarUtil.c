@@ -2685,3 +2685,4 @@ UInt32 StrHToI(Char *pHexaString) {
 //	HostTraceOutputTL(appErrorClass, " -> %ld", value);
     return value;
 }
+
