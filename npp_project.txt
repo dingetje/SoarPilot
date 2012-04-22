@@ -1,0 +1,885 @@
+<NotepadPlus>
+    <Project name="Soaring Pilot">
+        <Folder name="AddIncs">
+            <Folder name="FiveWay">
+                <File name="AddIncs\FiveWay\FiveWay Developers Guide.pdf" />
+                <File name="AddIncs\FiveWay\PalmChars.h" />
+                <File name="AddIncs\FiveWay\Using 5 Way Navigator.pdf" />
+            </Folder>
+            <Folder name="GarminIncs">
+                <File name="AddIncs\GarminIncs\Garmin.h" />
+                <File name="AddIncs\GarminIncs\GarminChars.h" />
+                <File name="AddIncs\GarminIncs\GPSLib.h" />
+                <File name="AddIncs\GarminIncs\GPSLib68K.h" />
+                <File name="AddIncs\GarminIncs\GPSLibSysTrapNums.h" />
+                <File name="AddIncs\GarminIncs\PenInputMgr.h" />
+                <File name="AddIncs\GarminIncs\PenInputMgrCommon.h" />
+                <File name="AddIncs\GarminIncs\PenInputMgrSelectorNums.h" />
+            </Folder>
+            <Folder name="SonyIncs">
+                <Folder name="Libraries">
+                    <File name="AddIncs\SonyIncs\Libraries\SonyCapLib.h" />
+                    <File name="AddIncs\SonyIncs\Libraries\SonyHRLib.h" />
+                    <File name="AddIncs\SonyIncs\Libraries\SonyJpegUtilLib.h" />
+                    <File name="AddIncs\SonyIncs\Libraries\SonyLibPublic.h" />
+                    <File name="AddIncs\SonyIncs\Libraries\SonyMsaLib.h" />
+                    <File name="AddIncs\SonyIncs\Libraries\SonyRmcLib.h" />
+                    <File name="AddIncs\SonyIncs\Libraries\SonySilkLib.h" />
+                    <File name="AddIncs\SonyIncs\Libraries\SonySndLib.h" />
+                </Folder>
+                <Folder name="System">
+                    <File name="AddIncs\SonyIncs\System\SonyChars.h" />
+                    <File name="AddIncs\SonyIncs\System\SonyErrorBase.h" />
+                    <File name="AddIncs\SonyIncs\System\SonyHwrOEMIDs.h" />
+                    <File name="AddIncs\SonyIncs\System\SonyJogAssist.h" />
+                    <File name="AddIncs\SonyIncs\System\SonyKeyMgr.h" />
+                    <File name="AddIncs\SonyIncs\System\SonyNotify.h" />
+                    <File name="AddIncs\SonyIncs\System\SonySystemFtr.h" />
+                    <File name="AddIncs\SonyIncs\System\SonySystemPublic.h" />
+                    <File name="AddIncs\SonyIncs\System\SonySystemResources.h" />
+                </Folder>
+                <File name="AddIncs\SonyIncs\SonyCapLib.h" />
+                <File name="AddIncs\SonyIncs\SonyChars.h" />
+                <File name="AddIncs\SonyIncs\SonyCLIE.h" />
+                <File name="AddIncs\SonyIncs\SonyErrorBase.h" />
+                <File name="AddIncs\SonyIncs\SonyHRLib.h" />
+                <File name="AddIncs\SonyIncs\SonyHwrOEMIDs.h" />
+                <File name="AddIncs\SonyIncs\SonyJogAssist.h" />
+                <File name="AddIncs\SonyIncs\SonyJpegUtilLib.h" />
+                <File name="AddIncs\SonyIncs\SonyKeyMgr.h" />
+                <File name="AddIncs\SonyIncs\SonyLibPublic.h" />
+                <File name="AddIncs\SonyIncs\SonyMsaLib.h" />
+                <File name="AddIncs\SonyIncs\SonyNotify.h" />
+                <File name="AddIncs\SonyIncs\SonyRmcLib.h" />
+                <File name="AddIncs\SonyIncs\SonySilkLib.h" />
+                <File name="AddIncs\SonyIncs\SonySndLib.h" />
+                <File name="AddIncs\SonyIncs\SonySystemFtr.h" />
+                <File name="AddIncs\SonyIncs\SonySystemPublic.h" />
+                <File name="AddIncs\SonyIncs\SonySystemResources.h" />
+            </Folder>
+            <Folder name="Treo600">
+                <Folder name="68K">
+                    <Folder name="Libraries">
+                        <Folder name="Camera">
+                            <File name="AddIncs\Treo600\68K\Libraries\Camera\CameraLib.h" />
+                        </Folder>
+                        <Folder name="CarrierCustomLib">
+                            <File name="AddIncs\Treo600\68K\Libraries\CarrierCustomLib\CarrierCustomLib.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\CarrierCustomLib\CarrierCustomLibErr.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\CarrierCustomLib\CarrierCustomLibTraps.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\CarrierCustomLib\CarrierCustomLibTypes.h" />
+                        </Folder>
+                        <Folder name="DefaultHelperLibrary">
+                            <File name="AddIncs\Treo600\68K\Libraries\DefaultHelperLibrary\DefaultHelperLib.h" />
+                        </Folder>
+                        <Folder name="FavoritesDBLibrary">
+                            <File name="AddIncs\Treo600\68K\Libraries\FavoritesDBLibrary\FavoritesDBLib.h" />
+                        </Folder>
+                        <Folder name="HsSoundLib">
+                            <File name="AddIncs\Treo600\68K\Libraries\HsSoundLib\HsSoundLib.h" />
+                        </Folder>
+                        <Folder name="HTTP">
+                            <File name="AddIncs\Treo600\68K\Libraries\HTTP\HS_HTTPLib68K.h" />
+                        </Folder>
+                        <Folder name="Imaging">
+                            <File name="AddIncs\Treo600\68K\Libraries\Imaging\ImageLib.h" />
+                        </Folder>
+                        <Folder name="NetMaster">
+                            <File name="AddIncs\Treo600\68K\Libraries\NetMaster\NetMasterLibrary.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\NetMaster\NetMasterLibTypes.h" />
+                        </Folder>
+                        <Folder name="NetPref">
+                            <File name="AddIncs\Treo600\68K\Libraries\NetPref\NetPrefLibFieldInfoTable.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\NetPref\NetPrefLibrary.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\NetPref\NetPrefLibTypes.h" />
+                        </Folder>
+                        <Folder name="SmartTextEngine">
+                            <File name="AddIncs\Treo600\68K\Libraries\SmartTextEngine\SmartTextEngine.h" />
+                        </Folder>
+                        <Folder name="Telephony">
+                            <File name="AddIncs\Treo600\68K\Libraries\Telephony\HsPhone.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\Telephony\HsPhoneAudio.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\Telephony\HsPhoneCDMA.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\Telephony\HsPhoneEvent.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\Telephony\HsPhoneGSM.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\Telephony\HsPhoneIOTA.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\Telephony\HsPhoneLibrary.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\Telephony\HsPhoneMisc.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\Telephony\HsPhoneNetwork.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\Telephony\HsPhonePower.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\Telephony\HsPhoneSecurity.h" />
+                            <File name="AddIncs\Treo600\68K\Libraries\Telephony\HsPhoneSMS.h" />
+                        </Folder>
+                        <Folder name="TonesLibrary">
+                            <File name="AddIncs\Treo600\68K\Libraries\TonesLibrary\TonesLib.h" />
+                        </Folder>
+                        <Folder name="TransparencyLibrary">
+                            <File name="AddIncs\Treo600\68K\Libraries\TransparencyLibrary\TransparencyLib.h" />
+                        </Folder>
+                    </Folder>
+                    <Folder name="System">
+                        <File name="AddIncs\Treo600\68K\System\FarCall.h" />
+                        <File name="AddIncs\Treo600\68K\System\HsExgMgr.h" />
+                        <File name="AddIncs\Treo600\68K\System\HsExt.h" />
+                        <File name="AddIncs\Treo600\68K\System\HsExtKbdUtils.h" />
+                        <File name="AddIncs\Treo600\68K\System\HsExtTraps.h" />
+                        <File name="AddIncs\Treo600\68K\System\HsExtUtilBigButton.h" />
+                        <File name="AddIncs\Treo600\68K\System\HsHelper.h" />
+                        <File name="AddIncs\Treo600\68K\System\HsNav.h" />
+                    </Folder>
+                    <File name="AddIncs\Treo600\68K\Hs.h" />
+                </Folder>
+                <Folder name="Common">
+                    <Folder name="Libraries">
+                        <Folder name="Camera">
+                            <File name="AddIncs\Treo600\Common\Libraries\Camera\CameraLibCommon.h" />
+                        </Folder>
+                        <Folder name="ComChannelProvider">
+                            <File name="AddIncs\Treo600\Common\Libraries\ComChannelProvider\ComChannelProviderTypes.h" />
+                        </Folder>
+                        <Folder name="DefaultHelperLibrary">
+                            <File name="AddIncs\Treo600\Common\Libraries\DefaultHelperLibrary\DefaultHelperLibTypes.h" />
+                        </Folder>
+                        <Folder name="FavoritesDBLibrary">
+                            <File name="AddIncs\Treo600\Common\Libraries\FavoritesDBLibrary\FavoritesDBLibTypes.h" />
+                        </Folder>
+                        <Folder name="HsSoundLib">
+                            <File name="AddIncs\Treo600\Common\Libraries\HsSoundLib\HsSoundLibCommon.h" />
+                            <File name="AddIncs\Treo600\Common\Libraries\HsSoundLib\HsSoundLibTraps.h" />
+                        </Folder>
+                        <Folder name="HTTP">
+                            <File name="AddIncs\Treo600\Common\Libraries\HTTP\HS_HTTPLibApp.h" />
+                            <File name="AddIncs\Treo600\Common\Libraries\HTTP\HS_HTTPLibConst.h" />
+                        </Folder>
+                        <Folder name="Imaging">
+                            <File name="AddIncs\Treo600\Common\Libraries\Imaging\ImageLibCommon.h" />
+                            <File name="AddIncs\Treo600\Common\Libraries\Imaging\ImageLibTraps.h" />
+                        </Folder>
+                        <Folder name="MMS">
+                            <File name="AddIncs\Treo600\Common\Libraries\MMS\MmsHelperCommon.h" />
+                        </Folder>
+                        <Folder name="NetMaster">
+                            <File name="AddIncs\Treo600\Common\Libraries\NetMaster\NetMasterLibErrors.h" />
+                            <File name="AddIncs\Treo600\Common\Libraries\NetMaster\NetMasterLibTarget.h" />
+                            <File name="AddIncs\Treo600\Common\Libraries\NetMaster\NetMasterLibTraps.h" />
+                        </Folder>
+                        <Folder name="NetPref">
+                            <File name="AddIncs\Treo600\Common\Libraries\NetPref\NetPrefLibErrors.h" />
+                            <File name="AddIncs\Treo600\Common\Libraries\NetPref\NetPrefLibTarget.h" />
+                            <File name="AddIncs\Treo600\Common\Libraries\NetPref\NetPrefLibTraps.h" />
+                        </Folder>
+                        <Folder name="SmartTextEngine">
+                            <File name="AddIncs\Treo600\Common\Libraries\SmartTextEngine\SmartTextEngineDef.h" />
+                            <File name="AddIncs\Treo600\Common\Libraries\SmartTextEngine\SmartTextEngineErrors.h" />
+                            <File name="AddIncs\Treo600\Common\Libraries\SmartTextEngine\SmartTextEngineTraps.h" />
+                        </Folder>
+                        <Folder name="Telephony">
+                            <File name="AddIncs\Treo600\Common\Libraries\Telephony\HsPhoneErrors.h" />
+                            <File name="AddIncs\Treo600\Common\Libraries\Telephony\HsPhoneTrace.h" />
+                            <File name="AddIncs\Treo600\Common\Libraries\Telephony\HsPhoneTraps.h" />
+                            <File name="AddIncs\Treo600\Common\Libraries\Telephony\HsPhoneTypes.h" />
+                        </Folder>
+                        <Folder name="TonesLibrary">
+                            <File name="AddIncs\Treo600\Common\Libraries\TonesLibrary\TonesLibTypes.h" />
+                        </Folder>
+                        <Folder name="TransparencyLibrary">
+                            <File name="AddIncs\Treo600\Common\Libraries\TransparencyLibrary\TransparencyLibTypes.h" />
+                        </Folder>
+                    </Folder>
+                    <Folder name="System">
+                        <File name="AddIncs\Treo600\Common\System\HsAppLaunchCmd.h" />
+                        <File name="AddIncs\Treo600\Common\System\HsChars.h" />
+                        <File name="AddIncs\Treo600\Common\System\HsCreators.h" />
+                        <File name="AddIncs\Treo600\Common\System\HsErrorClasses.h" />
+                        <File name="AddIncs\Treo600\Common\System\HsErrors.h" />
+                        <File name="AddIncs\Treo600\Common\System\HsExgMgrCommon.h" />
+                        <File name="AddIncs\Treo600\Common\System\HsExtCommon.h" />
+                        <File name="AddIncs\Treo600\Common\System\HsExtUtilBigButtonCommon.h" />
+                        <File name="AddIncs\Treo600\Common\System\HsExtUtilBigButtonRsc.h" />
+                        <File name="AddIncs\Treo600\Common\System\HsKeyCodes.h" />
+                        <File name="AddIncs\Treo600\Common\System\HsKeyCommon.h" />
+                        <File name="AddIncs\Treo600\Common\System\HsKeyTypes.h" />
+                        <File name="AddIncs\Treo600\Common\System\HsNavCommon.h" />
+                    </Folder>
+                    <File name="AddIncs\Treo600\Common\HsCommon.h" />
+                </Folder>
+            </Folder>
+        </Folder>
+        <Folder name="Cygwin">
+            <Folder name="PalmDev">
+                <Folder name="sdk-5r3">
+                    <Folder name="include">
+                        <Folder name="68k">
+                            <Folder name="libraries">
+                                <Folder name="address">
+                                    <Folder name="2.0">
+                                        <Folder name="pub">
+                                            <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\address\2.0\pub\Contacts.h" />
+                                        </Folder>
+                                    </Folder>
+                                </Folder>
+                                <Folder name="audio">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\audio\PalmAudioPlayback.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\audio\PalmSoundCustomCtrl.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\audio\PalmSoundMgrExt.h" />
+                                </Folder>
+                                <Folder name="camera">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\camera\CameraLib.h" />
+                                </Folder>
+                                <Folder name="cameramgr">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\cameramgr\palmOneCamera.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\cameramgr\palmOneCameraSlider.h" />
+                                </Folder>
+                                <Folder name="carriercustomlib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\carriercustomlib\CarrierCustomLib.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\carriercustomlib\CarrierCustomLibErr.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\carriercustomlib\CarrierCustomLibTraps.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\carriercustomlib\CarrierCustomLibTypes.h" />
+                                </Folder>
+                                <Folder name="codecpluginmgr">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\codecpluginmgr\palmOneCodecPluginMgr.h" />
+                                </Folder>
+                                <Folder name="defaulthelperlibrary">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\defaulthelperlibrary\DefaultHelperLib.h" />
+                                </Folder>
+                                <Folder name="favoritesdblibrary">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\favoritesdblibrary\FavoritesDBLib.h" />
+                                </Folder>
+                                <Folder name="filebrowser">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\filebrowser\FileBrowserLib68K.h" />
+                                </Folder>
+                                <Folder name="hirestimerlib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\hirestimerlib\palmOneHiResTimer.h" />
+                                </Folder>
+                                <Folder name="hssoundlib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\hssoundlib\HsSoundLib.h" />
+                                </Folder>
+                                <Folder name="htmllib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\htmllib\HtmlLib68K.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\htmllib\HtmlLibTrap.h" />
+                                </Folder>
+                                <Folder name="http">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\http\HS_HTTPLib68K.h" />
+                                </Folder>
+                                <Folder name="imaging">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\imaging\ImageLib.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\imaging\palmOnePhoto.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\imaging\PalmPhoto.h" />
+                                </Folder>
+                                <Folder name="lcdoverlaylib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\lcdoverlaylib\palmOneLcdOverlay.h" />
+                                </Folder>
+                                <Folder name="locs">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\locs\LocsLib.h" />
+                                </Folder>
+                                <Folder name="netmaster">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\netmaster\NetMasterLibrary.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\netmaster\NetMasterLibTypes.h" />
+                                </Folder>
+                                <Folder name="netpref">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\netpref\NetPrefLibFieldInfoTable.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\netpref\NetPrefLibrary.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\netpref\NetPrefLibTypes.h" />
+                                </Folder>
+                                <Folder name="network">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\network\PalmNetServices.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\network\PalmVPPI.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\network\PalmWiFiCommon.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\network\PalmWPPI.h" />
+                                </Folder>
+                                <Folder name="pmconnectorlib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\pmconnectorlib\PmConnectorLib.h" />
+                                </Folder>
+                                <Folder name="pmkeylib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\pmkeylib\PmKeyLib.h" />
+                                </Folder>
+                                <Folder name="pmsysgadgetlib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\pmsysgadgetlib\PmSysGadgetLib.h" />
+                                </Folder>
+                                <Folder name="pmuiutillib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\pmuiutillib\PmUIUtilLib.h" />
+                                </Folder>
+                                <Folder name="smarttextengine">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\smarttextengine\SmartTextEngine.h" />
+                                </Folder>
+                                <Folder name="sndfilestream">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\sndfilestream\palmOneSndFileStream.h" />
+                                </Folder>
+                                <Folder name="telephony">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\telephony\HsPhone.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\telephony\HsPhoneAudio.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\telephony\HsPhoneCDMA.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\telephony\HsPhoneGSM.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\telephony\HsPhoneIOTA.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\telephony\HsPhoneLibrary.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\telephony\HsPhoneMisc.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\telephony\HsPhoneNetwork.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\telephony\HsPhonePower.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\telephony\HsPhoneSecurity.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\telephony\HsPhoneSMS.h" />
+                                </Folder>
+                                <Folder name="toneslibrary">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\toneslibrary\TonesLib.h" />
+                                </Folder>
+                                <Folder name="transparencylibrary">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\transparencylibrary\TransparencyLib.h" />
+                                </Folder>
+                                <Folder name="vmfont">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\68k\libraries\vmfont\palmOneVMFontLib.h" />
+                                </Folder>
+                            </Folder>
+                            <Folder name="system">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\FarCall.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\HardwareUtils68K.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\HsExgMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\HsExt.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\HsExtKbdUtils.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\HsExtTraps.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\HsExtUtilBigButton.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\HsHelper.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\HsNav.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmBGService.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmChars.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmDisplayExtent.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmErrorBase.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmGoLCD.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmHiResTime.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmLaunchCodes.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmLcdOverlay.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmLED.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmNative.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmNavigator.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\palmOneChars.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\palmOneNavigator.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\palmOneStatusBar.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmPin.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmPower.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmResources.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmStatusBar.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmVMLaunch.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PalmVMPlugin.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\PmPalmOSNVFS.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\68k\system\Slider.h" />
+                            </Folder>
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\68k\Hs.h" />
+                        </Folder>
+                        <Folder name="common">
+                            <Folder name="libraries">
+                                <Folder name="camera">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\camera\CameraLibCommon.h" />
+                                </Folder>
+                                <Folder name="cameramgr">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\cameramgr\palmOneCameraCommon.h" />
+                                </Folder>
+                                <Folder name="codecpluginmgr">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\codecpluginmgr\palmOneCodecFormat.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\codecpluginmgr\palmOneCodecPluginMgrCommon.h" />
+                                </Folder>
+                                <Folder name="comchannelprovider">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\comchannelprovider\ComChannelProviderTypes.h" />
+                                </Folder>
+                                <Folder name="datebook">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\datebook\DatebookLibCommon.h" />
+                                </Folder>
+                                <Folder name="defaulthelperlibrary">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\defaulthelperlibrary\DefaultHelperLibTypes.h" />
+                                </Folder>
+                                <Folder name="favoritesdblibrary">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\favoritesdblibrary\FavoritesDBLibTypes.h" />
+                                </Folder>
+                                <Folder name="filebrowser">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\filebrowser\FileBrowserLibCommon.h" />
+                                </Folder>
+                                <Folder name="hirestimerlib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\hirestimerlib\palmOneHiResTimerCommon.h" />
+                                </Folder>
+                                <Folder name="hssoundlib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\hssoundlib\HsSoundLibCommon.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\hssoundlib\HsSoundLibTraps.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\hssoundlib\PmSoundLibAudioGroup.h" />
+                                </Folder>
+                                <Folder name="http">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\http\HS_HTTPLibApp.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\http\HS_HTTPLibConst.h" />
+                                </Folder>
+                                <Folder name="imaging">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\imaging\ImageLibCommon.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\imaging\ImageLibTraps.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\imaging\palmOnePhotoCommon.h" />
+                                </Folder>
+                                <Folder name="lcdoverlaylib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\lcdoverlaylib\palmOneLcdOverlayCommon.h" />
+                                </Folder>
+                                <Folder name="locs">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\locs\LocsLibCommon.h" />
+                                </Folder>
+                                <Folder name="mms">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\mms\MmsHelperCommon.h" />
+                                </Folder>
+                                <Folder name="netmaster">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\netmaster\NetMasterLibErrors.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\netmaster\NetMasterLibTarget.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\netmaster\NetMasterLibTraps.h" />
+                                </Folder>
+                                <Folder name="netpref">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\netpref\NetPrefLibErrors.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\netpref\NetPrefLibTarget.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\netpref\NetPrefLibTraps.h" />
+                                </Folder>
+                                <Folder name="pmconnectorlib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\pmconnectorlib\PmConnectorLibCommon.h" />
+                                </Folder>
+                                <Folder name="pmkeylib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\pmkeylib\PmKeyLibCommon.h" />
+                                </Folder>
+                                <Folder name="pmsysgadgetlib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\pmsysgadgetlib\PmSysGadgetLibBbutRscCommon.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\pmsysgadgetlib\PmSysGadgetLibCommon.h" />
+                                </Folder>
+                                <Folder name="pmuiutillib">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\pmuiutillib\PmUIUtilLibCommon.h" />
+                                </Folder>
+                                <Folder name="smarttextengine">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\smarttextengine\SmartTextEngineDef.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\smarttextengine\SmartTextEngineErrors.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\smarttextengine\SmartTextEngineRsc.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\smarttextengine\SmartTextEngineTraps.h" />
+                                </Folder>
+                                <Folder name="telephony">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneAudioTypes.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneCallControlTypes.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneCDMATypes.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneErrors.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneEvent.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneGSMTypes.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneIOTATypes.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\hsPhoneLocationTypes.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneMiscTypes.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneNetworkTypes.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneSecurityTypes.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneSMSTypes.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneTrace.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneTraps.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\telephony\HsPhoneTypes.h" />
+                                </Folder>
+                                <Folder name="toneslibrary">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\toneslibrary\TonesLibTypes.h" />
+                                </Folder>
+                                <Folder name="transparencylibrary">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\transparencylibrary\TransparencyLibTypes.h" />
+                                </Folder>
+                                <Folder name="vmfont">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\vmfont\VMFontLibCommon.h" />
+                                </Folder>
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\libraries\PmLibErrors.h" />
+                            </Folder>
+                            <Folder name="system">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsAppLaunchCmd.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsChars.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsCreators.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsErrorClasses.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsErrors.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsExgMgrCommon.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsExtCommon.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsExtUtilBigButtonCommon.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsExtUtilBigButtonRsc.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsKeyCodes.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsKeyCommon.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsKeyTypes.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\HsNavCommon.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\PalmCreators.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\PalmFeatures.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\PalmGoLCDCommon.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\palmOneChars.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\palmOneCreators.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\palmOneFeatures.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\palmOneNavigator.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\palmOneResources.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\palmOneSystemCommon.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\common\system\PalmShimSettings.h" />
+                            </Folder>
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\common\HsCommon.h" />
+                        </Folder>
+                        <Folder name="Core">
+                            <Folder name="Hardware">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\Hardware\HAL.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\Hardware\HwrMiscFlags.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\Hardware\M68KHwr.h" />
+                            </Folder>
+                            <Folder name="System">
+                                <Folder name="Unix">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\arpa_inet.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\netdb.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\netinet_in.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\netinet_in_systm.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\netinet_ip.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\netinet_tcp.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\sys_errno.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\sys_socket.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\sys_socketvar.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\sys_time.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\sys_types.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\sys_uio.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\unix_fcntl.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\unix_netdb.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\unix_stdarg.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\unix_stdio.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\unix_stdlib.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Unix\unix_string.h" />
+                                </Folder>
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\AlarmMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\AppLaunchCmd.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Bitmap.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\CharGB.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\CharLatin.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Chars.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\CharShiftJIS.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\CMCommon.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\CMLConst.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\ConnectionMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\ConsoleMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Crc.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\CTP.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\DataMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\DateTime.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\DebugMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\DLCommon.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\DLServer.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Encrypt.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\ErrorBase.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\ErrorMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\ExgLib.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\ExgMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\FeatureMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\FileStream.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\FixedMath.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\FloatMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Font.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Graffiti.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Helper.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\HelperServiceClass.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\HostControl.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\ImcUtils.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\IntlMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\IrLib.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\KeyMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\LocaleMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Localize.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\MemoryMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\ModemMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\NetBitUtils.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\NetMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\NotifyMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\OverlayMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\PalmLocale.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\PalmLocRawData.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Password.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\PceNativeCall.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\PenInputMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\PenMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Preferences.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Rect.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\ScriptPlugin.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SerialDrvr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SerialLinkMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SerialMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SerialMgrOld.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SerialSdrv.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SerialVdrv.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SoundMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\StdIOPalm.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\StdIOProvider.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\StringMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SysEvent.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SysEvtMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SysResTypes.rh" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SystemMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SystemPkt.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SystemPublic.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SystemResources.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\SysUtils.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\TextMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\TextServicesMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\TimeMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\TraceMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\UDAMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\System\Window.h" />
+                            </Folder>
+                            <Folder name="UI">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\AboutBox.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\AttentionMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Category.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Clipboard.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Control.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Day.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Event.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\FatalAlert.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Field.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Find.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\FontSelect.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Form.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\GraffitiReference.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\GraffitiShift.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\InsPoint.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Keyboard.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Launcher.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\List.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Menu.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\PhoneLookup.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\PrivateRecords.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Progress.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\ScrollBar.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\SelDay.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\SelTime.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\SelTimeZone.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\Table.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\UIColor.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\UIControls.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\UIPublic.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\UIResDefs.r" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Core\UI\UIResources.h" />
+                            </Folder>
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\Core\CoreTraps.h" />
+                        </Folder>
+                        <Folder name="Dynamic">
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\Dynamic\PalmOptErrorCheckLevel.Debug" />
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\Dynamic\PalmOptErrorCheckLevel.h" />
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\Dynamic\PalmOptErrorCheckLevel.Release" />
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\Dynamic\PalmOptModel.h" />
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\Dynamic\PalmOptTraceLevel.h" />
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\Dynamic\PalmOptTraceLevel.Off" />
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\Dynamic\PalmOptTraceLevel.On" />
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\Dynamic\PalmOptUserMode.h" />
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\Dynamic\PalmSpecifyOptLevel.h" />
+                        </Folder>
+                        <Folder name="Extensions">
+                            <Folder name="Bluetooth">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Extensions\Bluetooth\BtCommVdrv.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Extensions\Bluetooth\BtExgLib.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Extensions\Bluetooth\BtLib.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Extensions\Bluetooth\BtLibTypes.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Extensions\Bluetooth\BtPrefsPnlTypes.h" />
+                            </Folder>
+                            <Folder name="ExpansionMgr">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Extensions\ExpansionMgr\ExpansionMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Extensions\ExpansionMgr\FSLib.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Extensions\ExpansionMgr\SlotDrvrLib.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\Extensions\ExpansionMgr\VFSMgr.h" />
+                            </Folder>
+                        </Folder>
+                        <Folder name="libraries">
+                            <Folder name="AddressSort">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\AddressSort\AddressSortLib.h" />
+                            </Folder>
+                            <Folder name="CPMLib">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\CPMLib\CPMLib.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\CPMLib\CPMLib68KInterface.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\CPMLib\CPMLibCommon.h" />
+                            </Folder>
+                            <Folder name="exglocal">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\exglocal\ExgLocalLib.h" />
+                            </Folder>
+                            <Folder name="INet">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\INet\INetMgr.h" />
+                            </Folder>
+                            <Folder name="Lz77">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Lz77\Lz77Mgr.h" />
+                            </Folder>
+                            <Folder name="PalmOSGlue">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\BmpGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\CtlGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\DateGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\FldGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\FntGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\FrmGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\IntlGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\LmGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\LstGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\MemGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\OmGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\PalmOSGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\ResGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\SysGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\TblGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\TsmGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\TxtGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\UIColorGlue.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\PalmOSGlue\WinGlue.h" />
+                            </Folder>
+                            <Folder name="Pdi">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Pdi\PdiConst.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Pdi\PdiLib.h" />
+                            </Folder>
+                            <Folder name="Simulator">
+                                <Folder name="Locale">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Simulator\Locale\Locale_deDE.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Simulator\Locale\Locale_enUS.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Simulator\Locale\Locale_esES.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Simulator\Locale\Locale_frFR.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Simulator\Locale\Locale_itIT.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Simulator\Locale\Locale_jpJP.h" />
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Simulator\Locale\Locale_zhCN.h" />
+                                </Folder>
+                            </Folder>
+                            <Folder name="Sms">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Sms\SmsLib.h" />
+                            </Folder>
+                            <Folder name="SSL">
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\SSL\SslLib.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\SSL\SslLibAsn1.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\SSL\SslLibMac.h" />
+                            </Folder>
+                            <Folder name="Telephony">
+                                <Folder name="UI">
+                                    <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Telephony\UI\TelephonyMgrUI.h" />
+                                </Folder>
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Telephony\TelephonyMgr.h" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\Telephony\TelephonyMgrTypes.h" />
+                            </Folder>
+                            <File name="Cygwin\PalmDev\sdk-5r3\include\libraries\LibTraps.h" />
+                        </Folder>
+                        <File name="Cygwin\PalmDev\sdk-5r3\include\BuildDefaults.h" />
+                        <File name="Cygwin\PalmDev\sdk-5r3\include\BuildDefines.h" />
+                        <File name="Cygwin\PalmDev\sdk-5r3\include\PalmCompatibility.h" />
+                        <File name="Cygwin\PalmDev\sdk-5r3\include\palmOne_68K.h" />
+                        <File name="Cygwin\PalmDev\sdk-5r3\include\PalmOS.h" />
+                        <File name="Cygwin\PalmDev\sdk-5r3\include\PalmOS.pch" />
+                        <File name="Cygwin\PalmDev\sdk-5r3\include\PalmOS.win.pch" />
+                        <File name="Cygwin\PalmDev\sdk-5r3\include\PalmTypes.h" />
+                        <File name="Cygwin\PalmDev\sdk-5r3\include\PalmUtils.h" />
+                    </Folder>
+                    <Folder name="lib">
+                        <Folder name="m68k-palmos-coff">
+                            <Folder name="mown-gp">
+                                <File name="Cygwin\PalmDev\sdk-5r3\lib\m68k-palmos-coff\mown-gp\libNetSocket-debug.a" />
+                                <File name="Cygwin\PalmDev\sdk-5r3\lib\m68k-palmos-coff\mown-gp\libNetSocket.a" />
+                            </Folder>
+                            <File name="Cygwin\PalmDev\sdk-5r3\lib\m68k-palmos-coff\libNetSocket-debug.a" />
+                            <File name="Cygwin\PalmDev\sdk-5r3\lib\m68k-palmos-coff\libNetSocket.a" />
+                            <File name="Cygwin\PalmDev\sdk-5r3\lib\m68k-palmos-coff\libPalmOSGlue-debug.a" />
+                            <File name="Cygwin\PalmDev\sdk-5r3\lib\m68k-palmos-coff\libPalmOSGlue.a" />
+                        </Folder>
+                    </Folder>
+                </Folder>
+            </Folder>
+        </Folder>
+        <Folder name="PalmSim5">
+            <Folder name="Card1">
+                <Folder name="PALM">
+                    <Folder name="Launcher">
+                        <File name="PalmSim5\Card1\PALM\Launcher\Filez.prc" />
+                        <File name="PalmSim5\Card1\PALM\Launcher\HostFS_Simulator.prc" />
+                        <File name="PalmSim5\Card1\PALM\Launcher\MathLib.prc" />
+                        <File name="PalmSim5\Card1\PALM\Launcher\SoarPilot.prc" />
+                    </Folder>
+                    <Folder name="Programs">
+                        <Folder name="SoarPilot">
+                            <File name="PalmSim5\Card1\PALM\Programs\SoarPilot\polars.spl" />
+                        </Folder>
+                    </Folder>
+                </Folder>
+            </Folder>
+        </Folder>
+        <File name="Makefile" />
+        <File name="Mathlib.c" />
+        <File name="Mathlib.h" />
+        <File name="soarBT.c" />
+        <File name="soarBT.h" />
+        <File name="soarCAI.c" />
+        <File name="soarCAI.h" />
+        <File name="soarCOL.c" />
+        <File name="soarCOL.h" />
+        <File name="soarComp.c" />
+        <File name="soarComp.h" />
+        <File name="soarConf.c" />
+        <File name="soarConf.h" />
+        <File name="soarDB.c" />
+        <File name="soarDB.h" />
+        <File name="soarENL.c" />
+        <File name="soarENL.h" />
+        <File name="soarEW.c" />
+        <File name="soarEW.h" />
+        <File name="soarFlrm.c" />
+        <File name="soarFlrm.h" />
+        <File name="soarForm.c" />
+        <File name="soarForm.h" />
+        <File name="soarGar.c" />
+        <File name="soarGar.h" />
+        <File name="soarGEOMAG.c" />
+        <File name="soarGEOMAG.h" />
+        <File name="soarGPSInfo.c" />
+        <File name="soarGPSInfo.h" />
+        <File name="soarGraph.c" />
+        <File name="soarGraph.h" />
+        <File name="soaring.c" />
+        <File name="soaring.def" />
+        <File name="soaring.h" />
+        <File name="soaring.rcp" />
+        <File name="soarIO.c" />
+        <File name="soarIO.h" />
+        <File name="soarKeys.h" />
+        <File name="soarKeys.h.all" />
+        <File name="soarKeys.h.bogus" />
+        <File name="soarLog.c" />
+        <File name="soarLog.h" />
+        <File name="soarMAGCOFF.h" />
+        <File name="soarMap.c" />
+        <File name="soarMap.h" />
+        <File name="soarMath.c" />
+        <File name="soarMath.h" />
+        <File name="soarMem.c" />
+        <File name="soarMem.h" />
+        <File name="soarNMEA.c" />
+        <File name="soarNMEA.h" />
+        <File name="soarPLst.c" />
+        <File name="soarPLst.h" />
+        <File name="soarRECO.c" />
+        <File name="soarRECO.h" />
+        <File name="soarRSA.c" />
+        <File name="soarRSA.h" />
+        <File name="soarSHA.c" />
+        <File name="soarSHA.h" />
+        <File name="soarSHAAdd.c" />
+        <File name="soarSHAAdd.h" />
+        <File name="soarSTF.c" />
+        <File name="soarSTF.h" />
+        <File name="soarSUA.c" />
+        <File name="soarSUA.h" />
+        <File name="soarTask.c" />
+        <File name="soarTask.h" />
+        <File name="soarTer.c" />
+        <File name="soarTer.h" />
+        <File name="soarUGraph.c" />
+        <File name="soarUGraph.h" />
+        <File name="soarUMap.c" />
+        <File name="soarUMap.h" />
+        <File name="soarUtil.c" />
+        <File name="soarUtil.h" />
+        <File name="soarVolk.c" />
+        <File name="soarVolk.h" />
+        <File name="soarWay.c" />
+        <File name="soarWay.h" />
+        <File name="soarWind.c" />
+        <File name="soarWind.h" />
+        <File name="soarWLst.c" />
+        <File name="soarWLst.h" />
+        <File name="_CygWin.bat" />
+        <File name="_PalmSim.bat" />
+        <File name="_Reporter.bat" />
+        <File name="smallbw.bmp" />
+        <File name="smallc.bmp" />
+        <File name="smallg.bmp" />
+        <File name="fgmc14.pfn" />
+        <File name="waysymb11.pfn" />
+        <File name="fgmc20.pfn" />
+        <File name="palmlarge.pfn" />
+        <File name="palmlargehi.pfn" />
+        <File name="palmlargelow.pfn" />
+        <File name="largec3222.bmp" />
+        <File name="largebw3222.bmp" />
+        <File name="largec6444.bmp" />
+        <File name="largebw6444.bmp" />
+        <File name="largeg3222.bmp" />
+        <File name="largeg6444.bmp" />
+    </Project>
+</NotepadPlus>
