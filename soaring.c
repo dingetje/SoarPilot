@@ -248,7 +248,12 @@ extern Int32 prevnumtskter;
 #endif
 
 // functions
-static void ResetDatebookAlarm ()
+
+/**
+* \fn ResetDatebookAlarm()
+* \brief reset databook alarms
+*/
+static void ResetDatebookAlarm()
 {
  UInt16 cardNo;
  LocalID dbID;
@@ -260,6 +265,10 @@ static void ResetDatebookAlarm ()
  AlmSetAlarm (cardNo, dbID, NULL, 0, true);
 }
 
+/**
+* \fn AllocGlobals()
+* \brief allocates memory for the various global data structures
+*/
 static void AllocGlobals()
 {
 	AllocMem((void *)&selectedWaypoint, sizeof(WaypointData));
@@ -282,6 +291,7 @@ static void AllocGlobals()
 	AllocMem((void *)&question, sizeof(QuestionData));
 	AllocMem((void *)&warning, sizeof(WarningData));
 
+	// clear allocated memory
 	MemSet(selectedWaypoint, sizeof(WaypointData), 0);
 	MemSet(TempWpt, sizeof(WaypointData), 0);
 	MemSet(inusePolar, sizeof(PolarData), 0);
@@ -315,6 +325,10 @@ static void AllocGlobals()
 
 }
 
+/**
+* \fn FreeGlobals()
+* \brief frees the allocated memory buffers
+*/
 static void FreeGlobals()
 {
 	FreeMem((void *)&selectedWaypoint);
@@ -338,6 +352,11 @@ static void FreeGlobals()
 	FreeMem((void *)&warning);
 }
 
+/**
+* \fn StartApplication(void)
+* \brief called when SoarPilot is started
+* \return always false meaning succesful startup
+*/
 static int StartApplication(void)
 {
 	UInt32 ftrDevVersion;
@@ -844,6 +863,10 @@ static int StartApplication(void)
 	return(false);
 }
 
+/**
+* \fn StopApplication()
+* \brief called when SoarPilot is exited
+*/
 static void StopApplication(void)
 {
 #ifdef NMEALOG
@@ -1072,6 +1095,12 @@ static void StopApplication(void)
 	return;
 }
 
+/**
+* \fn ApplicationHandleEvent(EventPtr event)
+* \brief main event handler
+* \param event pointer to event data
+* \return true in case event is handled, else false
+*/
 Boolean ApplicationHandleEvent(EventPtr event)
 {
 	FormPtr frm;
@@ -2202,6 +2231,11 @@ Boolean ApplicationHandleEvent(EventPtr event)
 //#define hsChrVolumeUp		0x161B
 //#define hsChrVolumeDown	0x161C
 
+/**
+* \fn PreprocessEvent(EventPtr event)
+* \brief handle command buttons
+* \return true in case event is handled, else false
+*/
 Boolean PreprocessEvent(EventPtr event)
 {
 	Boolean handled=false;
@@ -3875,6 +3909,10 @@ Boolean PreprocessEvent(EventPtr event)
 	return handled;
 }
 
+/**
+* \fn EventLoop
+* \brief EventLoop is the event handler
+*/
 static void EventLoop(void)
 {
 	EventType event;
@@ -3920,10 +3958,25 @@ static void EventLoop(void)
 	} while (event.eType != appStopEvent || !allowExit);
 }
 
+/**
+ \fn PilotMain (UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
+ \brief application main entry point
+ \param cmd is the unsigned 16 bits command code
+ \param cmdPBP is a pointer to optional additional command data
+ \param launchFlags are launch flags
+ \return result code
+ \details Each application has a PilotMain function that is equivalent to main in C programs.
+ To launch an application, the system calls PilotMain and sends it a launch code. 
+ The launch code may specify that the application is to become active and display its user interface
+ (called a normal launch), or it may specify that the application should simply perform a small task
+ and exit without displaying its user interface. The sole purpose of the PilotMain function is to
+ receive launch codes and respond to them. 
+*/
 UInt32 PilotMain (UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 {
 	UInt16 error=0;
 
+	// SoarPilot needs as a minimum PalmOS 3.0
 	if ((error = RomVersionCompatible(SYS_VER_30, launchFlags)) != 0)
 		return(error);
 
@@ -3942,25 +3995,16 @@ UInt32 PilotMain (UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 	return(error);
 }
 
-/***********************************************************************
+/**
+ * \fn RomVersionCompatible(UInt32 requiredVersion, UInt16 launchFlags)
+ * \brief This routine checks that a ROM version is meet your minimum requirement.
+ * \param requiredVersion - minimum rom version required
+ *              (see sysFtrNumROMVersion in SystemMgr.h for format)
+ * \param launchFlags - flags that indicate if the application UI is initialized.
  *
- * FUNCTION:    RomVersionCompatible
+ * \return error code or zero if rom is compatible
  *
- * DESCRIPTION: This routine checks that a ROM version is meet your
- *              minimum requirement.
- *
- * PARAMETERS:  requiredVersion - minimum rom version required
- *                                (see sysFtrNumROMVersion in SystemMgr.h 
- *                                for format)
- *              launchFlags     - flags that indicate if the application 
- *                                UI is initialized.
- *
- * RETURNED:    error code or zero if rom is compatible
- *
- * REVISION HISTORY:
- *
- *
- ***********************************************************************/
+ */
 Err RomVersionCompatible(UInt32 requiredVersion, UInt16 launchFlags)
 {
 	UInt32 romVersionNew;

@@ -1,5 +1,6 @@
 #ifndef SOARING_H
 #define SOARING_H
+// tab size: 8
 
 #define SFM __attribute__ ((section ("sfm")))
 #define SFM2 __attribute__ ((section ("sfm2")))
@@ -340,209 +341,228 @@ typedef struct DataValue {
 	int	valid;
 } DataValue;
 
+/**
+* \struct PolarData
+* \brief stores polar data
+*/
 typedef struct PolarData{
-	Char	name[16];
-	double	v1;
-	double	w1;
-	double	v2;
-	double	w2;
-	double	v3;
-	double	w3;
-	double	a;
-	double	b;
-	double	c;
-	double	maxdrywt;
-	double	maxwater;
-	double	Wsmin;
-	double	Vmin;
+	Char	name[16]; 	/**< name of the Polar */
+	double	v1; 		/**< speed of 1st point of the polar */
+	double	w1;		/**< sink rate @ 1st point */
+	double	v2;		/**< speed of 2nd point of the polar */
+	double	w2;		/**< sink rate @ 2nd point */
+	double	v3;		/**< speed of 3rd point of the polar */
+	double	w3;		/**< sink rate @ 3rd point */
+	double	a;		/**< a coefficient of polar */
+	double	b;		/**< b coefficient of polar */
+	double	c;		/**< c coefficient of polar */
+	double	maxdrywt;	/**< max. dry weight */
+	double	maxwater;	/**< max. water ballast */
+	double	Wsmin;		/**< minimum sink */
+	double	Vmin;		/**< minimum sink speed */
 } PolarData;
 
+/**
+* \struct Parser
+* \brief parser name and function handle
+*/
 typedef struct Parser {
-	ParserType	parser_func;
-	Char		name[32];
+	ParserType	parser_func; 	/**< Parser function handle */
+	Char		name[32];	/**< Parser name */
 } Parser; 
 
+/**
+* \struct TaskRules
+* \brief stores task rules
+*
+* The purpose of the Task Rules is to ensure you meet any rules set in a competition for start time and height,
+* or length of task (typically in an assigned area task). Or to ensure you do not loose more then 1000m from
+* your start height to avoid any distance penalty in an FAI distance task. 
+*/
 typedef struct TaskRules {
-	Boolean	rulesactive;
-	double	startwarnheight;
-	double	maxstartheight;
-	Int32	timebelowstart;
-	Int32	mintasktime;
-	double	finishheight;
-	Boolean	fgto1000m;
-	Int8	startaltref;
-	Int8	finishaltref;
-	Int32	startlocaltime;
-	Boolean	startonentry;
-	Boolean	warnbeforestart;
-	Boolean	inclcyldist;
+	Boolean	rulesactive;		/**< flag to indicate task rules are active */
+	double	startwarnheight;	/**< When you are within this height of your start height, and again if you are over your start height you will receive a warning if you have not started the task already. A zero value turns this rules off.  */
+	double	maxstartheight;		/**< Sets the maximum start height allowed for a valid start. A zero value turns this rules off. */
+	Int32	timebelowstart;		/**< Sets the time you need to be below the max start height before starting for a valid start. A zero value turns this rules off. */
+	Int32	mintasktime;		/**< min. task time (AAT), a zero value turns this rules off.  */
+	double	finishheight;		/**< Sets the minimum finish height, this will update all your final glide calculations to arrive at the finish at this height. A zero value turns this rules off. This height is always added to your finish point elevation. */
+	Boolean	fgto1000m;		/**< sets the finish height to be 1000m below the start height. This is useful when completing FAI distance tasks to avoid any distance penalties. If the finish point is less than 1000m below the start height, no change is made. */
+	Int8	startaltref;		/**< */
+	Int8	finishaltref;		/**< */
+	Int32	startlocaltime;		/**< This sets the earliest time your are allowed to start the task. This is in local time, depending on the time set in your Palm. A zero value turns this rule off. If the task rule of earliest start time is being used, the time to go before the start (mins:secs) is now displayed as a count down above the direction arrow on the Final Glide screen, and at the top centre of the Moving Map screen. 'Start!' will be displayed if the starting time has passed. */
+	Boolean	startonentry;		/**< This option will consider the task started on entry (rather than exit) of the start cylinder or FAI sector. (This option has no effect for a line or arc start type) */
+	Boolean	warnbeforestart;	/**< When this option is selected on the Task Rules screen, the program displays a countdown, shown as 'mins:secs' to the time when you need to turn towards the start to arrive exactly at the start time via the shortest route the the start. This is used for competitions run under the 'Grand Prix' rules. */
+	Boolean	inclcyldist;		/**< Option to include or exclude the distance from the edge of a start/turn/finish cylinder to the waypoint in the total distance calculation. */
 } TaskRules;
 
-/* Configuration Information which will be stored */    
+/**
+* \struct ConfigFlight
+* \brief SoarPilot Configuration Information
+*/
 typedef struct ConfigFlight {
-	double      bugfactor;
-	double      pctwater;
-	double      safealt;
-	Int8        spdunits;
-	Int8        disunits;
-	Int8        altunits;
-	Int8        lftunits;
-	Int8        wgtunits;
-	Int8        wtrunits;
-	double      logstartspd;
-	double      logstopspd;
-	Int32       logstoptime;
-	Boolean     logonoff;
-	Boolean     logautooff;
-	Int8	    mapscaleidx;
-	Int8        timezone;
-	UInt16	    nmeaspeed;
-	UInt16	    dataspeed;
-	Boolean	    flowctrl;
-	Int8        alttype;
-	Boolean     defaulttoFG;
-	Boolean     usecalchw;
-	Boolean     usepalmway;
-	Boolean     setmcval;
-	Boolean     optforspd;
-	Int8        ldforcalcs;
-	Boolean     btmlabels;
-	Boolean     trktrail;
-	Int8        thzoom;
-	Boolean     thonoff; 
-	Boolean     wayonoff;
-	Boolean     wayline;
-	Int8        waymaxlen;
-	UInt16      numtrkpts;
-	Int8        pressaltsrc;
-	Boolean     usepalt;
-	Int8        altreftype;
-	Boolean     taskonoff;
-	Int8	    taskdrawtype;
-	Boolean     FlrmCopyIGC;
-	Boolean     usechksums;
-	Int8        starttype;
-	double      startrad;
-	double      startdir;
-	Boolean     startdirmag;
-	Boolean     startdirauto;
-	Int8        turntype;
-	double      turnfairad;
-	double      turncircrad;
-	Int8        finishtype;
-	double      finishrad;
-	double      finishdir;
-	Boolean     finishdirmag;
-	Boolean     finishdirauto;
-	double	    qfealt;
-	Boolean     usetas;
-	Int8        flightcomp;
-	Int8        earthmodel; 
-	Boolean     usegpstime;
-	double      SUAmaxalt;
-	Int32       suaactivetypes;
-	Boolean     windarrow;
-	Boolean     inrngcalc;
-	Int8        xfertype;
-	Boolean     hwposlabel;
-	double      mapcircrad1;
-	double      mapcircrad2;
-	Boolean     tskzoom;
-	Int32       nodatatime;
-	Int32       slowlogint;
-	Int32       fastlogint;
-	Boolean     keysoundon;
-	Int16       mcrngmult;
-	Int8        nmeaxfertype;
-	Int8        llfmt;
-	Int8        maporient;
-	Int8        thmaporient;
-	Boolean     useiquesim;
-	Boolean     useiqueser;
-	double      horiz_dist;
-	double      vert_dist;
-	Boolean     CheckSUAWarn;
-	Int32       suawarntypes;  
-	Int8        wndunits;
-	double	    SUArewarn;
-	UInt32      stcurdevcreator; 
-	double      thzoomscale;
-	UInt32      autodismisstime;
-	double	    declutter;
-	Boolean	    keepSUA;
-	RGBColorType TaskColour;
-	RGBColorType SUAColour;
-	RGBColorType SectorColour;
-	Boolean     BoldTask;
-	Boolean	    BoldSUA;
-	Boolean     BoldSector;
-	Int8	    QNHunits;
-	Boolean	    BoldTrack;
-	Boolean	    autozeroQFE;
-	double	    SUAdispalt;
-	Int8	    shownextwpt;
-	Int8        AATmode;
-	Int8	    wpformat;
-	Int8	    tskspdunits;
-	UInt32	    SUAlookahead;
-	Int8        sectormaporient;
-	Int8	    thmapscaleidx;
-	Int8        listlinesvert;
-	Int8        listlineshoriz;
-	double	    gpsmsladj;
-	Int8        gpsaltref;
-	Boolean	    ctllinevis;
-	Boolean	    gpscalcdev;
-	Int8	    Flarmscaleidx;
-	Boolean     showrgs;
-	Boolean	    calcwind;
-	Boolean	    tskrestarts;
-	Boolean	    usefgterrain;
-	Boolean	    defaulthome;
-	RGBColorType SUAwarnColour;
-	Boolean     SUAdisponlywarned;
-	Boolean     SUAhighlightwarned;
-	Boolean     RefWptRadial;
-	UInt16      thnumtrkpts;
-	Int8	    windprofileorient;
-	RGBColorType SinkColour;
-	RGBColorType WeakColour;
-	RGBColorType StrongColour;
-	Boolean     dynamictrkcolour;
-	Boolean     useinputwinds;
-	Char        config_file[21];
-	Char        waypt_file[21];
-	Char        SUA_file[21];
-	UInt16	   screenchain[SCREENCHAINMAX];
-	Int16 	   profilescaleidx;
-	Boolean    thermalprofile;
-	Boolean	   showQFEQNHonstartup;
-	Boolean	   outputSMS;
-	Int8	   SMSouttype;
-	Int16      SMSsendtype;
-	Int32      SMSsendint;
-	Char       SMSaddress[41];
-	TaskRules  defaultrules;
-	Boolean    totalenergy;
-	Boolean    output_wypts;
-	Boolean    output_tasks;
-	Int8       leftaction;
-	Boolean    autostart;
-	Boolean    declaretasks;
-	Boolean    fgtostartalt;
-	Boolean    accuratedistcalc;
-	RGBColorType WayptColour;
-	Boolean    BoldWaypt;
-	Int8       thermal_turns;
-	Boolean    netto;
-	Int8       SUAformat;
-	Int8       mapRHfield;
-	Boolean    FGalert;
-	Boolean    echoNMEA;
-	Boolean    autoIGCxfer;
-	Boolean    declaretoSD;
-	Int8       MCbutton;
-	UInt8      BTAddr[6]; // AGM: preferred BT GPS address
+	double      bugfactor;			/**< bug factor value */
+	double      pctwater;			/**< percentage water */
+	double      safealt;			/**< safety altitude */
+	Int8        spdunits;			/**< speed unit identifier */
+	Int8        disunits;			/**< distance unit identifier */
+	Int8        altunits;			/**< altitude unit indentifier */
+	Int8        lftunits;			/**< lift unit identifier */
+	Int8        wgtunits;			/**< weight unit identifier */
+	Int8        wtrunits;			/**< water unit identifier */
+	double      logstartspd;		/**< logger auto start speed */
+	double      logstopspd;			/**< logger auto stop speed */
+	Int32       logstoptime;		/**< logger stop time */
+	Boolean     logonoff;			/**< logger on/off */
+	Boolean     logautooff;			/**< logger auto off flag */
+	Int8	    mapscaleidx;		/**< max. scale index */
+	Int8        timezone;			/**< time zone */
+	UInt16	    nmeaspeed;			/**< NMEA baud rate */
+	UInt16	    dataspeed;			/**< baud rate */
+	Boolean	    flowctrl;			/**< flow control flag */
+	Int8        alttype;			/**< Altitude type */
+	Boolean     defaulttoFG;		/**< */
+	Boolean     usecalchw;			/**< */
+	Boolean     usepalmway;			/**< use SoarPilot waypoints */
+	Boolean     setmcval;			/**< option to enable set MC value */
+	Boolean     optforspd;			/**< Optimize for speed */
+	Int8        ldforcalcs;			/**< */
+	Boolean     btmlabels;			/**< Map option: Enable bottom labels */
+	Boolean     trktrail;			/**< Map option: Enable track trail */
+	Int8        thzoom;			/**< Map option: Thermal zoom value */
+	Boolean     thonoff;			/**< Map option: Thermal zoom on/off */
+	Boolean     wayonoff;			/**< Map option: Waypoints on/off */
+	Boolean     wayline;			/**< Map option: */
+	Int8        waymaxlen;			/**< Map otpion: max. number of char. in waypoint */
+	UInt16      numtrkpts;			/**< Map option: number of points in trail */
+	Int8        pressaltsrc;		/**< Map option: Pressure altitude source */
+	Boolean     usepalt;			/**< Map option: use pressure altitude source */
+	Int8        altreftype;			/**< */
+	Boolean     taskonoff;			/**< */
+	Int8	    taskdrawtype;		/**< */
+	Boolean     FlrmCopyIGC;		/**< */
+	Boolean     usechksums;			/**< */
+	Int8        starttype;			/**< */
+	double      startrad;			/**< */
+	double      startdir;			/**< */
+	Boolean     startdirmag;		/**< */
+	Boolean     startdirauto;		/**< */
+	Int8        turntype;			/**< */
+	double      turnfairad;			/**< FAI turnpoint radius */
+	double      turncircrad;		/**< turnpoint radius */
+	Int8        finishtype;			/**< finish type */
+	double      finishrad;			/**< */
+	double      finishdir;			/**< */
+	Boolean     finishdirmag;		/**< */
+	Boolean     finishdirauto;		/**< */
+	double	    qfealt;			/**< QFE altitude */
+	Boolean     usetas;			/**< */
+	Int8        flightcomp;			/**< Flight computer index */
+	Int8        earthmodel;			/**< Earth model */
+	Boolean     usegpstime;			/**< flag to use GPS time */
+	double      SUAmaxalt;			/**< SUA max. altitude */
+	Int32       suaactivetypes;		/**< SUA active types */
+	Boolean     windarrow;			/**< Show wind arrow */
+	Boolean     inrngcalc;			/**< Use accurate in range calculation */
+	Int8        xfertype;			/**< Xfer type */
+	Boolean     hwposlabel;			/**< */
+	double      mapcircrad1;		/**< 1st circle radius */
+	double      mapcircrad2;		/**< 2nd circle radius */
+	Boolean     tskzoom;			/**< */
+	Int32       nodatatime;			/**< unix time stamp of no data event */
+	Int32       slowlogint;			/**< Slow log interval in sec. */
+	Int32       fastlogint;			/**< Fast log interval in sec. */
+	Boolean     keysoundon;			/**< Enable keyboard sounds */
+	Int16       mcrngmult;			/**< */
+	Int8        nmeaxfertype;		/**< NMEA xfer type */
+	Int8        llfmt;			/**< */
+	Int8        maporient;			/**< Map orientation type */
+	Int8        thmaporient;		/**< Thermal map orientation type */
+	Boolean     useiquesim;			/**< iQue simulator? */
+	Boolean     useiqueser;			/**< iQue serial */
+	double      horiz_dist;			/**< Horizontal distance to target */
+	double      vert_dist;			/**< Vertical distance to target */
+	Boolean     CheckSUAWarn;		/**< Enable SUA warnings */
+	Int32       suawarntypes;		/**< Enabled SUA warning types */
+	Int8        wndunits;			/**< Wind unit */
+	double	    SUArewarn;			/**< */
+	UInt32      stcurdevcreator;		/**< */
+	double      thzoomscale;		/**< Thermal zoom scale factor */
+	UInt32      autodismisstime;		/**< Auto dismiss time for warning dialog */
+	double	    declutter;			/**< Map declutter value */
+	Boolean	    keepSUA;			/**< option to keep SUA always visible */
+	RGBColorType TaskColour;		/**< RGB value for task line */
+	RGBColorType SUAColour;			/**< RGB value for SUA lines */
+	RGBColorType SectorColour;		/**< RGB value for sector lines */
+	Boolean     BoldTask;			/**< Enable task line in bold */
+	Boolean	    BoldSUA;			/**< Enable SUA line in bold */
+	Boolean     BoldSector;			/**< Enable sector line in bold */
+	Int8	    QNHunits;			/**< QNH unit */
+	Boolean	    BoldTrack;			/**< Enable track line in bold */
+	Boolean	    autozeroQFE;		/**< Autozero QFE @ take off */
+	double	    SUAdispalt;			/**< */
+	Int8	    shownextwpt;		/**< Show next waypoint */
+	Int8        AATmode;			/**< AAT mode */
+	Int8	    wpformat;			/**< Waypoint format */
+	Int8	    tskspdunits;		/**< Task speed unit */
+	UInt32	    SUAlookahead;		/**< SUA look ahead time */
+	Int8        sectormaporient;		/**< Sector map orientation */
+	Int8	    thmapscaleidx;		/**< */
+	Int8        listlinesvert;		/**< */
+	Int8        listlineshoriz;		/**< */
+	double	    gpsmsladj;			/**< GPS MSL adjust value */
+	Int8        gpsaltref;			/**< GPS altitude reference */
+	Boolean	    ctllinevis;			/**< */
+	Boolean	    gpscalcdev;			/**< Calculate GPS deviation */
+	Int8	    Flarmscaleidx;		/**< FLARM scale index */
+	Boolean     showrgs;			/**< Show range */
+	Boolean	    calcwind;			/**< Compute wind */
+	Boolean	    tskrestarts;		/**< Task restart */
+	Boolean	    usefgterrain;		/**< Use final glide over terrain */
+	Boolean	    defaulthome;		/**< use home field as default target */
+	RGBColorType SUAwarnColour;		/**< RGB value for SUA warning color */
+	Boolean     SUAdisponlywarned;		/**< display only active SUA warning area */
+	Boolean     SUAhighlightwarned;		/**< highlight active SUA warning area */
+	Boolean     RefWptRadial;		/**< */
+	UInt16      thnumtrkpts;		/**< */
+	Int8	    windprofileorient;		/**< */
+	RGBColorType SinkColour;		/**< RGB value for sink color */
+	RGBColorType WeakColour;		/**< RGB value for weak thermal color */
+	RGBColorType StrongColour;		/**< RGB value for strong thermal color */
+	Boolean     dynamictrkcolour;		/**< */
+	Boolean     useinputwinds;		/**< */
+	Char        config_file[21];		/**< name of active config file */
+	Char        waypt_file[21];		/**< name of active waypoints file */
+	Char        SUA_file[21];		/**< name of active SUA file */
+	UInt16	   screenchain[SCREENCHAINMAX];	/**< active screen chain order */
+	Int16 	   profilescaleidx;		/**< */
+	Boolean    thermalprofile;		/**< Show thermal profile */
+	Boolean	   showQFEQNHonstartup;		/**< Enable QFE screen @ startup */
+	Boolean	   outputSMS;			/**< Enable SMS output */
+	Int8	   SMSouttype;			/**< SMS output type */
+	Int16      SMSsendtype;			/**< */
+	Int32      SMSsendint;			/**< SMS interval */
+	Char       SMSaddress[41];		/**< SMS target address */
+	TaskRules  defaultrules;		/**< */
+	Boolean    totalenergy;			/**< */
+	Boolean    output_wypts;		/**< */
+	Boolean    output_tasks;		/**< */
+	Int8       leftaction;			/**< */
+	Boolean    autostart;			/**< */
+	Boolean    declaretasks;		/**< */
+	Boolean    fgtostartalt;		/**< */
+	Boolean    accuratedistcalc;		/**< */
+	RGBColorType WayptColour;		/**< */
+	Boolean    BoldWaypt;			/**< */
+	Int8       thermal_turns;		/**< */
+	Boolean    netto;			/**< */
+	Int8       SUAformat;			/**< */
+	Int8       mapRHfield;			/**< */
+	Boolean    FGalert;			/**< enable Final Glide Alert */
+	Boolean    echoNMEA;			/**< enable NMEA echo output */
+	Boolean    autoIGCxfer;			/**< logger auto xfer to IGC */
+	Boolean    declaretoSD;			/**< declare to SD card */
+	Int8       MCbutton;			/**< */
+	UInt8      BTAddr[6];			/**< preferred BT GPS address */
 } ConfigFlight;
 
 /* GPS, Calculated & Transient Global Data*/
@@ -668,41 +688,49 @@ typedef struct InputData {
 	double     newmc;
 } InputData;
 
+/**
+* \struct ApplicationScreen
+* \brief stores application screen data
+*/
 typedef struct ApplicationScreen {
-	int		form_id;
-	DataEvent	display_events[MAX_EVENT_SZ];
-	int		changed;
+	int		form_id;							/**< form identifier */
+	DataEvent	display_events[MAX_EVENT_SZ];	/**< */
+	int		changed;							/**< */
 } ApplicationScreen;
 
 #define MAXWAYSPERTASK	25
 #define TSKTEMPSLOT	25
 
+/**
+* \struct TaskData
+* \brief stores Task data
+*/
 typedef struct TaskData {
-	Char	name[13];
-	UInt16	numwaypts;
-	Boolean	hastakeoff;
-	Boolean	haslanding;
-	Char	wayptnames[MAXWAYSPERTASK+1][13];
-	double	wayptlats[MAXWAYSPERTASK+1];
-	double	wayptlons[MAXWAYSPERTASK+1];
-	double	elevations[MAXWAYSPERTASK+1];
-	double	distances[MAXWAYSPERTASK+1];
-	double	bearings[MAXWAYSPERTASK+1];
-	Char	remarks[MAXWAYSPERTASK+1][13];
-	UInt16	sectbear1[MAXWAYSPERTASK+1];
-	UInt16	sectbear2[MAXWAYSPERTASK+1];
-	double	arearadii[MAXWAYSPERTASK+1];
-	Int16	wayptidxs[MAXWAYSPERTASK+1];
-	double	ttldist;
-	UInt16	waypttypes[MAXWAYSPERTASK+1];
+	Char	name[13];								/**< task name */
+	UInt16	numwaypts;								/**< number of waypoints in the task */
+	Boolean	hastakeoff;								/**< flag to indicate take off is detected */
+	Boolean	haslanding;								/**< flag to indicate landing is detected */
+	Char	wayptnames[MAXWAYSPERTASK+1][13];		/**< list of waypoints in the task */
+	double	wayptlats[MAXWAYSPERTASK+1];			/**< latitude for each of the waypoints */
+	double	wayptlons[MAXWAYSPERTASK+1];			/**< longitude for each of the waypoints */
+	double	elevations[MAXWAYSPERTASK+1];			/**< elevation for each of the waypoints */
+	double	distances[MAXWAYSPERTASK+1];			/**< distance for each of the waypoints */
+	double	bearings[MAXWAYSPERTASK+1];				/**< bearing for each of the waypoints */
+	Char	remarks[MAXWAYSPERTASK+1][13];			/**< remark for each of the waypoints */
+	UInt16	sectbear1[MAXWAYSPERTASK+1];			/**< sector bearcan for each of the waypoints */
+	UInt16	sectbear2[MAXWAYSPERTASK+1];			/**< sector bearcan for each of the waypoints */
+	double	arearadii[MAXWAYSPERTASK+1];			/**< area diameter for each of the waypoints */
+	Int16	wayptidxs[MAXWAYSPERTASK+1];			/**< index for each of the waypoints */
+	double	ttldist;								/**< task total distance */
+	UInt16	waypttypes[MAXWAYSPERTASK+1];			/**< type for each of the waypoints */
 	UInt16	numctlpts;
 	double	arearadii2[MAXWAYSPERTASK+1];
 	double	targetlats[MAXWAYSPERTASK+1];
 	double	targetlons[MAXWAYSPERTASK+1];
 	double	distlats[MAXWAYSPERTASK+1];
 	double	distlons[MAXWAYSPERTASK+1];
-	Boolean	rulesactive;
-	double	startwarnheight;
+	Boolean	rulesactive;							/**< flag to indicate task rules are active */
+	double	startwarnheight;						/**< copied from task rules */
 	double	maxstartheight;
 	Int32	timebelowstart;
 	Int32	mintasktime;
@@ -744,38 +772,50 @@ typedef struct ActiveTaskData {
 	double	finishheight;
 } ActiveTaskData;
 
+/**
+* \struct LoggerData
+* \brief stores logger data
+*/
 typedef struct LoggerData {
-	Char	gpsutc[10];
-	Char	gpslat[10];
-	Char	gpslatdir[5];
-	Char	gpslng[11];
-	Char	gpslngdir[5];
-	Char	gpsstat[5];
-	double	pressalt;
-	double	gpsalt;
-	Char	gpsdtg[7];
-	Boolean	thermal;
-	Int16	taskleg;
-	double	terelev;
-	Int8	siu; 			// Satellites In Use
-	double	eph;			// Horizontal Estimated Precision-2sigma
-	Int8	svns[GPSMAXSATS];	// Space Vehicle Numbers being used
-	Int16	enl;			// Engine noise level
-	Boolean	event;		// pilot event
+	Char	gpsutc[10];			/**< GPS UTC string */
+	Char	gpslat[10];			/**< GPS latitude */
+	Char	gpslatdir[5];		/**< GPS latitude direction */
+	Char	gpslng[11];			/**< GPS longitude */
+	Char	gpslngdir[5];		/**< GPS longitude direction */
+	Char	gpsstat[5];			/**< GPS status */
+	double	pressalt;			/**< pressure altitude */
+	double	gpsalt;				/**< GPS altitude */
+	Char	gpsdtg[7];			/**< GPS date */
+	Boolean	thermal;			/**< thermal mode */
+	Int16	taskleg;			/**< task leg identifier */
+	double	terelev;			/**< terrain elevation */
+	Int8	siu;				/**< Satellites In Use */
+	double	eph;				/**< Horizontal Estimated Precision-2sigma */
+	Int8	svns[GPSMAXSATS];	/**< Space Vehicle Numbers being used */
+	Int16	enl;				/**< Engine noise level */
+	Boolean	event;				/**< pilot event */
 } LoggerData;
 
+/**
+* \struct IGCHInfo
+* \brief stores IGC header information
+*/
 typedef struct IGCHInfo {
-	Char	name[26];
-	Char	type[16];
-	Char	gid[11];
-	Char	cid[6];
-	Char	cls[13];
-	Char	site[26];
-	Char	gpsmodel[26];
-	Char	gpsser[26];
-	Char	ooid[26];
+	Char	name[26];			/**< Pilot name */
+	Char	type[16];			/**< Glider type */
+	Char	gid[11];			/**< Glider registration */
+	Char	cid[6];				/**< Glider call sign */
+	Char	cls[13];			/**< Glider class */
+	Char	site[26];			/**< Glider site name */
+	Char	gpsmodel[26];		/**< GPS model */
+	Char	gpsser[26];			/**< GPS serial # */
+	Char	ooid[26];			/**< Official Observer identification */
 } IGCHInfo;
 
+/**
+* \struct FlightData
+* \brief stores flight data
+*/
 typedef struct FlightData {
 	Char		startutc[10];
 	Char		stoputc[10];
@@ -806,6 +846,10 @@ typedef struct FlightData {
 	Char		declareutc[10];
 } FlightData;
 
+/**
+* \struct WaypointData
+* \brief stores waypoint data
+*/
 typedef struct WaypointData {
 	double	lat;
 	double	lon;
@@ -829,6 +873,10 @@ typedef struct WaypointData {
 	Char	UsedTime[13];
 } WaypointData;
 
+/**
+* \struct SUAIndex
+* \brief SUA index data
+*/
 typedef struct SUAIndex {
 	Boolean	active;		// active for drawing?
 	Char	title[26];
@@ -862,6 +910,10 @@ typedef struct SUAIndex {
 	Int8	baseunits;
 } SUAIndex;
 
+/**
+* \struct SUAData
+* \brief SUA data
+*/
 typedef struct SUAData {
 	Int16	plottype;
 	double	lat;
@@ -873,6 +925,10 @@ typedef struct SUAData {
 	double	rightbrg;
 } SUAData;
 
+/**
+* \struct SUAAlertData
+* \brief SUA Alert data
+*/
 typedef struct SUAAlertData {
 	Char	title[26];
 	Char	displaytext[257];
@@ -885,6 +941,10 @@ typedef struct SUAAlertData {
 	Int16	alerttype;
 } SUAAlertData;
 
+/**
+* \struct SUAAlertRet
+* \brief SUA Alert return value
+*/
 typedef struct SUAAlertRet {
 	Boolean	valid;
 	Int16	btnselected;
@@ -893,18 +953,30 @@ typedef struct SUAAlertRet {
 	Int16	priority;
 } SUAAlertRet;
 
+/**
+* \struct QuestionData
+* \brief question dialog data
+*/
 typedef struct QuestionData {
 	Int16	type;
 	Boolean	default_answer;
 	Boolean	autodismiss;
 } QuestionData;
 
+/**
+* \struct WarningData
+* \brief warning dialog data
+*/
 typedef struct WarningData {
 	Int16	type;
 	Char	line1[40];
 	Char	line2[40];
 } WarningData;
 
+/**
+* \struct PalmData
+* \brief data for the various supported Palm types
+*/
 typedef struct PalmData {
 	UInt32	romVersion;
 	Char	appVersion[32];
@@ -932,6 +1004,10 @@ typedef struct PalmData {
 	Boolean	ENLCapable;
 } PalmData;
 
+/**
+* \struct ApplicationData
+* \brief application data
+*/
 typedef struct ApplicationData {
 	Parser			parser;
 	ConfigFlight		config;
