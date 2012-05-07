@@ -328,17 +328,39 @@
 
 #define reloadAppEvents		firstUserEvent
 
+/**
+* \typedef ParserType
+* \brief function type definition for parsers
+* \param string to parse
+* \param length of string
+* \param reset - true to reset the parser?
+* \return none
+*/
 typedef void (*ParserType)(Char* string, UInt32 length, Boolean reset);
+
+/**
+* \typedef EventHandlerType
+* \brief event handler function type
+* \return none
+*/
 typedef void (*EventHandlerType)();
 
+/**
+* \struct DataEvent
+* \brief TBW
+*/
 typedef struct DataEvent {
-	EventHandlerType	event;
-	int			valid;
+	EventHandlerType	event;	/**< event handler function handle */
+	int			valid;	/**< */
 } DataEvent;
 
+/**
+* \struct DataValue
+* \brief TBW
+*/
 typedef struct DataValue {
-	double	value;
-	int	valid;
+	double	value;		/**< data value */
+	int	valid;		/**< data valid */
 } DataValue;
 
 /**
@@ -367,8 +389,8 @@ typedef struct PolarData{
 * \brief parser name and function handle
 */
 typedef struct Parser {
-	ParserType	parser_func; 	/**< Parser function handle */
-	Char		name[32];	/**< Parser name */
+	ParserType	parser_func; 	/**< %Parser function handle */
+	Char		name[32];	/**< %Parser name */
 } Parser; 
 
 /**
@@ -565,7 +587,10 @@ typedef struct ConfigFlight {
 	UInt8      BTAddr[6];			/**< preferred BT GPS address */
 } ConfigFlight;
 
-/* GPS, Calculated & Transient Global Data*/
+/**
+* \struct InputData
+* \brief GPS, Calculated & Transient Global Data
+*/
 typedef struct InputData {
 	DataValue  magnetic_track;
 	DataValue  deviation;
@@ -693,9 +718,9 @@ typedef struct InputData {
 * \brief stores application screen data
 */
 typedef struct ApplicationScreen {
-	int		form_id;							/**< form identifier */
+	int		form_id;			/**< form identifier */
 	DataEvent	display_events[MAX_EVENT_SZ];	/**< */
-	int		changed;							/**< */
+	int		changed;			/**< */
 } ApplicationScreen;
 
 #define MAXWAYSPERTASK	25
@@ -706,22 +731,22 @@ typedef struct ApplicationScreen {
 * \brief stores Task data
 */
 typedef struct TaskData {
-	Char	name[13];								/**< task name */
-	UInt16	numwaypts;								/**< number of waypoints in the task */
-	Boolean	hastakeoff;								/**< flag to indicate take off is detected */
-	Boolean	haslanding;								/**< flag to indicate landing is detected */
+	Char	name[13];					/**< task name */
+	UInt16	numwaypts;					/**< number of waypoints in the task */
+	Boolean	hastakeoff;					/**< flag to indicate take off is detected */
+	Boolean	haslanding;					/**< flag to indicate landing is detected */
 	Char	wayptnames[MAXWAYSPERTASK+1][13];		/**< list of waypoints in the task */
 	double	wayptlats[MAXWAYSPERTASK+1];			/**< latitude for each of the waypoints */
 	double	wayptlons[MAXWAYSPERTASK+1];			/**< longitude for each of the waypoints */
 	double	elevations[MAXWAYSPERTASK+1];			/**< elevation for each of the waypoints */
 	double	distances[MAXWAYSPERTASK+1];			/**< distance for each of the waypoints */
-	double	bearings[MAXWAYSPERTASK+1];				/**< bearing for each of the waypoints */
+	double	bearings[MAXWAYSPERTASK+1];			/**< bearing for each of the waypoints */
 	Char	remarks[MAXWAYSPERTASK+1][13];			/**< remark for each of the waypoints */
 	UInt16	sectbear1[MAXWAYSPERTASK+1];			/**< sector bearcan for each of the waypoints */
 	UInt16	sectbear2[MAXWAYSPERTASK+1];			/**< sector bearcan for each of the waypoints */
 	double	arearadii[MAXWAYSPERTASK+1];			/**< area diameter for each of the waypoints */
 	Int16	wayptidxs[MAXWAYSPERTASK+1];			/**< index for each of the waypoints */
-	double	ttldist;								/**< task total distance */
+	double	ttldist;					/**< task total distance */
 	UInt16	waypttypes[MAXWAYSPERTASK+1];			/**< type for each of the waypoints */
 	UInt16	numctlpts;
 	double	arearadii2[MAXWAYSPERTASK+1];
@@ -729,8 +754,8 @@ typedef struct TaskData {
 	double	targetlons[MAXWAYSPERTASK+1];
 	double	distlats[MAXWAYSPERTASK+1];
 	double	distlons[MAXWAYSPERTASK+1];
-	Boolean	rulesactive;							/**< flag to indicate task rules are active */
-	double	startwarnheight;						/**< copied from task rules */
+	Boolean	rulesactive;					/**< flag to indicate task rules are active */
+	double	startwarnheight;				/**< copied from task rules */
 	double	maxstartheight;
 	Int32	timebelowstart;
 	Int32	mintasktime;
@@ -746,6 +771,10 @@ typedef struct TaskData {
 	Int8	aataimtype;
 } TaskData;
 
+/**
+* \struct ActiveTaskData
+* \brief active task data
+*/
 typedef struct ActiveTaskData {
 	Char	declaredtg[7];
 	Char	declareutc[10];
@@ -774,7 +803,7 @@ typedef struct ActiveTaskData {
 
 /**
 * \struct LoggerData
-* \brief stores logger data
+* \brief logger data
 */
 typedef struct LoggerData {
 	Char	gpsutc[10];			/**< GPS UTC string */
@@ -798,7 +827,7 @@ typedef struct LoggerData {
 
 /**
 * \struct IGCHInfo
-* \brief stores IGC header information
+* \brief IGC header information
 */
 typedef struct IGCHInfo {
 	Char	name[26];			/**< Pilot name */
@@ -814,7 +843,7 @@ typedef struct IGCHInfo {
 
 /**
 * \struct FlightData
-* \brief stores flight data
+* \brief flight data
 */
 typedef struct FlightData {
 	Char		startutc[10];
@@ -848,7 +877,7 @@ typedef struct FlightData {
 
 /**
 * \struct WaypointData
-* \brief stores waypoint data
+* \brief waypoint data
 */
 typedef struct WaypointData {
 	double	lat;
@@ -968,14 +997,14 @@ typedef struct QuestionData {
 * \brief warning dialog data
 */
 typedef struct WarningData {
-	Int16	type;
-	Char	line1[40];
-	Char	line2[40];
+	Int16	type;			/**< warning type */
+	Char	line1[40];		/**< 1st line of warning message */
+	Char	line2[40];		/**< 2nd line of warning message */
 } WarningData;
 
 /**
 * \struct PalmData
-* \brief data for the various supported Palm types
+* \brief flags for the various supported Palm types
 */
 typedef struct PalmData {
 	UInt32	romVersion;
@@ -1009,31 +1038,35 @@ typedef struct PalmData {
 * \brief application data
 */
 typedef struct ApplicationData {
-	Parser			parser;
-	ConfigFlight		config;
-	InputData		input;
-	ApplicationScreen	application;
-	TaskData		task;
-	LoggerData		logger;
-	FlightData		flight;
-	WaypointData		inuseWaypoint;
-	PolarData		polar;
-	IGCHInfo		igchinfo;
-	ActiveTaskData		activetask;
+	Parser			parser;		/**< active parser */
+	ConfigFlight		config;		/**< active configuration */
+	InputData		input;		/**< input data */
+	ApplicationScreen	application;	/**< active screen */
+	TaskData		task;		/**< task data */
+	LoggerData		logger;		/**< logger data */
+	FlightData		flight;		/**< active flight */
+	WaypointData		inuseWaypoint;	/**< waypoint data */
+	PolarData		polar;		/**< active polar */
+	IGCHInfo		igchinfo;	/**< IGC header */
+	ActiveTaskData		activetask;	/**< Active Task */
 } ApplicationData;
 
+/**
+* @struct ScreenGlobals
+* @brief some screen properties
+*/
 typedef struct ScreenGlobals {
-	double	SRES;
-	Int16	WIDTH;
-	Int16	HEIGHT;
-	double	TOPCORNER;
-	double	BOTTOMCORNER;
+	double	SRES;			/**< Screen resolution */
+	Int16	WIDTH;			/**< Screen width in pixels */
+	Int16	HEIGHT;			/**< Screen height in pixels */
+	double	TOPCORNER;		/**< Top corner position */
+	double	BOTTOMCORNER;		/**< Bottom corner position */
 	double	BOTTOMCORNERLBL;
 	double	TOPANGLE;
 	double	BOTTOMANGLE;
 	double	BOTTOMANGLELBL;
-	Int16	GLIDERX;
-	Int16	GLIDERY;
+	Int16	GLIDERX;		/**< Glider symbol X position */
+	Int16	GLIDERY;		/**< Glider symbol Y position */
 } ScreenGlobals;
 
 // global externals

@@ -359,9 +359,9 @@ void grLibDrawGraph(Graph_t *br,UInt8 group)
 * in a variety of combinations -see the header file for enumerated types
 *
 * @param  br the pointer to the graph data
-* @param  gridOrient, specifies which grid is printed (vertical,
+* @param  gridOrient specifies which grid is printed (vertical,
 * horizontal,none etc.)
-* @param  gridTextOrient,specifies which scaled textual information
+* @param  gridTextOrient specifies which scaled textual information
 * is printed (x axis, y axis, none etc.)
 * @param  numberOfGrids specifies how many grids will be printed. 
 * considering the limited width of a Handheld, it is recommended to keep
@@ -832,7 +832,6 @@ void grLibLineFill(Graph_t *br,UInt8 x1, UInt8 y1,UInt8 x2,UInt8 y2,GraphType_t 
  * as was initially input by the user.
  *
  * @param  br pointer to the data structure of the actual graph
- * @param  ret pointer to the returned and filled data structure
  * @param  x,y coordinates where the stylus tapped the screen
  * @return None
  */
@@ -882,7 +881,7 @@ void grLibSetUserValue(Graph_t *br, UInt16 idx, void **uptr)
  * @param  coljmp To obtain the "shade", the function draws each new line with a color
  *         index value 1 less or more than the previous. To obtain shades of any color
  *         pass an index for the color (See RGB() function usage)
- * @param  or orientation - true for horizontal and false for vertical.
+ * @param  orient orientation - true for horizontal and false for vertical.
  *         the lines are drawn either horizontally or vertically, you could
  *         consider this as "grain" orientation. See demo in app.c for example.
  * @param  color whether shade is color or greyscale. At this version only color is supported
@@ -978,14 +977,8 @@ void drawThermoGraph(UInt8 x,UInt8 y, UInt8 ex,
  /**[INTERNAL]:Draws a circle with the given radius, center points
  *
  *
- * @param  r,g,b values for the color
- * @return index for the color in the color table
- * 
- *<br>
- * <br><b>NOTE</b>: To get colors that are close to what you wish it to be, you can
- * download any color utility that shows the R,G,B components for a color
- * and pass the values to this function. You can use the return values 
- * in the Palm color functions.
+ * @param br, pointer to graph variable
+ * @return none 
 */
  void grLibDrawCircle(Graph_t *br)
  {
