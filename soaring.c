@@ -1,5 +1,20 @@
 // $Id: soaring.c,v 1.160 2008/01/16 01:32:08 Administrator Exp $
 // $Name:  $
+
+/**
+* \file soaring.c
+*
+* \brief this is the main SoarPilot module where it all starts and ends
+*
+*/
+
+/**
+* \mainpage
+* This is the source code documentation for SoarPilot, a Palm powered flight computer.
+* - Main site: http://www.soaringpilot.org
+* - Yahoo user group: http://tech.groups.yahoo.com/group/soaringpilot/
+*/
+
 #include <PalmOS.h>	// all the system toolbox headers
 #include <SerialMgr.h>
 #include <MemoryMgr.h>
