@@ -12,7 +12,11 @@
 * \mainpage
 * This is the source code documentation for SoarPilot, a Palm powered flight computer.
 * - Main site: http://www.soaringpilot.org
+* - Wiki: http://www.soaringpilot.org/dokuwiki/
 * - Yahoo user group: http://tech.groups.yahoo.com/group/soaringpilot/
+*
+* This documentation is intended for SoarPilot developers. Developers are
+* expected to use the SVN repository as described in the wiki.
 */
 
 #include <PalmOS.h>	// all the system toolbox headers

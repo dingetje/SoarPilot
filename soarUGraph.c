@@ -67,7 +67,7 @@
 #include "soarUMap.h" // for RGB function
 
 /** [UTILITY] Draws a rectangle on the screen based on coordinates.
-* @param x,y,ex and ey take the same parameters as PalmOS rect data type
+* @param x,y,ex,ey take the same parameters as PalmOS rect data type
 * @param r tells the function to fill the rectangles with a pattern
 * specified by 'r'. See the grlib.h typedefs for the fill types.
 * @return none
@@ -421,7 +421,7 @@ void grLibDrawGraphGrids(Graph_t *br,
 /** [UTILITY]:Draws a 'Number' on a coordinate specified on the screen.
 * This is a utility function that prints a numerical value
 * on specified coordinates of the screen
-* @param xy coordinates
+* @param x,y coordinates
 * @param value the number that will be 'Ascii' fied and printed
 * @return none
 */
@@ -561,7 +561,7 @@ void grLibDrawGraphText(Graph_t *br, UInt32 xValue, UInt32 yValue, Int8 xOffset,
 * above example, notice that the group value changes and a new legend 
 * is used -- so there are 3 bars, each with different color, and each
 * specifying a different internet provider (yahoo,msn,att.)
-*
+* @param legend char. pointer to optional legend string, use NULL to leave empty
 * @return gErr if inconsistent values are entered
 *
 *<b>Note</b><br>
@@ -940,8 +940,8 @@ void drawThermoGraph(UInt8 x,UInt8 y, UInt8 ex,
   * @param radius of the circle
   * @param centerX the center X coordinate of the circle
   * @param centerY the center Y coordinate of the circle
-  * @param whether the graph supports color or not
-  * @param PrintDatatype_t can be NONE, PRINT_VALUES or 
+  * @param color whether the graph supports color or not
+  * @param prn PrintDatatype_t can be NONE, PRINT_VALUES or 
   * PRINT_PERCENTAGES. This tells the graph plotter to print no values
   * by the side of the Pie, or print the actual data values, or print the
   * percentage representation of the graph.
@@ -976,8 +976,7 @@ void drawThermoGraph(UInt8 x,UInt8 y, UInt8 ex,
 
  /**[INTERNAL]:Draws a circle with the given radius, center points
  *
- *
- * @param br, pointer to graph variable
+ * @param br pointer to graph variable
  * @return none 
 */
  void grLibDrawCircle(Graph_t *br)
@@ -1000,8 +999,7 @@ void drawThermoGraph(UInt8 x,UInt8 y, UInt8 ex,
  
  /**[INTERNAL]:Draws the actual pie slices
  *
- *
- * @param br, pointer to graph variable
+ * @param br pointer to graph variable
  * @param group the group of slice to be drawn
  * @return none
  * <br>
