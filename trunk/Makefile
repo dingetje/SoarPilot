@@ -20,6 +20,7 @@ TXT2BITM        =txt2bitm
 OBJRES          =m68k-palmos-obj-res
 BUILDPRC        =build-prc
 MULTIGEN        =m68k-palmos-multigen
+DOXYGEN			="C:/Program Files/doxygen/bin/doxygen.exe"
 
 # uncomment this if you want to build a gdb debuggable version
 # -On: n=Optimization-level (0=none), -g: needed for debugging
@@ -67,3 +68,8 @@ clean:
 cleant:
 	rm -rf *.o $(APP) *.bin *.grc *.stamp *-sections.*
 	rm -rf *~
+
+# .PHONY = always build target (don’t look for it in the filesystem)
+.PHONY: doc	
+doc:
+	$(DOXYGEN) Doxyfile
