@@ -781,6 +781,7 @@
             </Folder>
         </Folder>
         <File name="Makefile" />
+        <File name="Doxyfile" />
         <File name="Mathlib.c" />
         <File name="Mathlib.h" />
         <File name="soarBT.c" />
