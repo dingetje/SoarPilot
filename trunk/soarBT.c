@@ -1,5 +1,9 @@
 #include <PalmOS.h>
 #include "soarBT.h"
+/**
+* \file soarBT.c
+* \brief Bluetooth code SoarPilot
+*/
 
 /**************/
 /* BT Globals */

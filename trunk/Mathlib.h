@@ -1,3 +1,10 @@
+/**
+* \file Mathlib.h
+* \brief shared library of IEEE-754 double math functions
+* \copyright  Copyright (C) 1997 Rick Huebner
+* \version Version 1.01, 23 August 1997, Rick Huebner
+*/
+
 /* MathLib: Pilot shared library of IEEE-754 double math functions
  *
  * Library function prototypes for the calling application.  This is

@@ -1,5 +1,9 @@
 #ifndef SOARCAI_H
 #define SOARCAI_H
+/**
+* \file soarCAI.h
+* \brief SoarPilot Cambridge 302 header file
+*/
 
 #define SCAI __attribute__ ((section ("scai")))
 

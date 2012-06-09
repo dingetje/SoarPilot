@@ -1,3 +1,8 @@
+/**
+* \file soarCOL.c
+* \brief SoarPilot Colibri support
+*/
+
 #include <PalmOS.h>			// all the system toolbox headers
 #include "soarCOL.h"
 #include "soarComp.h"

@@ -1,3 +1,10 @@
+/**
+* \file Mathlib.c
+* \brief shared library of IEEE-754 double math functions
+* \copyright  Copyright (C) 1997 Rick Huebner
+* \version Version 1.01, 23 August 1997, Rick Huebner
+*/
+
 /* MathLib: Pilot shared library of IEEE-754 double math functions
  *
  * Convenience functions for the calling application.  These functions

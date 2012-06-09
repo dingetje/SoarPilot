@@ -1,5 +1,9 @@
 #ifndef SOARCOL_H
 #define SOARCOL_H
+/**
+* \file soarCOL.h
+* \brief SoarPilot Colibri header file
+*/
 
 #define SCMP2 __attribute__ ((section ("scmp2")))
 
