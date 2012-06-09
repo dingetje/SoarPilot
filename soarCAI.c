@@ -1,3 +1,8 @@
+/**
+* \file soarCAI.c
+* \brief SoarPilot Cambridge 302 support
+*/
+
 #include <PalmOS.h>	// all the system toolbox headers
 #include "soaring.h"
 #include "soarCAI.h"
