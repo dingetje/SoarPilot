@@ -1179,6 +1179,10 @@ Boolean UploadCAIPilotInfo()
 	return(retval);
 }
 
+/**
+* \brief function to clear all waypoints in CAI flight computer
+* \return true if successful, else false
+*/
 Boolean ClearCAIWaypoints()
 {
 	Boolean retval=true;
@@ -1222,6 +1226,10 @@ Boolean ClearCAIWaypoints()
 	return(retval);
 }
 
+/**
+* \brief function to clear all flights in CAI flight computer
+* \return true if successful, else false
+*/
 Boolean ClearCAIFlights()
 {
 	Boolean retval=true;
@@ -1265,6 +1273,10 @@ Boolean ClearCAIFlights()
 	return(retval);
 }
 
+/**
+* \brief function to send clear flights command to CAI flight computer
+* \return true if successful, else false
+*/
 Boolean SendCAIClearFlights()
 {
 	Char output_char[14];
@@ -1280,6 +1292,10 @@ Boolean SendCAIClearFlights()
 	return(true);
 }
 
+/**
+* \brief helper function to send byte to CAI flight computer and update checksum
+* \return currently always true
+*/
 static int putChar(CAIData *caidata, Char c)
 {
 //	Char ec;
@@ -1289,21 +1305,30 @@ static int putChar(CAIData *caidata, Char c)
 //	TxData(&c, USESER);
 // PG use 
 //	serial_out(c);
-	SrmSend(serial_ref, &c, 1, &error);
+	SrmSend(serial_ref, &c, 1, &error); // todo: error handling?
 //	return GetData(&ec, 1, USESER)
 //		&& ec == c;
 	return true;
 }
 
+/**
+* \brief helper function to send string to CAI flight computer and update checksum
+* \return currently always true
+*/
 Int16 putString(CAIData *caidata, const Char *str)
 {
 	while (*str) {
-		if (!putChar(caidata, *str++))
+		if (!putChar(caidata, *str++)) {
 			return false;
+		}
 	}
 	return true;
 }
 
+/**
+* \brief helper function to send floating point number to CAI flight computer and update checksum
+* \return currently always true
+*/
 static Int16 putDouble(CAIData *caidata, double value, Int16 precision)
 {
 	Char buffer[13];
@@ -1312,6 +1337,10 @@ static Int16 putDouble(CAIData *caidata, double value, Int16 precision)
 	return putString(caidata, buffer);
 }
 
+/**
+* \brief helper function to read string from CAI flight computer
+* \return true on success, else false
+*/
 static Int16 getString(CAIData *caidata, Char *str, Int16 size)
 {
 	if (GetData(str, size, USESER)) {
@@ -1323,10 +1352,15 @@ static Int16 getString(CAIData *caidata, Char *str, Int16 size)
 		}
 
 		return true;
-	} else
+	} else {
 		return false;
+	}
 }
 
+/**
+* \brief helper function to put CAI flight computer in command mode
+* \return true on success, else false
+*/
 static Int16 cmdMode(CAIData *caidata)
 {
 	Int16 i;
@@ -1370,6 +1404,10 @@ static Int16 downloadMode(CAIData *caidata)
 }
 */
 
+/**
+* \brief helper function to put CAI flight computer in upload mode
+* \return true on success, else false
+*/
 static Int16 uploadMode(CAIData *caidata)
 {
 //	HostTraceOutputTL(appErrorClass, "Inside uploadMode");
@@ -1387,6 +1425,10 @@ static Int16 uploadMode(CAIData *caidata)
 	return true;
 }
 
+/**
+* \brief helper function to put CAI flight computer in flight mode
+* \return true on success, else false
+*/
 Int16 CAIFlightMode(CAIData *caidata)
 {
 	Char outputstr[6];
@@ -1406,28 +1448,44 @@ Int16 CAIFlightMode(CAIData *caidata)
 	return true;
 }
 
+/**
+* \brief helper function to calculate and verify short checksum
+* \return true on success, else checksum mismatch
+*/
 static Int16 shortChecksum(CAIData *caidata)
 {
 	Char checksum = 0;
 	Int16 i;
 
-	for (i = 3; i < (caidata->buffer[0]&255); i++)
+	for (i = 3; i < (caidata->buffer[0]&255); i++) {
 		checksum ^= caidata->buffer[i];
+	}
 
 	return(checksum == caidata->buffer[2]);
 }
 
+/**
+* \brief helper function to calculate and verify long checksum
+* \return true on success, else checksum mismatch
+*/
 static Int16 longChecksum(CAIData *caidata, Int16 size)
 {
 	unsigned short i, checksum = 0;
 
-	for (i = 5; i < size; i++)
+	for (i = 5; i < size; i++) {
 		checksum += caidata->buffer[i]&255;
+	}
 
 	return checksum == (caidata->buffer[3]&255)*256 + (caidata->buffer[4]&255);
 
 }
 
+/**
+* \brief helper function to read short checksum reply to CAI flight computer
+* \param caidata pointer to CAI data structure
+* \param prompt expected prompt
+* \return true on success, else false
+*/
 static Int16 shortReply(CAIData *caidata, const Char *prompt)
 {
 	Int16 size, promptSize;
@@ -1443,6 +1501,12 @@ static Int16 shortReply(CAIData *caidata, const Char *prompt)
 		&& StrNCompare(prompt, caidata->buffer + size - promptSize, promptSize) == 0);
 }
 
+/**
+* \brief helper function to read long checksum reply to CAI flight computer
+* \param caidata pointer to CAI data structure
+* \param prompt expected prompt
+* \return true on success, else false
+*/
 static Int16 longReply(CAIData *caidata, const Char *prompt)
 {
 	Int16 size; 
@@ -1489,7 +1553,12 @@ static Int16 longReply(CAIData *caidata, const Char *prompt)
 */
 }
 				
-// This is used just to get the number of logs in the 302
+/**
+* \brief This is used just to get the number of logs in the 302
+* \param caidata pointer to CAI data structure
+* \param numLogs pointer to store number of flights return value
+* \return true on success, else false
+*/
 Boolean GetCAINumLogs(CAIData *caidata, Int16 *numLogs)
 {
 	caidata->index = 0;
@@ -1510,7 +1579,12 @@ Boolean GetCAINumLogs(CAIData *caidata, Int16 *numLogs)
 	}
 }
 
-// This is used just to get the number of logs in the GPSNAV
+/**
+* \brief This is used just to get the number of logs in the GPSNAV
+* \param caidata pointer to CAI data structure
+* \param numLogs pointer to store number of flights return value
+* \return true on success, else false
+*/
 Boolean GetGPNNumLogs(CAIData *caidata, Int16 *numLogs)
 {
 	caidata->index = 0;
@@ -1564,6 +1638,12 @@ Boolean GetGPNNumLogs(CAIData *caidata, Int16 *numLogs)
 	}
 }
 
+/**
+* \brief download info for next log file from CAI computer
+* \param caidata pointer to CAI data structure
+* \param logData pointer to flight data
+* \return true on success, else false
+*/
 Boolean GetCAILogInfoNext(CAIData *caidata, CAILogData *logData)
 {
 	Int16 offset = 6 + (caidata->index%8)*36;
@@ -1602,7 +1682,7 @@ Boolean GetCAILogInfoNext(CAIData *caidata, CAILogData *logData)
 */
 		}
 		previndex = caidata->index;
-	numLogs = caidata->buffer[5]&255;
+		numLogs = caidata->buffer[5]&255;
 //		HostTraceOutputTL(appErrorClass, "numLogs2-|%hd|", numLogs);
 		logData->index = caidata->index;
 //		HostTraceOutputTL(appErrorClass, "logData->index-|%hd|", logData->index);
@@ -1652,6 +1732,12 @@ Boolean GetCAILogInfoNext(CAIData *caidata, CAILogData *logData)
 	return(false);
 }
 
+/**
+* \brief get GPSNAV log info
+* \param caidata pointer to CAI data structure
+* \param logData pointer to flight data
+* \return currently always false
+*/
 Boolean GetGPNLogInfo(CAIData *caidata, CAILogData *logData)
 {
 	Int16 tempnum;
@@ -1760,6 +1846,13 @@ Boolean GetGPNLogInfo(CAIData *caidata, CAILogData *logData)
 	return(false);
 }
 
+/**
+* \brief send command to download flight from CAI computer
+* \param caidata pointer to CAI data structure
+* \param logIndex flight log index number
+* \param blockSize pointer to store resulting block size
+* \return true on success, else false
+*/
 Boolean CAILogStart(CAIData *caidata, Int16 logIndex, Int16 *blockSize)
 {
 //	HostTraceOutputTL(appErrorClass, "Inside CAILogStart");
@@ -1778,6 +1871,13 @@ Boolean CAILogStart(CAIData *caidata, Int16 logIndex, Int16 *blockSize)
 	}
 }
 
+/**
+* \brief helper function to handle transfer reply from CAI flight computer
+* \param caidata pointer to CAI data structure
+* \param buffer pointer to reply buffer
+* \param size of buffer
+* \return true on success, else false
+*/
 static Int16 transferReply(CAIData *caidata, Char *buffer, Int16 size)
 {
 	Int16 promptSize = StrLen(CAI_UPLOAD_PROMPT);
@@ -1835,6 +1935,13 @@ static Int16 transferReply(CAIData *caidata, Char *buffer, Int16 size)
 		&& StrNCompare(caidata->buffer + 7, CAI_UPLOAD_PROMPT, promptSize) == 0;
 }
 
+/**
+* \brief send command to transfer next flight to CAI flight computer
+* \param caidata pointer to CAI data structure
+* \param buffer pointer to result buffer
+* \param valid ??
+* \return true on success, else false
+*/
 Int16 CAILogRead(CAIData *caidata, Char *buffer, Int16 *valid)
 {
 	Int16 i;
