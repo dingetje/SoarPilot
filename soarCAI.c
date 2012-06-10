@@ -1936,10 +1936,10 @@ static Int16 transferReply(CAIData *caidata, Char *buffer, Int16 size)
 }
 
 /**
-* \brief send command to transfer next flight to CAI flight computer
+* \brief send command to transfer next flight to CAI flight computer and grab reply
 * \param caidata pointer to CAI data structure
 * \param buffer pointer to result buffer
-* \param valid ??
+* \param valid reply length
 * \return true on success, else false
 */
 Int16 CAILogRead(CAIData *caidata, Char *buffer, Int16 *valid)
@@ -1950,9 +1950,10 @@ Int16 CAILogRead(CAIData *caidata, Char *buffer, Int16 *valid)
 //	HostTraceOutputTL(appErrorClass, "Inside CAILogRead-caidata->blockSize|%hd|", caidata->blockSize);
 
 	*valid = 0;
-	if (caidata->blockSize == 0)
+	if (caidata->blockSize == 0) {
 		return true;
-
+	}
+	
 	for (i = 0; i < GL_CAI_RETRY_CMD; i++) {
 /*
 //		HostTraceOutputTL(appErrorClass, "CAILogRead-i|%hd|", i);
@@ -1975,10 +1976,12 @@ Int16 CAILogRead(CAIData *caidata, Char *buffer, Int16 *valid)
 			&& putString(caidata, cmd)
 			&& transferReply(caidata, buffer, caidata->blockSize)) {
 			*valid = STR2SHORT(caidata->buffer + 5);
-			if (*valid != caidata->blockSize)
+			if (*valid != caidata->blockSize) {
 				caidata->blockSize = 0;
+			}
 			return true;
 		}
+		// send retry command
 		cmd = "B R";
 	}
 
@@ -1987,6 +1990,13 @@ Int16 CAILogRead(CAIData *caidata, Char *buffer, Int16 *valid)
 	return false;
 }
 
+/**
+* \brief send command to transfer flight signature to CAI flight computer and grab reply
+* \param caidata pointer to CAI data structure
+* \param buffer pointer to result buffer
+* \param valid length of reply from flight computer
+* \return true on success, else false
+*/
 Int16 CAILogSignature(CAIData *caidata, Char *buffer, Int16 *valid)
 {
 	if (uploadMode(caidata)
@@ -1999,6 +2009,12 @@ Int16 CAILogSignature(CAIData *caidata, Char *buffer, Int16 *valid)
 	return false;
 }
 
+/**
+* \brief send command to transfer generic info to CAI flight computer and grab reply
+* \param caidata pointer to CAI data structure
+* \param geninfo pointer to generic info structure
+* \return true on success, else false
+*/
 Boolean GetCAIGenInfo(CAIData *caidata, CAIGenInfo *geninfo)
 {
 	// 3 for short reply
@@ -2006,7 +2022,7 @@ Boolean GetCAIGenInfo(CAIData *caidata, CAIGenInfo *geninfo)
 	Int16 offset = 3 + 15;
 
 	if (uploadMode(caidata)
-		&& putString(caidata, "W")
+		&& putString(caidata, "W") // request generic info command
 		&& shortReply(caidata, CAI_UPLOAD_PROMPT)) {
 		StrNCopy(geninfo->id, caidata->buffer + offset, CAI_ID_SIZE);
 		geninfo->id[CAI_ID_SIZE] = '\0';
@@ -2025,6 +2041,11 @@ Boolean GetCAIGenInfo(CAIData *caidata, CAIGenInfo *geninfo)
 	}
 }
 
+/**
+* \brief download all flight logs from CAI flight computer
+* \param cmd command, use CAIFIFREE to free memory buffer
+* \return true on success, else false
+*/
 Boolean DownloadCAILogInfo(Int16 cmd)
 {
 	Boolean retval=true;
@@ -2135,6 +2156,10 @@ Boolean DownloadCAILogInfo(Int16 cmd)
 	return(retval);
 }
 
+/**
+* \brief download selected fligh logs from CAI flight computer
+* \return true on success, else false
+*/
 Boolean DownloadCAISelectedLog()
 {
 	Boolean retval=true;
@@ -2253,6 +2278,12 @@ Boolean DownloadCAISelectedLog()
 	return(retval);
 }
 
+/**
+* \brief send set speed command to CAI flight computer
+* \param caidata pointer to CAI data structure
+* \param newspeed new speed value
+* \return true on success, else false
+*/
 Boolean SendCAISetSpeed(CAIData *caidata, Int32 newspeed)
 {
 	Char output_char[14];
@@ -2260,8 +2291,8 @@ Boolean SendCAISetSpeed(CAIData *caidata, Int32 newspeed)
 	Int32 x, baudval;
 
 	if (!cmdMode(caidata)) {
-	caidata->state = GL_CAI_UNKNOWN;
-	return(false);
+		caidata->state = GL_CAI_UNKNOWN;
+		return(false);
 	} else {
 //		HostTraceOutputTL(appErrorClass, "Sending CAI Set Baud Command");
 //		HostTraceOutputTL(appErrorClass, "newspeed-|%ld|", newspeed);
