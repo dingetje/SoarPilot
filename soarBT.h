@@ -2,10 +2,10 @@
 #define SOARBT_H
 /**
 * \file soarBT.h
-* \brief Bluetooth header file for SoarPilot
+* \brief SoarPilot Bluetooth header file
 */
 
-#include <BtCommVdrv.h> // AGM: for prefered BT GPS connection feature
+#include <BtCommVdrv.h> // AM: for prefered BT GPS connection feature
 
 #define BT __attribute__ ((section ("bt")))
 

@@ -1,3 +1,8 @@
+/**
+* \file soarComp.c
+* \brief SoarPilot flight computer support
+*/
+
 #include <PalmOS.h>	// all the system toolbox headers
 #include "soarComp.h"
 #include "soaring.h"
@@ -26,7 +31,12 @@ extern Int16 CAInumperpage;
 extern CAILogData *cailogdata;
 extern UInt32 cursecs;
 
-// Flight List Event Handler
+/**
+* \fn form_list_flts_event_handler(EventPtr event)
+* \param event pointer to Event from flights form
+* \return true if event has been handled, else false
+* \brief Flight List Event Handler
+*/
 Boolean form_list_flts_event_handler(EventPtr event)
 {
 	Boolean handled = false;
@@ -251,6 +261,11 @@ Boolean form_list_flts_event_handler(EventPtr event)
 	return(handled);
 }
 
+/**
+* \fn DeclareTaskToLogger(Int8 CompDecCmd)
+* \param CompDecCmd declare command
+* \brief Declare task to flight computer
+*/
 void DeclareTaskToLogger(Int8 CompDecCmd)
 {
 	Char tempchar[7];
@@ -480,6 +495,13 @@ void DeclareTaskToLogger(Int8 CompDecCmd)
 	return;
 }
 
+/**
+* \fn compmsg(Int8 msgtype, Boolean success)
+* \param msgtype message type
+* \param success show successful message if true, else fail message
+* \return true if successful
+* \brief compose error/success message helper and popup dialog
+*/
 Boolean compmsg(Int8 msgtype, Boolean success)
 {
 	Char loggername[15];
@@ -590,6 +612,10 @@ Boolean compmsg(Int8 msgtype, Boolean success)
 	return(success);
 }	
 
+/**
+* \param scr screen number
+* \brief refresh flights list in active form
+*/
 void refresh_flts_list(Int16 scr)
 {
 	FormType *pfrm = FrmGetActiveForm();
@@ -634,7 +660,7 @@ void refresh_flts_list(Int16 scr)
 			}
 		} else if (scr < 0)  {
 			if (currentCAIFltPage > 0) {
-				// If not on the first page of waypoints, move up one page 
+				// If not on the first page of flights, move up one page 
 				currentCAIFltPage--;
 			} else {
 				// If at the top, wrap to the last page
@@ -661,11 +687,11 @@ void refresh_flts_list(Int16 scr)
 			items = (Char **) MemPtrNew(nrecs * (sizeof(Char *)));
 			prevNumRecs = nrecs;
 
-			// Loop through each waypoint record
+			// Loop through each flight record
 			for (x = 0, caifltIndex = start; caifltIndex < end; caifltIndex++, x++) { 
 				// Assign each of the nrecs pointers-to-pointers
 				//  the address of a newly allocated 40 character array,
-				//  retrieve the waypoint name associated with that record,
+				//  retrieve the flight name associated with that record,
 				//  and copy that name into the array.
 				items[x] = (Char *) MemPtrNew(FILENAMESIZE * (sizeof(Char)));
 				MemSet(items[x],FILENAMESIZE,0);
@@ -732,7 +758,7 @@ void refresh_flts_list(Int16 scr)
 			DrawFormWithNoListBorder(pfrm, FrmGetObjectIndex(pfrm, form_list_flts_list));
 		}
 	
-		// If the currently selected waypoint is on the currently
+		// If the currently selected flight is on the currently
 		//  displayed page, then darken it as if it were selected.  If not then
 		//  de-select everything.
 		if ((selectedCAIFltIndex >= (currentCAIFltPage*CAInumperpage)) 
@@ -747,6 +773,11 @@ void refresh_flts_list(Int16 scr)
 	}
 }
 
+/**
+* \param lstselection index of selected flight in list
+* \brief set the selected flight
+* \return true if set
+*/
 Boolean SetSelectedFlt(Int16 lstselection)
 {
 	if (cainumLogs > 0) {

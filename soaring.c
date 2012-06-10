@@ -3,9 +3,7 @@
 
 /**
 * \file soaring.c
-*
 * \brief this is the main SoarPilot module where it all starts and ends
-*
 */
 
 /**

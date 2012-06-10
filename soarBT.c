@@ -2,7 +2,7 @@
 #include "soarBT.h"
 /**
 * \file soarBT.c
-* \brief Bluetooth code SoarPilot
+* \brief SoarPilot Bluetooth code
 */
 
 /**************/
