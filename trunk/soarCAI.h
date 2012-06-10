@@ -74,77 +74,86 @@
 
 #define CAINOTFOUND -1
 
+/// CAI states
 typedef enum {
-	GL_CAI_UNKNOWN, GL_CAI_PNP, GL_CAI_CMD, GL_CAI_DOW, GL_CAI_UPL
+	GL_CAI_UNKNOWN, 		///< unknown mode
+	GL_CAI_PNP, 			///< Pocket-Nav mode
+	GL_CAI_CMD, 			///< command mode
+	GL_CAI_DOW, 			///< download mode
+	GL_CAI_UPL				///< upload mode
 } CAIState;
 
+/// function typedef for input callback routine
 typedef Boolean (*CAIInputCallback)(void *userData, Char *data, Int16 size);
+/// function typedef for output callback routine
 typedef Boolean (*CAIOutputCallback)(void *userData, Char *data, Int16 size);
+/// function typedef for flush callback routine
 typedef void (*CAIFlushCallback)(void *userData);
 
-// General CAI Data Structure
+/// General CAI Data Structure
 typedef struct {
-	CAIState state;
-	Int16 index;
-	short blockSize;
-	Char checksum;
-	unsigned short longChecksum;
-	Char buffer[GL_CAI_BUFFER_SIZE];
-	void *userData;
-	CAIInputCallback input;
-	CAIOutputCallback output;
-	CAIFlushCallback flush;
+	CAIState state;						///< state
+	Int16 index;						///< index
+	short blockSize;					///< block size
+	Char checksum;						///< checksum
+	unsigned short longChecksum;		///< long checksum
+	Char buffer[GL_CAI_BUFFER_SIZE];	///< buffer
+	void *userData;						///< user data
+	CAIInputCallback input;				///< input callback routine
+	CAIOutputCallback output;			///< output callback routine
+	CAIFlushCallback flush;				///< flush callback routine
 } CAIData;
 
-// CAI Time Data Structure
+/// CAI Time Data Structure
 typedef struct {
-	Int16 hour;
-	Int16 min;
-	Int16 sec;
-	UInt32 totalsecs;
+	Int16 hour;							///< hour
+	Int16 min;							///< minute
+	Int16 sec;							///< second
+	UInt32 totalsecs;					///< total number of seconds
 } CAITime;
 
-// CAI Flight Log Structure
+/// CAI Flight Log Structure
 typedef struct {
-   Int16 index;
-   CAIDate startDate;
-   CAITime startTime;
-   CAIDate endDate;
-   CAITime endTime;
-   Char pilotName[GL_CAI_NAME_SIZE + 1];
-   Int16 FlightOfDay;
-   UInt16 StartTape; 	// for Colibri / Flarm
-   UInt8  StartPage; 	// for Colibri
-   UInt16 EndTape; 	// for Colibri
-   UInt8  EndPage; 	// for Colibri
-   UInt16 SerialNo; 	// for Colibri
-   Char IGCname[16];	// for Flarm
+   Int16 index;							///< index
+   CAIDate startDate;					///< start date
+   CAITime startTime;					///< start time
+   CAIDate endDate;						///< end date
+   CAITime endTime;						///< end time
+   Char pilotName[GL_CAI_NAME_SIZE + 1];///< pilot name
+   Int16 FlightOfDay;					///< flight number
+   UInt16 StartTape;				 	///< for Colibri / Flarm
+   UInt8  StartPage; 					///< for Colibri
+   UInt16 EndTape; 						///< for Colibri
+   UInt8  EndPage; 						///< for Colibri
+   UInt16 SerialNo; 					///< for Colibri
+   Char IGCname[16];					///< for Flarm
 } CAILogData;
 
-// CAI Addition Data
+/// CAI Addition Data
 typedef struct CAIAddData {
-	double   stfdb;
-	double	 arvrad;
-	double	 apprad;
-	Int16	 tbtwn;
-	Boolean	 dalt;
-	Boolean	 sinktone;
-	Boolean	 tefg;
-	Int8	 tempunits;
-	Int8	 barounits;
-	Int16    variotype;
-	Boolean  pilotinfo;
-	Boolean  gliderinfo;
+	double   stfdb;						///< ???
+	double	 arvrad;					///< ???
+	double	 apprad;					///< ???
+	Int16	 tbtwn;						///<
+	Boolean	 dalt;						///< destination altitude
+	Boolean	 sinktone;					///< sink tone
+	Boolean	 tefg;						///<
+	Int8	 tempunits;					///< temperature unit
+	Int8	 barounits;					///< pressure unit
+	Int16    variotype;					///< vario type
+	Boolean  pilotinfo;					///< pilot info
+	Boolean  gliderinfo;				///< glider info
 } CAIAddData;
 
+/// CAI Generic Info
 typedef struct {
-	Char id[CAI_ID_SIZE+1];
-	Char ostype[CAI_OSTYPE_SIZE+1];
-	Char ver[CAI_VER_SIZE+1];
+	Char id[CAI_ID_SIZE+1];				///< identifier string
+	Char ostype[CAI_OSTYPE_SIZE+1];		///< OS type
+	Char ver[CAI_VER_SIZE+1];			///< version
 } CAIGenInfo;
 
 /*****************************************************************************
- * prototypes
+ * function prototypes
  *****************************************************************************/
 void Output302GRec(Int8 item) SCAI;
 Boolean DeclareCAITask() SCAI;

@@ -1,7 +1,9 @@
 /**
 * \file soarCAI.c
-* \brief SoarPilot Cambridge 302 support
+* \brief SoarPilot Cambridge C302, C302A and GPSNAV support
 */
+
+// tab size: 4
 
 #include <PalmOS.h>	// all the system toolbox headers
 #include "soaring.h"
@@ -19,34 +21,42 @@
 #include "soarWay.h"
 #include "soarWLst.h"
 
+/// CAI command mode prompt
 #define CAI_COMMAND_PROMPT "\r\n\ncmd>"
+/// CAI download mode prompt
 #define CAI_DOWNLOAD_PROMPT "\r\n\ndn>"
+/// CAI upload mode prompt
 #define CAI_UPLOAD_PROMPT "\r\n\nup>"
 
 #define STR2SHORT(s) ((((s)[0]&255)<<8)+((s)[1]&255))
 
 // variables for list of flights in logger
-Int16 cainumLogs = 0;
-Int16 currentCAIFltPage = 0;
-Int16 selectedCAIFltIndex = -1;
-Int16 CAInumperpage = 8;
-CAILogData *cailogdata = NULL;
 
-Int16 previndex = 1;
-Int16 appnumblocks = 0;
-CAIGenInfo *caigeninfo=NULL;
-Boolean skipmc = false;
-Boolean skipbugs = false;
-Boolean skipballast = false;
+Int16 cainumLogs = 0;				///< number of flights
+Int16 currentCAIFltPage = 0;		///< current flight page number
+Int16 selectedCAIFltIndex = -1;		///< selected flight index
+Int16 CAInumperpage = 8;			///< number of flights per page
+CAILogData *cailogdata = NULL;		///< CAI logger data
+
+Int16 previndex = 1;				///< prev. index
+Int16 appnumblocks = 0;				///< ???
+CAIGenInfo *caigeninfo=NULL;		///< CAI generic info
+Boolean skipmc = false;				///< skip MC
+Boolean skipbugs = false;			///< skip bugs
+Boolean skipballast = false;		///< skip ballast
 
 // externals
-extern UInt16 serial_ref;
-extern UInt16  WayptsortType;
-extern Int8 xfrdialog;
-extern Int8 CompCmdRes;
-extern Int16 CompCmdData;
-extern Boolean	menuopen;
+extern UInt16 serial_ref;			///< serial port handle
+extern UInt16  WayptsortType;		///< waypoint sort type
+extern Int8 xfrdialog;				///< transfer dialog
+extern Int8 CompCmdRes;				///< return value flight computer command
+extern Int16 CompCmdData;			///< flight computer command data
+extern Boolean	menuopen;			///< menu open flag
 
+/**
+* \brief output a CAI C302 "G" record
+* \param item type of G-record
+*/
 void Output302GRec(Int8 item)
 {
 	Char output_char[81];
@@ -98,6 +108,11 @@ void Output302GRec(Int8 item)
 	return;
 }
 
+
+/**
+* \brief function to declare task to CAI flight computer
+* \return true - task declaration successful, false - task decl. failed
+*/
 Boolean DeclareCAITask()
 {
 	UInt16 TAKEOFFSET=0, LANDOFFSET=0;
@@ -195,11 +210,15 @@ Boolean DeclareCAITask()
 	return(retval);
 }
 
+/**
+* \brief function to put CAI flight computer in command mode
+* \return true - successful, else connection error
+*/
 Boolean SendCAICommandStart()
 {
 	Char output_char[6];
 
-	// Put C302/CFR into Command Mode
+	// Put C302/CFR into Command Mode (send Ctrl-C)
 	StrCopy(output_char, "\003");
 	TxData(output_char, USESER);
 	// Put it here so that the Serial Flush will take effect
@@ -212,10 +231,14 @@ Boolean SendCAICommandStart()
 		CompCmdRes = CONNECTERR;
 		return(false);
 	}
-	
 	return(true);
 }
 
+/**
+* \brief function to put CAI flight computer in Pocket NAV mode
+* \param dialog - true to show dialog
+* \return for now always true
+*/
 Boolean SendCAIFlightModeStart(Boolean dialog)
 {
 	Char output_char[6];
@@ -231,6 +254,7 @@ Boolean SendCAIFlightModeStart(Boolean dialog)
 	}
 	
 	// Send the CAI Command it into Command Mode
+	// AM: wouldn't it be better to check return value?
 	SendCAICommandStart();
 
 	if (data.config.flightcomp == C302COMP ||
@@ -260,6 +284,10 @@ Boolean SendCAIFlightModeStart(Boolean dialog)
 	return(true);
 }
 
+/**
+* \brief function to send flight download command to CAI flight computer
+* \return true if download prompt seen, else false
+*/
 Boolean SendCAIDownloadStart()
 {
 	Char output_char[6];
@@ -268,12 +296,17 @@ Boolean SendCAIDownloadStart()
 	// Xmit the C302 Download command to put it in Download Mode
 	StrCopy(output_char, "DOW 1\r");
 	TxData(output_char, USESER);
-	if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER)))
+	if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER))) {
 		return(false);
-
+	}
 	return(true);
 }
 
+/**
+* \brief function to upload data to CAI flight computer
+* \param data pointer to data to upload
+* \return true if upload prompt seen, else false
+*/
 Boolean SendCAIUploadStart(CAIData *data)
 {
 	Char output_char[6];
@@ -283,14 +316,18 @@ Boolean SendCAIUploadStart(CAIData *data)
 	StrCopy(output_char, "UPL 1\r");
 //	StrCopy(output_char, "UPL\r");
 	putString(data, output_char);
-	if (!(WaitFor(CAI_UPLOAD_PROMPT, USESER)))
+	if (!(WaitFor(CAI_UPLOAD_PROMPT, USESER))) {
 		return(false);
-
+	}
 	data->checksum = 0;
 	data->longChecksum = 0;
 	return(true);
 }
 
+/**
+* \brief function to send declare end to CAI flight computer
+* \return true if download prompt seen, else false
+*/
 Boolean SendCAIDeclareEnd()
 {
 	Char output_char[6];
@@ -305,13 +342,16 @@ Boolean SendCAIDeclareEnd()
 	}
 	TxData(output_char, USESER);
 //	HostTraceOutputTL(appErrorClass, "%s", output_char);
-	if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER)))
+	if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER))) {
 		return(false);
-
+	}
 	return(true);
 
 }
-
+/**
+* \brief function to send task points to CAI flight computer
+* \return true if successful, else false
+*/
 Boolean SendCAITaskpoints()
 {
 	Int16 caiidx=1, wayidx=0;
@@ -319,7 +359,6 @@ Boolean SendCAITaskpoints()
 	Char output_char[81];
 	Char tempchar[20];
 	UInt16 TAKEOFFSET=0, LANDOFFSET=0;
-
 
 	if (data.task.hastakeoff) {
 		TAKEOFFSET = 1;
@@ -384,6 +423,12 @@ Boolean SendCAITaskpoints()
 	return(retval);
 }
 
+/**
+* \brief function to send single task point to CAI flight computer
+* \param caiidx CAI index
+* \param wayidx waypoint index
+* \return true if download prompt seen (data understood and accepted), else false
+*/
 Boolean SendCAITaskpoint(UInt16 caiidx, UInt16 wayidx)
 {
 	Char output_char[81];
@@ -406,12 +451,17 @@ Boolean SendCAITaskpoint(UInt16 caiidx, UInt16 wayidx)
 
 	TxData(output_char, USESER);
 //	HostTraceOutputTL(appErrorClass, "%s", output_char);
-	if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER)))
+	if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER))) {
 		return(false);
-
+	}
 	return(true);
 }
 
+/**
+* \brief helper function to get unit flags for CAI flight computer
+* \param caidata pointer to CAIAddData structure
+* \return unit settings data
+*/
 static Int16 unitFlags(CAIAddData *caidata)
 {
 	return (data.config.lftunits == METRIC ? CAI_UNIT_VARIO_MS : CAI_UNIT_VARIO_KTS)
@@ -422,6 +472,10 @@ static Int16 unitFlags(CAIAddData *caidata)
 		| (data.config.spdunits == METRIC ? CAI_UNIT_SPEED_KPH : (data.config.spdunits == NAUTICAL ? CAI_UNIT_SPEED_KTS : CAI_UNIT_SPEED_MPH));
 }
 
+/**
+* \brief function to send pilot info to CAI flight computer, uses IGC header settings
+* \return true if download prompt seen (data understood and accepted), else false
+*/
 Boolean SendCAIPilotInfo()
 {
 	Char output_char[65];
@@ -447,6 +501,7 @@ Boolean SendCAIPilotInfo()
 		if (StrLen(data.igchinfo.name) < 24) {
 			tempchar[StrLen(data.igchinfo.name)] = '\0';
 		} else {
+			// IGC pilot name too long, truncate
 			tempchar[24] = '\0';
 		}
 		StrCat(output_char, tempchar);
@@ -524,8 +579,9 @@ Boolean SendCAIPilotInfo()
 // PG moved	FreeMem((void *)&caidata);
 
 //		HostTraceOutputTL(appErrorClass, "%s", output_char);
-		if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER)))
+		if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER))) {
 			return(false);
+		}
 	}
 
 	FreeMem((void *)&caidata);
@@ -533,6 +589,10 @@ Boolean SendCAIPilotInfo()
 	return(true);
 }
 
+/**
+* \brief function to send configuration to GPSNAV flight computer
+* \return true if download prompt seen (data understood and accepted), else false
+*/
 Boolean SendGPSNAVConfigInfo()
 {
 	Char output_char[65];
@@ -548,6 +608,7 @@ Boolean SendGPSNAVConfigInfo()
 	MemMove(caidata, record_ptr, sizeof(CAIAddData));
 	MemHandleUnlock(record_handle);
 
+	// set pilot data flag set?
 	if (caidata->pilotinfo) {
 		// X,units,PILOTID,ACID,DATUM,APP-R,ARR-R,FAST,SLOW,USERCFG,CONFIG1,CONFIG2,MFN
 		// Sending Pilot, Glider & Config Data
@@ -619,8 +680,9 @@ Boolean SendGPSNAVConfigInfo()
 		TxData(output_char, USESER);
 
 //		HostTraceOutputTL(appErrorClass, "%s", output_char);
-		if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER)))
+		if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER))) {
 			return(false);
+		}
 	}
 
 	FreeMem((void *)&caidata);
@@ -628,6 +690,10 @@ Boolean SendGPSNAVConfigInfo()
 	return(true);
 }
 
+/**
+* \brief function to send glider info to CAI flight computer
+* \return true if download prompt seen (data understood and accepted), else false
+*/
 Boolean SendCAIGliderInfo()
 {
 	Char output_char[65];
@@ -651,6 +717,7 @@ Boolean SendCAIGliderInfo()
 	gliderinfo = caidata->gliderinfo;
 	FreeMem((void *)&caidata);
 
+	// set glider info flag set?
 	if (gliderinfo) {
 //		HostTraceOutputTL(appErrorClass, "About to AllocMem");
 		AllocMem((void *)&polar, sizeof(PolarData));
@@ -732,13 +799,19 @@ Boolean SendCAIGliderInfo()
 		FreeMem((void *)&polar);
 
 //		HostTraceOutputTL(appErrorClass, "%s", output_char);
-		if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER)))
+		if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER))) {
 			return(false);
+		}
 	}
 
 	return(true);
 }
 
+/**
+* \brief function to upload SoarPilot waypoints to CAI flight computer
+* \param ShowFinished true to show upload completed dialog
+* \return true if successful, else false
+*/
 Boolean UploadCAIWaypoints(Boolean ShowFinished)
 {
 	Boolean clearwaypoints = false;
@@ -843,6 +916,10 @@ Boolean UploadCAIWaypoints(Boolean ShowFinished)
 	return(retval);
 }
 
+/**
+* \brief function to upload max. possible waypoints to CAI flight computer
+* \return true if successful, else false
+*/
 Boolean SendCAIWaypoints()
 {
 	Char output_char[81];
@@ -858,15 +935,21 @@ Boolean SendCAIWaypoints()
 //	HostTraceOutputTL(appErrorClass, "Sending CAI Waypoints");
 	nrecs = OpenDBCountRecords(waypoint_db);
 
+	// max. number of waypoints for each model
 	if (data.config.flightcomp == C302COMP ||
 		 data.config.flightcomp == C302ACOMP) {
-		if (nrecs > 2000) nrecs = 2000;
+		if (nrecs > 2000) {
+			nrecs = 2000;
+		}
 	} else {
-		if (nrecs > 250) nrecs = 250;
+		if (nrecs > 250) {
+			nrecs = 250;
+		}
 	}
 
 	AllocMem((void *)&waydata, sizeof(WaypointData));
 
+	// step through the SoarPilot waypoint database
 	for (wayindex=0; wayindex<nrecs; wayindex++) {
 		OpenDBQueryRecord(waypoint_db, wayindex, &output_hand, &output_ptr);
 		MemMove(waydata, output_ptr, sizeof(WaypointData));
@@ -933,6 +1016,10 @@ Boolean SendCAIWaypoints()
 	return(retval);
 }
 
+/**
+* \brief function to clear all waypoints of CAI flight computer
+* \return true if successful, else false
+*/
 Boolean SendCAIClearWaypoints()
 {
 	Char output_char[14];
@@ -950,6 +1037,10 @@ Boolean SendCAIClearWaypoints()
 	return(true);
 }
 
+/**
+* \brief function to send waypoint end command to CAI flight computer
+* \return true if successful, else false
+*/
 Boolean SendCAIWaypointEnd()
 {
 	Char output_char[6];
@@ -958,13 +1049,17 @@ Boolean SendCAIWaypointEnd()
 	StrCopy(output_char, "C,-1\r");
 	TxData(output_char, USESER);
 //	HostTraceOutputTL(appErrorClass, "%s", output_char);
-	if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER)))
+	if (!(WaitFor(CAI_DOWNLOAD_PROMPT, USESER))) {
 		return(false);
-
+	}
 	return(true);
 
 }
 
+/**
+* \brief function to upload SoarPilot glider settings to CAI flight computer
+* \return true if successful, else false
+*/
 Boolean UploadCAIGliderInfo()
 {
 	Boolean retval=true;
@@ -1015,6 +1110,10 @@ Boolean UploadCAIGliderInfo()
 	return(retval);
 }
 
+/**
+* \brief function to upload SoarPilot pilot info to CAI flight computer
+* \return true if successful, else false
+*/
 Boolean UploadCAIPilotInfo()
 {
 	Boolean retval=true;
@@ -2096,6 +2195,12 @@ Boolean SendCAISetSpeed(CAIData *caidata, Int32 newspeed)
 	}
 }
 
+/**
+* \brief find the CAI flight number
+* \param fltdate [input] flight date
+* \param flttime [input] flight time
+* \return flight number
+*/
 Int8 FindCAIFltNumOfDay(CAIDate *fltdate, CAITime *flttime) 
 {
 	Int16 x = 0;
@@ -2143,7 +2248,12 @@ Int8 FindCAIFltNumOfDay(CAIDate *fltdate, CAITime *flttime)
 	return(fltnum);
 }
 
-
+/**
+* \brief generate a valid CAI IGC file name
+* \param fltdate [input] flight date
+* \param flttime [input] flight time
+* \param igcname [output] pointer to buffer for resulting IGC file name, must be big enough!
+*/
 void GenerateCAIIGCName(CAIDate *fltdate, CAITime *flttime, Char *igcname)
 {
 	Char strIgc[15];
@@ -2194,6 +2304,11 @@ void GenerateCAIIGCName(CAIDate *fltdate, CAITime *flttime, Char *igcname)
 	return;
 }
 
+/**
+* \brief form event handler for CAI config form
+* \param event pointer to event data
+* \return true if event handled, else false
+*/
 Boolean form_config_caiinst_event_handler(EventPtr event)
 {
 	Char tempchar[30];
@@ -2205,6 +2320,7 @@ Boolean form_config_caiinst_event_handler(EventPtr event)
 	switch (event->eType) {
 		case frmOpenEvent:
 			if (caidata == NULL) AllocMem((void *)&caidata, sizeof(CAIAddData));
+			// fall through
 		case frmUpdateEvent:
 			/* Retrieve IGC Header Info */
 			OpenDBQueryRecord(config_db, CAIINFO_REC, &record_handle, &record_ptr);
@@ -2340,7 +2456,11 @@ Boolean form_config_caiinst_event_handler(EventPtr event)
 		}
 		return(handled);
 }
-
+/**
+* \brief form event handler for GPSNAV config form
+* \param event pointer to event data
+* \return true if event handled, else false
+*/
 Boolean form_config_gpsnavinst_event_handler(EventPtr event)
 {
 	Boolean handled=false;
@@ -2351,6 +2471,7 @@ Boolean form_config_gpsnavinst_event_handler(EventPtr event)
 	switch (event->eType) {
 		case frmOpenEvent:
 			if (caidata == NULL) AllocMem((void *)&caidata, sizeof(CAIAddData));
+			// fall through
 		case frmUpdateEvent:
 			/* Retrieve IGC Header Info */
 			OpenDBQueryRecord(config_db, CAIINFO_REC, &record_handle, &record_ptr);

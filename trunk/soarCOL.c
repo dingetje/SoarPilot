@@ -1,8 +1,9 @@
+// tab size: 4
+
 /**
 * \file soarCOL.c
 * \brief SoarPilot Colibri support
 */
-
 #include <PalmOS.h>			// all the system toolbox headers
 #include "soarCOL.h"
 #include "soarComp.h"
@@ -18,30 +19,33 @@
 #include "soarWay.h"
 
 // global variables from the main SoarPilot program
-extern Char 		c36[37];		// FAI base36 format - from soarVolk.c
-extern Boolean 		BinaryFileXfr; 		// the format of the requested log download:
-						// false	-	IGC-format
-						// true		-	LXN-format
-extern Int8		CompCmdRes;		// from soarComp.c to pass back results
+
+extern Char 		c36[37];			///< FAI base36 format - from soarVolk.c
+extern Boolean 		BinaryFileXfr; 		///< the format of the requested log download, false - IGC-format, true - LXN-format
+extern Int8			CompCmdRes;			///< from soarComp.c to pass back results
 
 // global variables from CAI routines
-extern CAILogData 	*cailogdata;
-extern Int16 		cainumLogs;
-extern Int16 		selectedCAIFltIndex;
+
+extern CAILogData 	*cailogdata;		///< CAI logger data
+extern Int16 		cainumLogs;			///< CAI number of logs
+extern Int16 		selectedCAIFltIndex;///< CAI selected flight index
 
 // Global variables
-Char			CRC;
+Char			CRC;					///< CRC checksum
 
 // Global variables for the flight-log download
-UInt32			StartPos = 0, EndPos = 0;		// start and end postion of one flight log in the memory of the logger
-UInt32			OrigStartPos = 0;			// original starting position of the log, because StartPos gets incremented
-UInt32			CurrentPos = 0;				// current position in the binary data when generating IGC
-UInt16			RemainInBlock;				// remaining bytes in the current block
-UInt16			PosInBlock;				// current position in the downloaded block
-MemInfo			*MeminfoP;				// memory info downloaded from the logger
-UInt8			*LogBuffer;
+
+UInt32			StartPos = 0, 			///< start postion of one flight log in the memory of the logger
+				EndPos = 0;				///< end postion of one flight log in the memory of the logger
+UInt32			OrigStartPos = 0;		///< original starting position of the log, because StartPos gets incremented
+UInt32			CurrentPos = 0;			///< current position in the binary data when generating IGC
+UInt16			RemainInBlock;			///< remaining bytes in the current block
+UInt16			PosInBlock;				///< current position in the downloaded block
+MemInfo			*MeminfoP;				///< memory info downloaded from the logger
+UInt8			*LogBuffer;				///< Logger buffer
 //Boolean			LXold = false;				// flag to show if filser sentences to be used for older LX devide (LX5000)
 
+/// Competition class strings
 Char			*Competition_Class[] =
 {
 	"STANDARD",
@@ -53,6 +57,7 @@ Char			*Competition_Class[] =
 	"MOTOR_GL",""
 };
 
+/// GPS datum strings
 Char			*Table_GPSdatum[] =
 {
 	"ADINDAN        ",
@@ -169,14 +174,10 @@ Char			*Table_GPSdatum[] =
 //**************************************************************************************
 //**************************************************************************************
 
-
-//**************************************************************************************
-// Function for sending active task + IGC info to the Colibri
-// Uses global variable 'data'
-// Output:	true	-	successful declaration
-//		false	-	unsuccessful declaration
-//**************************************************************************************
-
+/**
+* \return true - successful declaration, false - unsuccessful declaration
+* \brief Function for sending active task + IGC info to the Colibri, uses global variable 'data'
+*/
 Boolean COLDeclareTask()
 {
 	DateTimeType		date;
@@ -358,15 +359,11 @@ Boolean COLDeclareTask()
 	return(result);
 }
 
-
-//**************************************************************************************
-// Function for acquire flight headers
-// Uses global variables cailogdata and cainumLogs
-// Input:	cmd	-	what to do
-// Output:	true	-	successful flight header download
-//		false	-	unsuccessful download
-//**************************************************************************************
-
+/**
+* \param cmd command code, what to do
+* \return true - successful flight headers download, false - unsuccessful download
+* \brief Function for acquire Colibri flight headers. Uses global variables cailogdata and cainumLogs
+*/
 Boolean COLGetFlightList(Int16 cmd)
 {
 	UInt16			numberOfFlights = 0;
@@ -474,15 +471,12 @@ Boolean COLGetFlightList(Int16 cmd)
 	return false;
 }
 
-
-//***********************************************************************************************
-// Function for downloading one flight log
-// Uses external variable BinaryFileXfr to decide if download in LXN or IGC format
-// Uses external variables cailogdata, cainumLogs, selectedCAIFltIndex
-// Output:	true			-	successful flight download
-//		false			-	unsuccessful download
-//***********************************************************************************************
-
+/**
+* \return true - successful flight download, false - unsuccessful download
+* \brief Function for downloading one flight log.
+* Uses external variable BinaryFileXfr to decide if download in LXN or IGC format
+* Uses external variables cailogdata, cainumLogs, selectedCAIFltIndex
+*/
 Boolean COLDownloadFlight()
 {
 	Boolean		result;
@@ -564,16 +558,13 @@ Boolean COLDownloadFlight()
 //***********************************************************************************************
 
 
-
-//***********************************************************************************************
-// Function for copying waypoint into sendBuffer as it is required by the Colibri
-// Uses global variable struct 'data'
-// Input:	sendBuffer		-	declaration block under construction (will be sent to Colibri)
-//		from			-	index of waypoint in data.task struct, this should be copied
-//						into the declaration block to send
-//		to			-	index of waypoint in the declaration block
-//***********************************************************************************************
-
+/**
+* \brief Function for copying waypoint into sendBuffer as it is required by the Colibri
+* Uses global variable struct 'data'
+* \param sendBuffer - declaration block under construction (will be sent to Colibri)
+* \param from - index of waypoint in data.task struct, this should be copied into the declaration block to send
+* \param to - index of waypoint in the declaration block
+*/
 void COLCopyWaypoint(Char *sendBuffer, UInt8 from, UInt8 to)
 {
 	Int32		longitude, latitude;
@@ -595,14 +586,13 @@ void COLCopyWaypoint(Char *sendBuffer, UInt8 from, UInt8 to)
 	sendBuffer[195 + (to * 4)] = (UInt8) ((latitude & 0x0000FF00) >> 8);
 	sendBuffer[196 + (to * 4)] = (UInt8) (latitude & 0x000000FF);
 }
-
-
-//***********************************************************************************************
-// Function for calculating CRC-checksum continuously
-// Input:	c		-	character for including in the CRC value
-// Output:	c (the same character the function was called with)
 //***********************************************************************************************
 
+/**
+* \brief Function for calculating CRC-checksum continuously, uses global CRC variable
+* \param c - character for including in the CRC value
+* \return c (the same character the function was called with)
+*/
 Char Calc_CRC(Char c)
 {
 	Int8	tmp, count, tmpc = c;
@@ -617,11 +607,12 @@ Char Calc_CRC(Char c)
 }
 
 //***********************************************************************************************
-// Function for syncing the Colibri
-// Output:	true	-	3 consecutive correct answer from Colibri
-//		false	-	10 consecutive incorrect (or missing) answer from Colibri
-//***********************************************************************************************
 
+/**
+* \brief Function for syncing the Colibri
+* \return true - 3 consecutive correct answer from Colibri,
+* false - 10 consecutive incorrect (or missing) answer from Colibri
+*/
 Boolean COLSync()
 {
 	UInt16		cnt = 0,
@@ -669,13 +660,12 @@ Boolean COLSync()
 	else
 		return false;
 }
-
 //***********************************************************************************************
-// Function for keeping the Colibri active
-// Output:	true	-	correct answer from Colibri
-//		false	-	incorrect (or missing) answer from Colibri
-//***********************************************************************************************
-
+/**
+* \brief Function for keeping the Colibri active
+* \return true - correct answer from Colibri,
+* false - incorrect (or missing) answer from Colibri
+*/
 Boolean COLPing()
 {
 	UInt16	timeoutcnt;
@@ -699,17 +689,16 @@ Boolean COLPing()
 	else
 	        return(true);
 }
-
-
-//***********************************************************************************************
-// Function to send a data block to the Colibri
-// 		after the block is sent, a CRC-byte is appended, too
-// Input:	block		-	pointer to the block to send
-//		size		-	number of bytes to send out
-// Output:	true		-	successful sending (LX_ACK received after checksum sent)
-//		false		-	unsuccessful sending (NAK received, timeout, etc...)
 //***********************************************************************************************
 
+/**
+* \brief Function to send a data block to the Colibri
+* after the block is sent, a CRC-byte is appended, too
+* \param block - pointer to the block to send
+* \param size -	number of bytes to send out
+* \return true - successful sending (LX_ACK received after checksum sent)
+* false - unsuccessful sending (NAK received, timeout, etc...)
+*/
 Boolean COLSendBlock(UInt8 *block, UInt16 size)
 {
 	UInt32		i;
@@ -745,17 +734,16 @@ Boolean COLSendBlock(UInt8 *block, UInt16 size)
 		return false;								// error occured (timeout, CRC, etc...)
 }
 
-
 //***********************************************************************************************
-// Function to receive a data block from the Colibri
-// 		after the block is received, CRC-check is done
-// Input:	block		-	pointer to the block where the data can be stored after reception
-//		size		-	number of bytes to receive, the CRC-byte is not included
-//		timeout		-	time to wait for the next byte, in seconds
-// Output:	true		-	successful (received checksum correct)
-//		false		-	unsuccessful reception (checksum incorrect, timeout, etc...)
-//***********************************************************************************************
-
+/**
+* \brief Function to receive a data block from the Colibri
+* after the block is received, CRC-check is done
+* \param block - pointer to the block where the data can be stored after reception
+* \param size -	number of bytes to receive, the CRC-byte is not included
+* \param timeout - time to wait for the next byte, in seconds
+* \return true - successful (received checksum correct)
+* false - unsuccessful reception (checksum incorrect, timeout, etc...)
+*/
 Boolean COLReadBlock(UInt8 *block, UInt16 size, UInt16 timeout)
 {
 	UInt16		cnt = 0,
@@ -792,17 +780,16 @@ Boolean COLReadBlock(UInt8 *block, UInt16 size, UInt16 timeout)
 			return false;
 	}
 }
-
-
-//***********************************************************************************************
-// Function for downloading one block of a flight log
-// Input:	blockStart		-	starting position of the block in the Colibri's memory
-//		blockEnd		-	end position of the block in the Colibri's memory
-//		buffer			-	buffer for the received block
-// Output:	0			-	unsuccessful flight block download
-//		other			-	successful download, returns the size of the block
 //***********************************************************************************************
 
+/**
+* \brief Function for downloading one block of a flight log
+* \param blockStart - starting position of the block in the Colibri's memory
+* \param blockEnd - end position of the block in the Colibri's memory
+* \param buffer - buffer for the received block
+* \return 0	- unsuccessful flight block download
+* other	- successful download, returns the size of the block
+*/
 UInt16 COLGetFlightBlock(UInt32 blockStart, UInt32 blockEnd, UInt8 *buffer)
 {
 	Boolean			result, done;
@@ -873,15 +860,14 @@ UInt16 COLGetFlightBlock(UInt32 blockStart, UInt32 blockEnd, UInt8 *buffer)
 
 	return blockSize;
 }
-
-
-//***********************************************************************************************
-// Function for downloading the decrypt block at the end of the flight-log download
-// Input:	buffer		-	pointer to the buffer where the data can be stored after reception
-// Output:	true		-	successful decrypt block download
-//		false		-	unsuccessful download
 //***********************************************************************************************
 
+/**
+* \brief Function for downloading the decrypt block at the end of the flight-log download
+* \param buffer	- pointer to the buffer where the data can be stored after reception
+* \return true - successful decrypt block download
+* false	- unsuccessful download
+*/
 Boolean COLGetDecryptBlock(UInt8 *buffer)
 {
 	Boolean			result;
@@ -893,16 +879,14 @@ Boolean COLGetDecryptBlock(UInt8 *buffer)
 	
 	return result;
 }
-
-
-//***********************************************************************************************
-// Function for storing the received flight header data into the given index of the cailogdata array
-// Uses global variable array 'cailogdata'
-// Input:	buffer		-	pointer to the buffer where the received flight header is stored
-//		ind		-	index of the 'cailogdata' array, where the flight details should
-//					be extracted
 //***********************************************************************************************
 
+/**
+* \brief Function for storing the received flight header data into the given index of the cailogdata array
+* Uses global variable array 'cailogdata'
+* \param buffer - pointer to the buffer where the received flight header is stored
+* \param ind - index of the 'cailogdata' array, where the flight details should be extracted
+*/
 void COLStoreFlightHeader(UInt8* buffer, UInt16 ind)
 {
 	cailogdata[ind].index = ind;
@@ -937,14 +921,13 @@ void COLStoreFlightHeader(UInt8* buffer, UInt16 ind)
 	
 	cailogdata[ind].SerialNo = (((UInt16) buffer[91]) * 256) + buffer[92];
 }
-
-
-//***********************************************************************************************
-// Function for downloading the memory information of the Colibri (or other LX-device)
-// Output:	true		-	successful memory info download
-//		false		-	unsuccessful download
 //***********************************************************************************************
 
+/**
+* \brief Function for downloading the memory information of the Colibri (or other LX-device)
+* \return true - successful memory info download
+* false	- unsuccessful download
+*/
 Boolean COLGetMemInfo()
 {
 	UInt8		*tempBuffer;
@@ -974,13 +957,11 @@ Boolean COLGetMemInfo()
 	return valid;
 }
 
-
-//***********************************************************************************************
-// Function for downloading one flight log in binary-format
-// Output:	true			-	successful flight download
-//		false			-	unsuccessful download
-//***********************************************************************************************
-
+/**
+* \brief Function for downloading one flight log in binary-format
+* \return true - successful flight download
+* false	- unsuccessful flight download
+*/
 Boolean COLDownloadFlightLXN()
 {
 	Boolean		result = false;
@@ -1000,16 +981,20 @@ Boolean COLDownloadFlightLXN()
 				{
 					result = HandleVFSData(IOWRITE, buffer, &rcvBlockSize);
 				}
-				else
+				else {
 					result = false;		// problem during downloading the block
+				}
 			}
-			else result = false;
+			else {
+				// didn't sync
+				result = false;
+			}
 
 		} while ((StartPos < EndPos) && result);
 
 		MemPtrFree(buffer);
 	}
-
+	// succesful so far?
 	if (result)
 	{
 		buffer = MemPtrNew(256);
@@ -1025,24 +1010,25 @@ Boolean COLDownloadFlightLXN()
 					result = HandleVFSData(IOWRITE, buffer, &rcvBlockSize);		// output of the received data to file
 				}
 			}
-			else result = false;		// synching with the logger failed
-
+			else {
+				result = false;		// synching with the logger failed
+			}
 			MemPtrFree(buffer);
 		}
-		else
+		else {
 			result = false;
+		}
 	}
 
 	return result;
 }
-
-
-//***********************************************************************************************
-// Function for downloading one flight log in IGC-format
-// Output:	true			-	successful flight download
-//		false			-	unsuccessful download
 //***********************************************************************************************
 
+/**
+* \brief Function for downloading one flight log in IGC-format
+* \return true - successful flight download
+* false	- unsuccessful flight download
+*/
 Boolean COLDownloadFlightIGC()
 {
 	Boolean			retVal, done = false, result = false;
@@ -1896,16 +1882,15 @@ Boolean COLDownloadFlightIGC()
 	}
 	return result;
 }
-
-
-//***********************************************************************************************
-// Function for receiving a binary data block from the logger
-// Input:	data		-	pointer to the buffer where the received data is to be stored
-//		numBytes	-	number of requested bytes
-// Output:	false		-	unsuccessful read
-//		true		-	successful read
 //***********************************************************************************************
 
+/**
+* \brief Function for receiving a binary data block from the logger
+* \param data - pointer to the buffer where the received data is to be stored
+* \param numBytes - number of requested bytes
+* \return true - successful read
+* false	- unsuccessful read
+*/
 Boolean COLGetBinaryDataForIGC(UInt8 *data, UInt32 numBytes)
 {
 	Boolean		retVal;
@@ -1967,14 +1952,22 @@ Boolean COLGetBinaryDataForIGC(UInt8 *data, UInt32 numBytes)
 							PosInBlock = numBytes;
 							retVal = true;
 						}
-						else retVal = false;	// not enough bytes read from the logger
+						else {
+							retVal = false;	// not enough bytes read from the logger
+						}
 					}
-					else retVal = false;		// problem during downloading the block
+					else {
+						retVal = false;		// problem during downloading the block
+					}
 				}
-				else retVal = false;			// synching with logger failed
+				else {
+					retVal = false;			// synching with logger failed
+				}
 			}
 		}
-		else retVal = false;					// already reached the end of log
+		else {
+			retVal = false;					// already reached the end of log
+		}
 	}
 	
 	if ((!retVal) || ((StartPos + CurrentPos + 1) > EndPos))
@@ -1985,7 +1978,6 @@ Boolean COLGetBinaryDataForIGC(UInt8 *data, UInt32 numBytes)
 			LogBuffer = NULL;
 		}
 	}
-	
 	return retVal;
 }
 
