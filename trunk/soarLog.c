@@ -579,7 +579,8 @@ void OutputIGCHeader(FlightData *fltdata)
 //		HostTraceOutputTL(appErrorClass, "%s", output_char);
 	}
 
-	if (fltdata->flightcomp == RECOCOMP) {
+	// Output Engine Noise Level?
+	if (fltdata->flightcomp == RECOCOMP || data.config.logenl) {
 		StrCopy(output_char, "I033638FXA3940SIU4143ENL");
 	} else {
 		StrCopy(output_char, "I023638FXA3940SIU");
@@ -832,7 +833,8 @@ void OutputIGCFltBRecs(Int32 startidx, Int32 stopidx, Int32 totalrecs)
 		StrIToA(tempchar, (Int32)(logdata->siu));
 		StrCat(output_char, leftpad(tempchar, '0', 2));
 
-		if (data.config.flightcomp == RECOCOMP) {
+		// Output ENL?
+		if (data.config.flightcomp == RECOCOMP || data.config.logenl) {
 			// Output the ENL (Engine Noise Level) Information
 			StrIToA(tempchar, (Int32)(logdata->enl));
 			StrCat(output_char, leftpad(tempchar, '0', 3));
@@ -1061,7 +1063,7 @@ Int16 FindFltNumOfDay(Char* fltdtg, Int16 flthour, Int16 fltminute, Int16 fltsec
 void StopLogging() 
 {
 //	HostTraceOutputTL(appErrorClass, "Stop Logging");
-	initENL(true);
+	initENL(true); // close ENL stream
 	if (recv_data) {
 		StrCopy(data.flight.stoputc, data.logger.gpsutc);
 		StrCopy(data.flight.stopdtg, data.logger.gpsdtg);
