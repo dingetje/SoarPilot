@@ -26,11 +26,9 @@
 // sound samples are signed 16-bit numbers
 #define STYPE   UInt8
 
-//#define ENLLOG
-
 SndStreamRef ENLstream = NULL;
 STYPE *ENLbuffer = NULL;
-UInt32 ENLLevel = 0;
+UInt16 ENLLevel = 0;
 
 /**
 * \brief check if device is capable to record sounds
