@@ -4663,6 +4663,12 @@ Boolean form_set_logger_event_handler(EventPtr event)
 			// maintain sensible minimums
 			if (data.config.logstoptime < 60) data.config.logstoptime = 60;
 			if (data.config.nodatatime < 60) data.config.nodatatime = 60;
+			
+			// ENL enabled but device cannot capture sound?
+			if (data.config.logenl && !device.ENLCapable) {
+				FrmCustomAlert(WarningAlert, "Device not ENL capable!"," "," ");
+				data.config.logenl = 0;
+			}
 			handled=false;
 			break;
 		case ctlSelectEvent:  // A control button was pressed and released.
