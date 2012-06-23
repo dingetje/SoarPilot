@@ -227,7 +227,7 @@ Int16 getENL()
 			pBuffer++;
 		}
 		mean = Fabs(total) / k;
-		volume = (mean / 0.64);
+		volume = (mean / 0.064);
 //		HostTraceOutputTL(appErrorClass, "ENL mean = %s", DblToStr(mean, 3));
 //		HostTraceOutputTL(appErrorClass, "ENL volume = %s", DblToStr(volume, 3));
 #ifdef ENLLOG
