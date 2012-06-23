@@ -1,10 +1,10 @@
 #include "soarForm.h"
 
 // version information
-VERSION ID 1 "4.6.2"
+VERSION ID 1 "4.6.3"
 
 STRING ID help_main "Welcome to: SoaringPilot\n"\
-  "4.6.2 April 2012 Beta\n"\
+  "4.6.3 June 2012 Beta\n"\
   "For info/help contact:\n"\
   "www.soaringpilot.org\n"\
   "or\n"\
@@ -212,9 +212,10 @@ MENUID menu_main
 BEGIN
   NOGRAFFITISTATEINDICATOR
   TITLE "Logger Config -                     "
-  LABEL "Logger Setup:" AUTOID AT (5 13) FONT 1
+  LABEL "Logger:" AUTOID AT (5 13) FONT 1
   CHECKBOX "On" ID form_set_logger_onoff AT (PREVRIGHT PREVTOP AUTO AUTO) FONT 0
   CHECKBOX "AutoOff" ID form_set_logger_autooff AT (PREVRIGHT+4 PREVTOP AUTO AUTO) FONT 0
+  CHECKBOX "ENL" form_set_logger_enl AT (PREVRIGHT+1 PREVTOP-1 30 AUTO) FONT 0
   LABEL "Slow Log Interval:" AUTOID AT (RIGHT@95 24) FONT 2
   FIELD ID form_set_logger_slowlogint AT (PREVRIGHT PREVTOP 30 AUTO) FONT 7 RIGHTALIGN UNDERLINED MAXCHARS 3 NUMERIC
   LABEL "secs" AUTOID AT (PREVRIGHT+2 PREVTOP+3) FONT 0
