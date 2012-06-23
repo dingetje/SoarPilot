@@ -4521,6 +4521,8 @@ Boolean form_set_logger_event_handler(EventPtr event)
 
 			ctl_set_value(form_set_logger_onoff, data.config.logonoff);
 			ctl_set_value(form_set_logger_autooff, data.config.logautooff);
+			// experimental ENL option in 4.6.3
+			ctl_set_value(form_set_logger_enl, data.config.logenl);
 			if (data.config.logautooff) {
 				field_set_enable(form_set_logger_offspd, true);
 				field_set_enable(form_set_logger_offtime, true);
@@ -4668,6 +4670,10 @@ Boolean form_set_logger_event_handler(EventPtr event)
 			switch ( event->data.ctlEnter.controlID ) {
 				case form_set_logger_onoff:
 					data.config.logonoff = ctl_get_value(form_set_logger_onoff);
+					handled = true;
+					break;
+				case form_set_logger_enl: // experimental ENL
+					data.config.logenl = ctl_get_value(form_set_logger_enl);
 					handled = true;
 					break;
 				case form_set_logger_autooff:
