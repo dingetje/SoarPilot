@@ -608,6 +608,12 @@ void OutputConfig()
 	StrCatEOL(output_char, data.config.xfertype);
 	TxData(output_char, data.config.xfertype);
 
+	// Xmit ENL (experimental)
+	StrCopy(output_char, "ENL,");
+	StrCat(output_char, StrIToA(tempchar, (Int32)data.config.logenl));
+	StrCatEOL(output_char, data.config.xfertype);
+	TxData(output_char, data.config.xfertype);
+
 	return;
 }
 
@@ -1839,6 +1845,13 @@ void config_parser(Char *serinp, UInt32 length, Boolean reset)
 								pos += 3;
 							}
 						}
+					}
+				}
+				if (StrCompare(tempchar, "ENL") == 0) {
+//					HostTraceOutputTL(appErrorClass, "ENL record");
+					// Getting the Engine Noise Level on/off switch
+					if (GetField(buf, 1, tempchar)) {
+						data.config.logenl = (Boolean)StrAToI(tempchar);
 					}
 				}
 			}
