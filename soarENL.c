@@ -52,9 +52,7 @@ Boolean ENLCapableDevice()
 	FtrGet(sysFtrCreator, sysFtrNumOEMDeviceID, &deviceID);
 	if ((companyID == 'Palm') && (deviceID == 'Frg1')) {
 		return true;
-	}
- 	
-	FrmCustomAlert(WarningAlert, "Device not ENL capable!"," "," ");
+	} 	
 	return false;
 }
 
