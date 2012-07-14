@@ -19,6 +19,7 @@ void DrawAltTimeGraph(Int16 fltindex, UInt8 graphtype)
 	UInt32 minscalevalue=0;
 	double prevalt=0.0;
 	double prevterelev=0.0;
+	UInt32 prevenl=0;
 	MemHandle output_hand;
 	MemPtr output_ptr;
 	FlightData *fltdata;
@@ -84,6 +85,12 @@ void DrawAltTimeGraph(Int16 fltindex, UInt8 graphtype)
 		} else if (maxscalevalue < 100000) {
 			maxscalevalue = ((maxscalevalue / 10000) + 1) * 10000;
 		}
+		// if ENL is enabled, set minimum scale to 1000
+		if (data.config.logenl) {
+			if (maxscalevalue < 1000) {
+				maxscalevalue = 1000;
+			}
+		}
 
 		minscalevalue = (UInt32)(pround(fltdata->minalt*data.input.altconst, 0));
 		//specify the scales (max and min X and Y) - these are the data ranges
@@ -135,9 +142,17 @@ void DrawAltTimeGraph(Int16 fltindex, UInt8 graphtype)
 					prevtasklegsecs = graphsecs;
 				} else {
 					// draw normal altitude
-					grLibInputGraphData(appgr, prevsecs,(UInt32)(pround(prevalt*data.input.altconst, 0)), 0, NULL);
-					grLibInputGraphData(appgr, graphsecs, (UInt32)(pround(logdata->gpsalt*data.input.altconst, 0)), 0, NULL);
+					grLibInputGraphData(appgr, prevsecs,(UInt32)(pround(prevalt*data.input.altconst, 0)), 0, "Alt");
+					grLibInputGraphData(appgr, graphsecs, (UInt32)(pround(logdata->gpsalt*data.input.altconst, 0)), 0, "Alt");
 //					grLibInputGraphData(appgr, graphsecs, (UInt32)(pround(logdata->pressalt*data.input.altconst, 0)), 0, NULL);
+
+					// Engine Noise Level?
+					if (data.config.logenl) {
+						// add ENL data in seperate group for a different color (on color displays)
+						grLibInputGraphData(appgr, prevsecs,prevenl, 1, "ENL");
+						grLibInputGraphData(appgr, graphsecs,(UInt32)logdata->enl, 1, "ENL");
+//						HostTraceOutputTL(appErrorClass, "Graph ENL = %d",  logdata->enl);
+					}
 				}
 
 				// draw ground
@@ -150,15 +165,18 @@ void DrawAltTimeGraph(Int16 fltindex, UInt8 graphtype)
 //					grLibDrawGraphText(appgr, graphsecs, (UInt32)(pround(logdata->pressalt*data.input.altconst, 0)), 5, -10, print_altitude(fltdata->maxalt));
 					altlabeldrawn = true;
 				}
-
 				// draw the graphs
 				grLibDrawGraph(appgr,0);
-//				grLibDrawGraph(appgr,1);
+				// ENL enabled?
+				if (data.config.logenl) {
+					grLibDrawGraph(appgr,1);
+				}
 				grLibDrawGraph(appgr2,0);
 			}
 			firsttime = false;
 			prevsecs = graphsecs;
 			prevalt = logdata->gpsalt;
+			prevenl = logdata->enl;
 			prevterelev = logdata->terelev;
 		}
 		// Output the end time
@@ -169,7 +187,11 @@ void DrawAltTimeGraph(Int16 fltindex, UInt8 graphtype)
 
 		FreeMem((void *)&fltdata);
 		FreeMem((void *)&logdata);
-		grLibDrawGraphTitle(appgr,"Altitude vs. Time");
+		if (data.config.logenl) {
+			grLibDrawGraphTitle(appgr,"Altitude + ENL vs. Time");
+		} else {
+			grLibDrawGraphTitle(appgr,"Altitude vs. Time");
+		}
 		grLibReleaseResources(appgr);
 		grLibReleaseResources(appgr2);
 		FreeMem((void *)&appgr);
