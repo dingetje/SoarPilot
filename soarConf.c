@@ -1,3 +1,7 @@
+/**
+* \file soarConf.c
+* \brief SoarPilot configuration handling
+*/
 #include <PalmOS.h>	// all the system toolbox headers
 #include "soaring.h"
 #include "soarConf.h"
@@ -19,6 +23,10 @@ extern Int16     selectedPolarIndex;
 extern PolarData *selectedPolar;
 extern Char buf[PARSELEN];
 
+/**
+ * OutputConfig writes the current configuration to the configured destination
+ * this can be either serial, SD card, DOC, etc.
+ */
 void OutputConfig()
 {
 	Char output_char[100];
@@ -616,7 +624,12 @@ void OutputConfig()
 
 	return;
 }
-
+/**
+ * config_parser parses a configuration buffer and loads in the SoarPilot config database
+ * @param serinp pointer to input buffer
+ * @param length length of the buffer in bytes
+ * @param reset if true reset the buffer and return
+ */
 void config_parser(Char *serinp, UInt32 length, Boolean reset)
 {
 	UInt32 cur = 0;

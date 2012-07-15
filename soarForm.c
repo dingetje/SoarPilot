@@ -7877,7 +7877,7 @@ Boolean form_transfer_event_handler(EventPtr event)
 						{
 							if (!configtoggle) {
 								XferClose(data.config.nmeaxfertype);
-								config_parser(NULL, 0, true);
+								config_parser(NULL, 0, true); // reset
 								data.parser.parser_func = config_parser;
 								ctl_set_enable(form_transfer_xmitbtn, false);
 								ctl_set_label(form_transfer_recvbtn, "Stop");

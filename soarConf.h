@@ -1,6 +1,9 @@
 #ifndef SOARCONF_H
 #define SOARCONF_H
-
+/**
+* \file soarConf.h
+* \brief SoarPilot configuration header file
+*/
 #define SCFG __attribute__ ((section ("scfg")))
 /*****************************************************************************
  * defines 
