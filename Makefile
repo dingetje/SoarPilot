@@ -3,7 +3,6 @@
 # system configuration.
 # Place the file into the developping directory.
 # "make clean" removes all generated files, even the ".prc".
-# "make doc" generates source code documentation, requires doxygen
 APP             =soaring
 ICONTEXT        ="SoarPilot"
 APPID           =Soar

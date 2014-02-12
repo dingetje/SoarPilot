@@ -1,7 +1,3 @@
-/**
-* \file soarConf.c
-* \brief SoarPilot configuration handling
-*/
 #include <PalmOS.h>	// all the system toolbox headers
 #include "soaring.h"
 #include "soarConf.h"
@@ -23,10 +19,6 @@ extern Int16     selectedPolarIndex;
 extern PolarData *selectedPolar;
 extern Char buf[PARSELEN];
 
-/**
- * OutputConfig writes the current configuration to the configured destination
- * this can be either serial, SD card, DOC, etc.
- */
 void OutputConfig()
 {
 	Char output_char[100];
@@ -616,20 +608,9 @@ void OutputConfig()
 	StrCatEOL(output_char, data.config.xfertype);
 	TxData(output_char, data.config.xfertype);
 
-	// Xmit ENL (experimental)
-	StrCopy(output_char, "ENL,");
-	StrCat(output_char, StrIToA(tempchar, (Int32)data.config.logenl));
-	StrCatEOL(output_char, data.config.xfertype);
-	TxData(output_char, data.config.xfertype);
-
 	return;
 }
-/**
- * config_parser parses a configuration buffer and loads in the SoarPilot config database
- * @param serinp pointer to input buffer
- * @param length length of the buffer in bytes
- * @param reset if true reset the buffer and return
- */
+
 void config_parser(Char *serinp, UInt32 length, Boolean reset)
 {
 	UInt32 cur = 0;
@@ -1858,13 +1839,6 @@ void config_parser(Char *serinp, UInt32 length, Boolean reset)
 								pos += 3;
 							}
 						}
-					}
-				}
-				if (StrCompare(tempchar, "ENL") == 0) {
-//					HostTraceOutputTL(appErrorClass, "ENL record");
-					// Getting the Engine Noise Level on/off switch
-					if (GetField(buf, 1, tempchar)) {
-						data.config.logenl = (Boolean)StrAToI(tempchar);
 					}
 				}
 			}
