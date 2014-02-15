@@ -18,8 +18,6 @@
 //#define SUALOG
 // used to output simple lat / lon / alt data
 //#define POSITIONLOG
-// Engine Noise Level debugging, captures one raw frame
-//#define ENLLOG
 
 #define VISORSUPPORT
 #define TREOSUPPORT
@@ -202,7 +200,7 @@
 #define docCreator		'REAd'
 
 // Database Version Numbers
-#define CONFIGDBVER	13.0
+#define CONFIGDBVER	12.0
 
 #define LOGGERDBVER	6.0	// should keep task, logger and flight databases the same
 #define FLIGHTDBVER	6.0	//
@@ -438,7 +436,6 @@ typedef struct ConfigFlight {
 	Int32       logstoptime;		/**< logger stop time */
 	Boolean     logonoff;			/**< logger on/off */
 	Boolean     logautooff;			/**< logger auto off flag */
-	Boolean		logenl;				/**< enable ENL flag (experimental) */
 	Int8	    mapscaleidx;		/**< max. scale index */
 	Int8        timezone;			/**< time zone */
 	UInt16	    nmeaspeed;			/**< NMEA baud rate */

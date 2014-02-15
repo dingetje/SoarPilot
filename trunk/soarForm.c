@@ -4521,8 +4521,6 @@ Boolean form_set_logger_event_handler(EventPtr event)
 
 			ctl_set_value(form_set_logger_onoff, data.config.logonoff);
 			ctl_set_value(form_set_logger_autooff, data.config.logautooff);
-			// experimental ENL option in 4.6.3
-			ctl_set_value(form_set_logger_enl, data.config.logenl);
 			if (data.config.logautooff) {
 				field_set_enable(form_set_logger_offspd, true);
 				field_set_enable(form_set_logger_offtime, true);
@@ -4663,12 +4661,6 @@ Boolean form_set_logger_event_handler(EventPtr event)
 			// maintain sensible minimums
 			if (data.config.logstoptime < 60) data.config.logstoptime = 60;
 			if (data.config.nodatatime < 60) data.config.nodatatime = 60;
-			
-			// ENL enabled but device cannot capture sound?
-			if (data.config.logenl && !device.ENLCapable) {
-				FrmCustomAlert(WarningAlert, "Device not ENL capable!"," "," ");
-				data.config.logenl = 0;
-			}
 			handled=false;
 			break;
 		case ctlSelectEvent:  // A control button was pressed and released.
@@ -4676,10 +4668,6 @@ Boolean form_set_logger_event_handler(EventPtr event)
 			switch ( event->data.ctlEnter.controlID ) {
 				case form_set_logger_onoff:
 					data.config.logonoff = ctl_get_value(form_set_logger_onoff);
-					handled = true;
-					break;
-				case form_set_logger_enl: // experimental ENL
-					data.config.logenl = ctl_get_value(form_set_logger_enl);
 					handled = true;
 					break;
 				case form_set_logger_autooff:
@@ -7877,7 +7865,7 @@ Boolean form_transfer_event_handler(EventPtr event)
 						{
 							if (!configtoggle) {
 								XferClose(data.config.nmeaxfertype);
-								config_parser(NULL, 0, true); // reset
+								config_parser(NULL, 0, true);
 								data.parser.parser_func = config_parser;
 								ctl_set_enable(form_transfer_xmitbtn, false);
 								ctl_set_label(form_transfer_recvbtn, "Stop");

@@ -318,7 +318,6 @@
 #define form_set_logger_event		2023
 #define form_set_logger_eventlbl	2024
 #define form_set_logger_autoIGCxfer	2025
-#define form_set_logger_enl		2026
 
 #define form_disp_sua			2100
 #define form_disp_sua_title		2101
