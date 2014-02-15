@@ -258,6 +258,8 @@ extern double tskcrashlon;
 extern double *tskterheights;
 extern Int32 numtskter;
 extern Int32 prevnumtskter;
+extern Int8 io_file_type;
+extern Int8 io_type;
 
 #ifdef VISORSUPPORT
 	// function required for Visor support
@@ -1460,6 +1462,11 @@ Boolean ApplicationHandleEvent(EventPtr event)
 				case menu_set_qnh:
 					FrmGotoForm(form_set_qnh);
 					break;
+				case menu_replay:
+					io_type = IO_RECEIVE;
+					io_file_type = IGC_FILE;
+					FrmGotoForm(form_list_files);
+					break;					
 				case menu_set_scrorder:
 					FrmGotoForm(form_set_scrorder);
 					break;
