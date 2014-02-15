@@ -1,7 +1,3 @@
-/**
-* \file soarDB.c
-* \brief SoarPilot database functions
-*/
 #include <PalmOS.h>
 #include "soaring.h"
 #include "soarDB.h"
@@ -20,17 +16,17 @@
 #include "soarMap.h"
 #include "soarRECO.h"
 
-DmOpenRef config_db;	/**< SoarPilot configuration database handle */
-DmOpenRef logger_db;	/**< SoarPilot logger database handle */
-DmOpenRef flight_db;	/**< SoarPilot flight database handle */
-DmOpenRef waypoint_db;	/**< SoarPilot waypoints database handle */
-DmOpenRef polar_db;	/**< SoarPilot polar database handle */
-DmOpenRef task_db;	/**< SoarPilot task database handle */
-DmOpenRef suaidx_db;	/**< SoarPilot SUA index database handle */
-DmOpenRef suadata_db;	/**< SoarPilot SUA database handle */
-DmOpenRef terrain_db;	/**< SoarPilot terrain database handle */
-DmOpenRef memo_db;	/**< SoarPilot memo database handle */
-DmOpenRef doc_db;	/**< SoarPilot DOC database handle */
+DmOpenRef config_db;
+DmOpenRef logger_db;
+DmOpenRef flight_db;
+DmOpenRef waypoint_db;
+DmOpenRef polar_db;
+DmOpenRef task_db;
+DmOpenRef suaidx_db;
+DmOpenRef suadata_db;
+DmOpenRef terrain_db;
+DmOpenRef memo_db;
+DmOpenRef doc_db;
 
 extern PolarData *inusePolar;
 extern Int16     selectedPolarIndex;
@@ -42,17 +38,9 @@ extern UInt16 numfilesfound;
 
 Char NameString[26];
 
-/**
- * OpenCreateDB
- * @brief open a database. If it doesn't exist, create it.
- * @param dbP pointer to database reference
- * @param cardNo card number
- * @param name database name
- * @param dbcreator
- * @param type
- * @param mode
- * @return result code either DB_OPEN_SUCCESS, DB_OPEN_FAIL or DB_OPEN_CREATE
- */
+/*****************************************************************************
+ * OpenCreateDB - open a database. If it doesn't exist, create it.
+ *****************************************************************************/
 Int16 OpenCreateDB(DmOpenRef *dbP, 
 						UInt16 cardNo, 
 						Char* name, 
@@ -71,18 +59,9 @@ Int16 OpenCreateDB(DmOpenRef *dbP,
 	return (DB_OPEN_SUCCESS);
 }
 
-/**
- * OpenCreateDB2
- * @brief open a database and get DB version number.
- * @param dbP pointer to database reference
- * @param cardNo card number
- * @param name database name
- * @param dbcreator
- * @param type
- * @param mode
- * @param curver expected current version
- * @return result code either DB_OPEN_SUCCESS, DB_OPEN_FAIL or DB_OPEN_CREATE
- */
+/*****************************************************************************
+ * OpenCreateDB2 - open a database and get DB version number.
+ *****************************************************************************/
 Int16 OpenCreateDB2(DmOpenRef *dbP, 
 						UInt16 cardNo, 
 						Char *name, 
@@ -162,14 +141,9 @@ Int16 OpenCreateDB2(DmOpenRef *dbP,
 	}
 }
 
-/**
- * OpenDeleteDB
- * @brief delete an open database
- * @param dbP pointer to database reference
- * @param cardNo card number
- * @param name database name
- * @return true on success else false
- */
+/*****************************************************************************
+ * OpenDeleteDB - delete an open.
+ *****************************************************************************/
 Boolean OpenDeleteDB(DmOpenRef *dbP, UInt16 cardNo, Char *name) 
 {
 	LocalID   dbID;
@@ -185,12 +159,9 @@ Boolean OpenDeleteDB(DmOpenRef *dbP, UInt16 cardNo, Char *name)
 	}
 }
 
-/**
+/*****************************************************************************
  * OpenDBCountRecords
- * @brief count records in open database
- * @param openDBDB database reference
- * @return number of records in database or NO_RECORD
- */
+ *****************************************************************************/
 UInt16 OpenDBCountRecords(DmOpenRef	openDBDB)
 {
 	if (openDBDB == 0)
@@ -201,15 +172,10 @@ UInt16 OpenDBCountRecords(DmOpenRef	openDBDB)
 
 
 
-/**
- * OpenDBAddRecord
- * @brief add a record in the open db at the start or end of the db (according to atStart)
- * @param openDBDB database handle
- * @param size size of new record data
- * @param openDBP pointer to new record data
- * @param atStart set to true to add record at start, else at end
- * @return index of added record or NO_RECORD on error
- */
+/*****************************************************************************
+ * OpenDBAddRecord - add a record in the open db at the start or
+ *		end of the db (according to atStart)
+ *****************************************************************************/
 UInt16 OpenDBAddRecord(DmOpenRef		openDBDB,
 						Int32		size,
 						MemPtr		openDBP,
@@ -242,16 +208,10 @@ UInt16 OpenDBAddRecord(DmOpenRef		openDBDB,
 
 
 
-/**
- * @brief create a new record in the open db at the start or
- * end of the db (according to atStart)
- * @param openDBDB database handle
- * @param size size of new record data
- * @param openDBH pointer to new record handle
- * @param openDBP pointer to new record data
- * @param atStart set to true to add record at start, else at end
- * @return index of new record or NO_RECORD on error
- */
+/*****************************************************************************
+ * OpenDBNewRecord - create a new record in the open db at the start or
+ *		end of the db (according to atStart)
+ *****************************************************************************/
 UInt16 OpenDBNewRecord(DmOpenRef		openDBDB,
 						Int32		size,
 						MemHandle	*openDBH,
@@ -262,7 +222,7 @@ UInt16 OpenDBNewRecord(DmOpenRef		openDBDB,
 
 	// check for an open db
  	if (openDBDB == 0)
-		return false; // @note hmm..shouldn't this be NO_RECORD?
+		return false;
 
 	if (atStart)
 		dbIndex = 0;
@@ -284,14 +244,11 @@ UInt16 OpenDBNewRecord(DmOpenRef		openDBDB,
 	return dbIndex;
 }
 
-/**
- * @brief get a record from the open database
- * @param openDBDB database handle
- * @param index record index
- * @param openDBH pointer to record handle
- * @param openDBP pointer to record data
- * @return false in case of errors, else true
- */
+
+
+/*****************************************************************************
+ * OpenDBGetRecord - get a record from the OpenDB
+ *****************************************************************************/
 Boolean OpenDBGetRecord(DmOpenRef	openDBDB,
 						Int16			index,
 						MemHandle	*openDBH,
@@ -322,14 +279,10 @@ Boolean OpenDBGetRecord(DmOpenRef	openDBDB,
 }
 
 
-/**
- * @brief get a read-only record from the open database
- * @param openDBDB database handle
- * @param index record index
- * @param openDBH pointer to record handle
- * @param openDBP pointer to record data
- * @return false in case of errors, else true
- */
+
+/*****************************************************************************
+ * OpenDBQueryRecord - get a read-only record from the OpenDB
+ *****************************************************************************/
 Boolean OpenDBQueryRecord(DmOpenRef	openDBDB,
 						Int16			index,
 						MemHandle	*openDBH,
@@ -361,15 +314,9 @@ Boolean OpenDBQueryRecord(DmOpenRef	openDBDB,
 
 
 
-/**
- * @brief Clear the busy bit for the given record and set the dirty bit if save is true.
- * @param openDBDB database handle
- * @param index record index
- * @param openDBH pointer to record handle
- * @param openDBP pointer to record data
- * @param save set to true to set the dirty bit for the released record
- * @return false in case of errors, else true
- */
+/*****************************************************************************
+ * OpenDBReleaseRecord - release a record from the openDB db.  
+ *****************************************************************************/
 Boolean OpenDBReleaseRecord(DmOpenRef	openDBDB,
 							Int16			index,
 							MemHandle	*openDBH,
@@ -400,12 +347,9 @@ Boolean OpenDBReleaseRecord(DmOpenRef	openDBDB,
 
 
 
-/**
- * @brief delete a record from the open database
- * @param openDBDB database handle
- * @param index record index
- * @return false in case of errors, else true
- */
+/*****************************************************************************
+ * OpenDBDeleteRecord - delete a record from the openDB db.  
+ *****************************************************************************/
 Boolean OpenDBDeleteRecord(DmOpenRef	openDBDB, Int16			index)
 {
 	// check for an open db
@@ -422,11 +366,9 @@ Boolean OpenDBDeleteRecord(DmOpenRef	openDBDB, Int16			index)
 
 
 
-/**
- * @brief delete all the records from the open database
- * @param openDBDB open database handle
- * @return false in case of errors, else true
- */
+/*****************************************************************************
+ * OpenDBEmpty - delete the records from the openDB db.  
+ *****************************************************************************/
 Boolean OpenDBEmpty(DmOpenRef	openDBDB)
 {
 	Int16		index;
@@ -445,12 +387,14 @@ Boolean OpenDBEmpty(DmOpenRef	openDBDB)
 }
 
 
-/**
- * @brief set the bit in a database so the database will or will not be backed up
- * by the default backup conduit
- * @param openDBRef reference to the OPEN database
- * @param setForBackup set to true for backup or false for no backup
- */
+/*****************************************************************************
+ * OpenDBSetBackup
+ *    set the bit in a database so the database will or will not be backed up
+ *		by the default backup conduit
+ * Parameters:
+ *		DmOpenRef	dbRef			- reference to the OPEN database
+ *		Boolean		setForBackup	- set for backup or not
+ *****************************************************************************/
 void OpenDBSetBackup(DmOpenRef	openDBRef,
 					Boolean		setForBackup)
 {
@@ -476,14 +420,11 @@ void OpenDBSetBackup(DmOpenRef	openDBRef,
 }
 
 
-/**
- * @brief update a record.  NULL records are written out as empty
- * @param openDBDB open database handle
- * @param size size of data
- * @param openDBP pointer to record data to update
- * @param dbIndex record index
- * @return false if dbIndex out of range or write fails, true otherwise
- */
+/*****************************************************************************
+ * OpenDBUpdateRecord - update a record.  NULL records are written out
+ *	as empty
+ *	Return: false if dbIndex out of range or write fails, true otherwise
+ *****************************************************************************/
 Boolean OpenDBUpdateRecord(DmOpenRef openDBDB,
 						Int32		size,
 						MemPtr	openDBP,
@@ -517,13 +458,10 @@ Boolean OpenDBUpdateRecord(DmOpenRef openDBDB,
 	return(result);
 }
 
-/**
- * @brief update the App Info data for a database
- * @param openDBDB open database handle
- * @param cardNo card number
- * @param appInfoData App Info data
- * @return false if AppInfo chuck not found otherwise true
- */
+/*****************************************************************************
+ * OpenDBUpdateAppInfo - update the App Info data for a database
+ *	Return: false - If AppInfo Chuck not found otherwise true
+ *****************************************************************************/
 Boolean OpenDBUpdateAppInfo(DmOpenRef openDBDB, 
 									 UInt16 cardNo, 
 									 double	appInfoData)
@@ -545,13 +483,10 @@ Boolean OpenDBUpdateAppInfo(DmOpenRef openDBDB,
 	return(result);
 }
 
-/**
- * @brief update the App Info data for a database
- * @param openDBDB open database handle
- * @param cardNo card number
- * @param appInfoData pointer to receive App Info data
- * @return false - If AppInfo Chuck not found otherwise true
- */
+/*****************************************************************************
+ * OpenDBGetAppInfo - update the App Info data for a database
+ *	Return: false - If AppInfo Chuck not found otherwise true
+ *****************************************************************************/
 Boolean OpenDBGetAppInfo(DmOpenRef openDBDB, 
 									 UInt16 cardNo, 
 									 double *appInfoData)
@@ -572,11 +507,18 @@ Boolean OpenDBGetAppInfo(DmOpenRef openDBDB,
 	return(result);
 }
 
-/**
- *  @brief Create an app info chunk if missing.  Set the strings to a default.
- *  @param dbP open database handle
- *  @return 0 if successful, errorcode if not
- */
+/************************************************************
+ *
+ *  FUNCTION: MemoAppInfoInit
+ *
+ *  DESCRIPTION: Create an app info chunk if missing.  Set
+ *		the strings to a default.
+ *
+ *  PARAMETERS: database pointer
+ *
+ *  RETURNS: 0 if successful, errorcode if not
+ *
+ *************************************************************/
 Err MemoAppInfoInit(DmOpenRef dbP)
 {
 	UInt16 				cardNo;
@@ -592,13 +534,14 @@ Err MemoAppInfoInit(DmOpenRef dbP)
 			NULL, NULL, &appInfoID, NULL, NULL, NULL))
 		return dmErrInvalidParam;
 	
-	if (appInfoID == 0) {
+	if (appInfoID == 0)
+		{
 		h = DmNewHandle (dbP, sizeof (MemoAppInfoType));
 		if (! h) return dmErrMemError;
 		
 		appInfoID = MemHandleToLocalID (h);
 		DmSetDatabaseInfo(cardNo, dbID, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &appInfoID, NULL, NULL, NULL);
-	}
+		}
 	
 	appInfoP = MemLocalIDToLockedPtr(appInfoID, cardNo);
 
@@ -617,13 +560,19 @@ Err MemoAppInfoInit(DmOpenRef dbP)
 	return 0;
 }
 
-/**
- * @brief  Get the application's database.  Open the database if it
+/***********************************************************************
+ *
+ * FUNCTION:     MemoGetDatabase
+ *
+ * DESCRIPTION:  Get the application's database.  Open the database if it
  * exists, create it if neccessary.
- * @param dbPP - pointer to a database ref (DmOpenRef) to be set
- * @param mode - how to open the database (dmModeReadWrite)
- * @return zero if no error, else the error
- */
+ *
+ * PARAMETERS:   *dbPP - pointer to a database ref (DmOpenRef) to be set
+ *					  mode - how to open the database (dmModeReadWrite)
+ *
+ * RETURNED:     Err - zero if no error, else the error
+ *
+ ***********************************************************************/
 Err MemoGetDatabase (DmOpenRef *dbPP, UInt16 mode)
 {
 	Err error = 0;
@@ -660,13 +609,6 @@ Err MemoGetDatabase (DmOpenRef *dbPP, UInt16 mode)
 	return 0;
 }
 
-/**
- * @brief perform an action on memo data
- * @param action action code, either IOINIT, IOWRITE, IOREAD or IOCLOSE
- * @param data pointer to data depending on action input or output handle
- * @param numBytes number of bytes in data, depending on action input or output
- * @return true in case of success, else false
- */
 Boolean HandleMemoData(Int8 action, Char *data, UInt32 *numBytes)
 {
 	static Char *memodata=NULL;
@@ -875,13 +817,6 @@ Boolean HandleMemoData(Int8 action, Char *data, UInt32 *numBytes)
 	return(retval);
 }
 
-/**
- * @brief perform an action on DOC data
- * @param action action code, either IODELETE, IOEXIST, IODIR, IOINIT, IOWRITE, IOREAD or IOCLOSE
- * @param data pointer to data depending on action input or output handle
- * @param numBytes number of bytes in data, depending on action input or output
- * @return true in case of success, else false
- */
 Boolean HandleDOCData(Int8 action, Char *data, UInt32 *numBytes)
 {
 	static Char *docdata=NULL;
@@ -1210,10 +1145,6 @@ Boolean HandleDOCData(Int8 action, Char *data, UInt32 *numBytes)
 	return(retval);
 }
 
-/**
- * @brief open all SoarPilot databases
- * @return false in case all databases opened, else true!
- */
 Boolean OpenAllDatabases(void)
 {
 	Int16 dberr;
@@ -1230,7 +1161,6 @@ Boolean OpenAllDatabases(void)
 		return(true);
 	}
 
-	// new config created, then set some sensible defaults
 	if (dberr==DB_OPEN_CREATE) {
 		// config data
 		data.config.bugfactor=1.0;
@@ -1696,9 +1626,6 @@ Boolean OpenAllDatabases(void)
 	return(false);
 }
 
-/**
- * @brief close all SoarPilot databases
- */
 void CloseAllDatabases(void)
 {
 	// Close all open databases
@@ -1713,13 +1640,6 @@ void CloseAllDatabases(void)
 	DmCloseDatabase(terrain_db);
 }
 
-/**
- * @brief Check the parameters of a write operation to a data storage chunk
- * before actually performing the write. DEBUG code only!
- * @param recordP pointer to record data
- * @param offset offset
- * @param bytes number of bytes
- */
 void DebugWriteCheck(MemPtr recordP, UInt32 offset, UInt32 bytes)
 {
 
