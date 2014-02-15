@@ -47,6 +47,7 @@
 #define SUADATA_TNP 	7
 #define SUADATA_OPENAIR	8
 #define WAYPOINTS_OZI	9
+#define IGC_FILE	10
 
 #define XFRXFR 		0
 #define XFRRECEIVE 	1

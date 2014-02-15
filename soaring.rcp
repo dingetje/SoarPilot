@@ -1,7 +1,7 @@
 #include "soarForm.h"
 
 // version information
-VERSION ID 1 "4.6.2"
+VERSION ID 1 "4.7.1"
 
 STRING ID help_main "Welcome to: SoaringPilot\n"\
   "4.6.2 April 2012 Beta\n"\
@@ -1915,6 +1915,7 @@ BEGIN
 		MENUITEM "Wind Profile" ID menu_wind_3dinfo "H"
 		MENUITEM "Thermals" ID menu_thermal_hist "J"
 		MENUITEM "QFE/QNH" ID menu_set_qnh "Q"
+		MENUITEM "Replay IGC" ID menu_replay
 		MENUITEM "Exit SP" ID menu_exit "E"
 	END
 	PULLDOWN "Navigation"

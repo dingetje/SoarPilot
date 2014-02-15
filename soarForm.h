@@ -28,6 +28,7 @@
 #define menu_thermal_hist		126
 #define menu_set_sms			127
 #define menu_active_rules		128
+#define menu_replay			129
 
 #define FONT14				150
 #define FONT20				151

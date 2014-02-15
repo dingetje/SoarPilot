@@ -1886,6 +1886,12 @@ Boolean form_list_files_event_handler(EventPtr event)
 					StrCopy(tempchar2, "Select SUA - ");
 					StrCopy(extension, ".air");
 					break;
+				case IGC_FILE:
+					StrCopy(tempchar2, "Select Flight Log - ");
+					StrCopy(extension, ".igc");
+					ctl_set_visible(form_list_files_deletebtn, false);
+					ctl_set_label(form_list_files_loadbtn, "Play");
+					break;
 				default:
 					StrCopy(tempchar2, "Select File - ");
 					StrCopy(extension, ".xxx");
@@ -1895,7 +1901,7 @@ Boolean form_list_files_event_handler(EventPtr event)
 			StrCat(tempchar2, tempchar);
 			frm_set_title(tempchar2);
 
-			// get directoty for specfic file type
+			// get directory for specfic file type
 			numfilesfound = 0;
 			switch (data.config.xfertype) {
 				case USEVFS:
