@@ -6673,7 +6673,6 @@ Boolean form_transfer_event_handler(EventPtr event)
 					EvtAddEventToQueue(&newEvent);
 					break;
 				case IGC_FILE:
-					io_type = IO_RECEIVE;
 					ctl_set_value(form_transfer_flight, true);
 					newEvent.eType = ctlSelectEvent;
 					newEvent.data.ctlEnter.controlID = form_transfer_flight;
@@ -7599,6 +7598,12 @@ Boolean form_transfer_event_handler(EventPtr event)
 									io_file_type = SUADATA_TNP;
 								}
 								break;
+							case form_transfer_flight:
+								io_file_type = IGC_FILE;
+								if ((data.config.xfertype == USEVFS) || (data.config.xfertype == USEDOC)) {
+									database = form_transfer_flight; // IGC replay
+								}
+								break;
 							default:
 								io_file_type = NO_FILE_TYPE;
 								break;
@@ -7610,17 +7615,14 @@ Boolean form_transfer_event_handler(EventPtr event)
 
 					} else {
 
-					if ((data.config.xfertype == USEVFS) && io_file_type == IGC_FILE) {
-						database = form_transfer_flight; // IGC replay
-					}
 					// check file name length
-					else if ((StrLen(transfer_filename) < 5) && ((data.config.xfertype == USEVFS) ||  (data.config.xfertype == USEDOC))) {
+					if ((StrLen(transfer_filename) < 5) && ((data.config.xfertype == USEVFS) ||  (data.config.xfertype == USEDOC))) {
 //						HostTraceOutputTL(appErrorClass, "Cancel Receiving - No Filename");
 						io_file_type = NO_FILE_TYPE;
 						io_type = IO_NONE;
 					} else {
 						// set default filenames
-					if ((data.config.xfertype != USEVFS) && (data.config.xfertype != USEDOC)) {
+						if ((data.config.xfertype != USEVFS) && (data.config.xfertype != USEDOC)) {
 //						HostTraceOutputTL(appErrorClass, "Setting Default Filenames");
 						switch ( database ) {
 							case form_transfer_config:
@@ -7842,7 +7844,8 @@ Boolean form_transfer_event_handler(EventPtr event)
 										FrmCustomAlert(WarningAlert, "Data Not Found"," "," ");
 									}
 									igctoggle = true;
-								}							}
+								}
+							}
 							if (igctoggle) {
 //								HostTraceOutputTL(appErrorClass, "Closing IGC file");
 								XferClose(data.config.xfertype);
