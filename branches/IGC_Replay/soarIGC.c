@@ -1,4 +1,5 @@
 #include <PalmOS.h>
+#include <MemoryMgr.h>
 #include "soaring.h"
 #include "soarUtil.h"
 #include "soarForm.h"
@@ -6,11 +7,57 @@
 #include "soarIO.h"
 #include "soarIGC.h"
 #include "soarMath.h"
+#include "soarUtil.h"
+#include "soarMem.h"
 
 extern Int32  rxrecs;
 extern char rxtype[15];
 extern Char buf[PARSELEN];
 
+static t_index pnts=0;	/* no of points in track */
+static t_point *pointlist = 0;	/* start point of track list */
+
+// cleanup old list if we have one
+static void cleanUpList()
+{
+	struct _point *pCleanup = 0;
+	while(pointlist)
+	{
+		pCleanup = pointlist;
+		pointlist = pointlist->next;
+		FreeMem((void *) pCleanup);
+	}
+	pnts = 0;
+}
+
+// Add a point to the list
+/* static void addPoint(double lat, double lon, double alt, double speed, double dist, int seconds)
+{
+	static t_point *last = 0;
+	t_point *neu = 0;
+	AllocMem((void *)&neu, sizeof(t_point));
+	MemSet(neu, sizeof(t_point), 0);
+	neu->lat = lat;
+	neu->lon = lon;
+	neu->alt = alt;
+	neu->speed = speed;
+	neu->dist = dist;
+	neu->seconds = seconds;
+	neu->next = 0;
+	// 1st time here?
+	if (!pointlist)
+	{
+		// remember start of the points list
+		pointlist = neu;
+	}
+	else
+	{
+		last->next = neu;
+	}
+	last = neu;
+	pnts++;
+} 
+ */
 void igc_parser(Char* serinp, UInt32 length, Boolean reset)
 {
 	UInt32 cur = 0;
@@ -21,12 +68,13 @@ void igc_parser(Char* serinp, UInt32 length, Boolean reset)
 	static Boolean lineoverflow = false;
 	
 	if (reset) {
-//		HostTraceOutputTL(appErrorClass, " resetting");
+		HostTraceOutputTL(appErrorClass, " IGC resetting");
 		next = 0;
 		skip = false;
 		MemSet(&buf,sizeof(buf),0);
 		rxrecs = 0;
 		StrCopy(rxtype, "Records");
+		cleanUpList();
 		return;
 	}
 
@@ -42,8 +90,8 @@ void igc_parser(Char* serinp, UInt32 length, Boolean reset)
 		}
 		buf[next] = '\0';
 
-		if (buf[0] == '*') {
-//			HostTraceOutputTL(appErrorClass, "Setting skip to true");
+		if (buf[0] != 'B') {
+			HostTraceOutputTL(appErrorClass, "Skipping non B-record");
 			skip = true;
 		}
 
@@ -66,7 +114,8 @@ void igc_parser(Char* serinp, UInt32 length, Boolean reset)
 					lineoverflow = false;
 
 				} else {				
-				//	TODO parse B record
+				//	TODO parse B record			
+					HostTraceOutputTL(appErrorClass, buf);
 					igcidx++;
 					if (FrmGetActiveFormID() == form_transfer) {
 						// update record counter on transferscreen
