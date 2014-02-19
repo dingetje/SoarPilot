@@ -27,6 +27,7 @@ DmOpenRef suadata_db;
 DmOpenRef terrain_db;
 DmOpenRef memo_db;
 DmOpenRef doc_db;
+DmOpenRef sim_db;
 
 extern PolarData *inusePolar;
 extern Int16     selectedPolarIndex;
@@ -1623,6 +1624,16 @@ Boolean OpenAllDatabases(void)
 		OpenDBSetBackup(terrain_db, true);
 	} 
 
+	/* simulator data, IGC playback */
+	dberr=OpenCreateDB2(&sim_db, CARD_NO, sim_db_name, appcreator, 
+								sim_db_type, DB_RW_MODE, (UInt16)(SIMDBVER*10.0));
+	if (dberr == DB_OPEN_FAIL) {
+		ErrDisplay("Could not create simulator database");
+	}
+	if (dberr==DB_OPEN_CREATE) {
+		OpenDBSetBackup(sim_db, true);
+	}
+	
 	return(false);
 }
 
@@ -1638,6 +1649,7 @@ void CloseAllDatabases(void)
 	DmCloseDatabase(suaidx_db);
 	DmCloseDatabase(suadata_db);
 	DmCloseDatabase(terrain_db);
+	DmCloseDatabase(sim_db);
 }
 
 void DebugWriteCheck(MemPtr recordP, UInt32 offset, UInt32 bytes)

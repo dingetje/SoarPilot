@@ -183,6 +183,7 @@
 #define suaidx_db_name		"SoaringPilot_suaidx_db\0"
 #define suadata_db_name		"SoaringPilot_suadata_db\0"
 #define terrain_db_name		"SoaringPilot_terrain_db\0"
+#define sim_db_name		"SoaringPilot_sim_db\0"
 
 #define config_db_type		'SCfg'
 #define logger_db_type		'SLog'
@@ -193,6 +194,7 @@
 #define suaidx_db_type		'SSdx'
 #define suadata_db_type		'SSua'
 #define terrain_db_type		'STer'
+#define sim_db_type		'SSim'
 
 #define memoDBName		"MemoDB\0"
 #define memoDBType		'DATA'
@@ -214,6 +216,7 @@
 #define POLARDBVER	2.0
 
 #define TERRAINDBVER	1.0
+#define SIMDBVER	1.0
 
 #define DOCDBVER	0
 
@@ -983,6 +986,19 @@ typedef struct SUAAlertRet {
 } SUAAlertRet;
 
 /**
+* \struct SimPoint
+* \brief IGC simulator point data
+*/
+typedef struct SimPoint
+{
+	double	lat,		// latitude
+		lon,		// longitude
+		alt;		// GPS or pressure altitude
+	int	seconds;	// time stamp
+} SimPoint;
+
+
+/**
 * \struct QuestionData
 * \brief question dialog data
 */
@@ -1084,6 +1100,7 @@ extern DmOpenRef task_db;
 extern DmOpenRef suaidx_db;
 extern DmOpenRef suadata_db;
 extern DmOpenRef terrain_db;
+extern DmOpenRef sim_db;
 
 // variables for new alert dialogs
 extern QuestionData *question;
