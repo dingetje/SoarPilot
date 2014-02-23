@@ -1542,6 +1542,7 @@ Boolean ApplicationHandleEvent(EventPtr event)
 // get data from GPS
 //******************************************************************************
 			// get NMEA data
+
 			// IGC simulator mode?
 			if (gps_sim) {
 
@@ -1552,6 +1553,7 @@ Boolean ApplicationHandleEvent(EventPtr event)
 				MemMove(&simpoint, sim_ptr, sizeof(SimPoint));
 				MemHandleUnlock(sim_hand);
 				
+				// first point?
 				if (gps_last_time == 0) {
 					Int8 j=0;
 					// remember time
@@ -1574,8 +1576,12 @@ Boolean ApplicationHandleEvent(EventPtr event)
 						satData[j].azimuth = ((SysRandom(0) * 180.0) /sysRandomMax) * degToRad;
 					}				
 				} else {
-					if (cursecs - gps_time > simpoint.seconds - gps_last_time)
+					if (cursecs - gps_time >= simpoint.seconds - gps_last_time)
 					{						
+						// remember times
+						gps_last_time = simpoint.seconds;
+						gps_time = cursecs;
+						
 						readtime = cursecs;
 						recv_data = true;
 						no_read_count = cursecs;
