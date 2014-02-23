@@ -110,6 +110,8 @@ Int32	gps_idx = 0;
 UInt32	gps_time = 0;
 UInt32	gps_last_time = 0;
 UInt16  gps_rec = 0;
+char latbuf[21],
+	 lonbuf[21];
 SimPoint simpoint;
 
 // Global screen Data
@@ -1573,12 +1575,7 @@ Boolean ApplicationHandleEvent(EventPtr event)
 					}				
 				} else {
 					if (cursecs - gps_time > simpoint.seconds - gps_last_time)
-					{
-						double dLat, dLon, min;
-						char lat[20], lon[20];
-						char dir[2];
-						Int16 deg;
-						
+					{						
 						readtime = cursecs;
 						recv_data = true;
 						no_read_count = cursecs;
@@ -1593,8 +1590,8 @@ Boolean ApplicationHandleEvent(EventPtr event)
 		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode....alt=%s", DblToStr(simpoint.alt,5));
 		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode..speed=%s", DblToStr(simpoint.speed,5));
 										
-						data.input.gpslatdbl = dLat = simpoint.lat;
-						data.input.gpslngdbl = dLon = simpoint.lon;
+						data.input.gpslatdbl = simpoint.lat;
+						data.input.gpslngdbl = simpoint.lon;
 						data.input.coslat = cos(DegreesToRadians(data.input.gpslatdbl));
 
 						//Altitude in meters divided by ALTMETCONST to convert to feet.
@@ -1613,34 +1610,16 @@ Boolean ApplicationHandleEvent(EventPtr event)
 						data.input.magnetic_track.value = nice_brg(data.input.true_track.value);
 						data.input.magnetic_track.valid=VALID;
 
-						// logger GPS position
-						if ( simpoint.lat < 0.0 ) {
-							dLat = -dLat;
-							dir[0] = 'S';
-						} else {
-							dir[0] = 'N';
-						}
-						dir[1] = '\0';
-						deg = (Int16) dLat;						
-						min = (dLat - (double)deg) * 60.0;
-						itoa(deg,lat,10);
-						StrCat(lat,DblToStr(min,4));
-						StrCat(lat,dir);
-						StrCopy(data.logger.gpslat, lat);
-						if ( dLon < 0.0 ) {
-							dLon = -dLon;
-							dir[0] = 'W';
-						} else {
-							dir[0] = 'E';
-						}
-						deg = (Int16) dLon;
-						min = (dLon - (double)deg) * 60.0;
-						itoa(deg,lon,10);
-						StrCat(lon,DblToStr(min,4));
-						StrCat(lon,dir);
-						StrCopy(data.logger.gpslng, lon);
-						HostTraceOutputTL(appErrorClass, "GPS simulator mode..lat=%s", lat);
-						HostTraceOutputTL(appErrorClass, "GPS simulator mode..lon=%s", lon);
+						// set logger GPS position
+						MemSet(latbuf, sizeof(latbuf), 0);
+						MemSet(lonbuf, sizeof(lonbuf), 0);
+						// LLToStringDM(double coord, Char *coordStr, Boolean lat, Boolean colon, Boolean period, Int8 numaddplaces)
+						LLToStringDM(simpoint.lat,latbuf,true,false,true,3);
+						StrCopy(data.logger.gpslat, latbuf);
+						LLToStringDM(simpoint.lon,lonbuf,false,false,true,3);
+						StrCopy(data.logger.gpslng, lonbuf);
+//						HostTraceOutputTL(appErrorClass, "GPS simulator mode..lat=%s -> lat=%s", DblToStr(simpoint.lat,5),latbuf);
+//						HostTraceOutputTL(appErrorClass, "GPS simulator mode..lon=%s -> lon=%s", DblToStr(simpoint.lon,5),lonbuf);
 						
 						updatemap = true;
 						updatetime = true;
