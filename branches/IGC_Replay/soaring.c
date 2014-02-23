@@ -1543,10 +1543,7 @@ Boolean ApplicationHandleEvent(EventPtr event)
 			// IGC simulator mode?
 			if (gps_sim) {
 
-				double gpsvar=0.0,
-						dLat, dLon;
-				char lat[20], lon[20];
-				char dir;
+				double gpsvar=0.0;
 
 				// get next record from sim database
 				OpenDBQueryRecord(sim_db, gps_idx, &sim_hand, &sim_ptr);
@@ -1577,6 +1574,11 @@ Boolean ApplicationHandleEvent(EventPtr event)
 				} else {
 					if (cursecs - gps_time > simpoint.seconds - gps_last_time)
 					{
+						double dLat, dLon, min;
+						char lat[20], lon[20];
+						char dir[2];
+						Int16 deg;
+						
 						readtime = cursecs;
 						recv_data = true;
 						no_read_count = cursecs;
@@ -1611,31 +1613,34 @@ Boolean ApplicationHandleEvent(EventPtr event)
 						data.input.magnetic_track.value = nice_brg(data.input.true_track.value);
 						data.input.magnetic_track.valid=VALID;
 
-						// TODO logger GPS position
-						// if ( simpoint.lat < 0.0 )
-						// {
-						// 	dLat = -dLat;
-						// 	dir = 'S';
-						// }
-						// else
-						// {
-						// 	dir = 'N';
-						// }
-						// deg = (int)(dLat);
-						// min = (dLat - (double)deg) * 60.0;
-						// sprintf( lat, "%02d%07.4f,%c", abs(deg), min, dir);
-						// if ( dLon < 0.0 )
-						// {
-						// 	dLon = -dLon;
-						// 	dir = 'W';
-						// }
-						// else
-						// {
-						// 	dir = 'E';
-						// }
-						// deg = (int)(dLon);
-						// min = (dLon - (double)deg) * 60.0;
-						// sprintf( lon, "%03d%07.4f,%c", abs(deg), min, dir);
+						// logger GPS position
+						if ( simpoint.lat < 0.0 ) {
+							dLat = -dLat;
+							dir[0] = 'S';
+						} else {
+							dir[0] = 'N';
+						}
+						dir[1] = '\0';
+						deg = (Int16) dLat;						
+						min = (dLat - (double)deg) * 60.0;
+						itoa(deg,lat,10);
+						StrCat(lat,DblToStr(min,4));
+						StrCat(lat,dir);
+						StrCopy(data.logger.gpslat, lat);
+						if ( dLon < 0.0 ) {
+							dLon = -dLon;
+							dir[0] = 'W';
+						} else {
+							dir[0] = 'E';
+						}
+						deg = (Int16) dLon;
+						min = (dLon - (double)deg) * 60.0;
+						itoa(deg,lon,10);
+						StrCat(lon,DblToStr(min,4));
+						StrCat(lon,dir);
+						StrCopy(data.logger.gpslng, lon);
+						HostTraceOutputTL(appErrorClass, "GPS simulator mode..lat=%s", lat);
+						HostTraceOutputTL(appErrorClass, "GPS simulator mode..lon=%s", lon);
 						
 						updatemap = true;
 						updatetime = true;
