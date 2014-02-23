@@ -1649,7 +1649,8 @@ void CloseAllDatabases(void)
 	DmCloseDatabase(suaidx_db);
 	DmCloseDatabase(suadata_db);
 	DmCloseDatabase(terrain_db);
-	DmCloseDatabase(sim_db);
+	// delete the sim database, it's faster to recreate
+	OpenDeleteDB(&sim_db, CARD_NO, sim_db_name);
 }
 
 void DebugWriteCheck(MemPtr recordP, UInt32 offset, UInt32 bytes)

@@ -185,6 +185,11 @@ extern Int16		*profilescale;
 extern Int16		profilebase;
 extern double		profilestep;
 
+// GPS simulator flag
+extern Boolean gps_sim;
+extern Int32   gps_idx;
+extern UInt16  gps_rec;
+
 // Main Final Glide Screen
 Boolean form_final_glide_event_handler(EventPtr event)
 {
@@ -286,10 +291,16 @@ Boolean form_final_glide_event_handler(EventPtr event)
 					WinEraseRectangle(&rectP, 0);
 					clearrect = false;
 				}
-				StrCopy(TempChar, "G");
-				StrCat(TempChar, data.input.gpsnumsats);
-				field_set_value(form_final_glide_gpsstat, TempChar);
-//				clearrect = false;
+				if (!gps_sim) {
+					StrCopy(TempChar, "G");
+					StrCat(TempChar, data.input.gpsnumsats);
+					field_set_value(form_final_glide_gpsstat, TempChar);
+//					clearrect = false;
+				} else {
+					FntSetFont(boldFont);
+					WinDrawInvertedChars(" SIM ", 5, GPSX, GPSY);
+					FntSetFont(stdFont);
+				}
 			}
 
 			switch (data.config.altunits) {
@@ -6467,7 +6478,6 @@ Boolean form_transfer_event_handler(EventPtr event)
 	EventType newEvent;
 	UInt16 controlID;
 	UInt32 filename_len;
-
 	pfrm = FrmGetActiveForm();
 
 	switch (event->eType)
@@ -7840,6 +7850,10 @@ Boolean form_transfer_event_handler(EventPtr event)
 										//HandleWaitDialog(false);
 										HandleWaitDialogUpdate(STOPDIALOG, 0, 0, NULL);
 										FrmCustomAlert(FinishedAlert, "Finished Receiving Data"," "," ");
+										gps_rec = OpenDBCountRecords(sim_db);
+										HostTraceOutputTL(appErrorClass, "Got %d GPS points for IGC replay", gps_rec);
+										gps_sim = (gps_rec > 0);
+										gps_idx = 0;
 									} else {
 										FrmCustomAlert(WarningAlert, "Data Not Found"," "," ");
 									}
