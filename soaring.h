@@ -97,6 +97,8 @@
 #define AIRFPMCONST	101.2686
 #define AIRKTSCONST	1.0
 #define AIRMPSCONST	0.5144444
+// km/h to knots
+#define AIRKMHKNCONST 0.539956803
 
 #define AIRFPMINCR	50.0 /* 50 feet/sec in knots */
 #define AIRKTSINCR	0.5
@@ -992,11 +994,12 @@ typedef struct SUAAlertRet {
 typedef struct SimPoint
 {
 	double	lat,		// latitude
-		lon,		// longitude
-		alt;		// GPS or pressure altitude
-	int	seconds;	// time stamp
+			lon,		// longitude
+			alt,		// GPS or pressure altitude
+			speed,		// speed
+			heading;	// heading
+	UInt32	seconds;	// time stamp
 } SimPoint;
-
 
 /**
 * \struct QuestionData

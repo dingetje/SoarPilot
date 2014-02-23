@@ -26,9 +26,11 @@
 #include <DLServer.h>
 #include <BtLibTypes.h>
 #include <HsChars.h>
+#include <SysUtils.h>
 #include "AddIncs/SonyIncs/SonyHwrOEMIDs.h"
 #include "AddIncs/GarminIncs/GarminChars.h"
 #include "AddIncs/GarminIncs/GPSLib.h"
+#include "Mathlib.h"
 #include "soaring.h"
 #include "soarUtil.h"
 #include "soarForm.h"
@@ -57,6 +59,7 @@
 #include "soarFlrm.h"
 #include "soarEW.h"
 #include "soarENL.h"
+#include "soarGEOMAG.h"
 
 #ifdef VISORSUPPORT
 	// lines needed for the Visor Keyboard Call
@@ -100,6 +103,14 @@ UInt32 	no_read_count = 0xffffffff;
 Boolean GPSdatavalid = false;
 UInt32 nogpstime = 0;
 Boolean hadGPSdatavalid = false;
+
+// GPS sim (IGC replay)
+Boolean gps_sim = false;
+Int32	gps_idx = 0;
+UInt32	gps_time = 0;
+UInt32	gps_last_time = 0;
+UInt16  gps_rec = 0;
+SimPoint simpoint;
 
 // Global screen Data
 ScreenGlobals SCREEN;
@@ -1137,6 +1148,8 @@ Boolean ApplicationHandleEvent(EventPtr event)
 	double tmpalt;
 	Boolean aboveFG;
 	static Boolean reachedwaypoint = false;
+	MemHandle sim_hand;
+	MemPtr sim_ptr;
 
 	// display application events (except nilEvent)
 //	if (event->eType != 0) {
@@ -1527,30 +1540,126 @@ Boolean ApplicationHandleEvent(EventPtr event)
 // get data from GPS
 //******************************************************************************
 			// get NMEA data
-			if (device.iQueCapable && data.parser.parser_func == nmea_parser && (data.config.nmeaxfertype == USEIQUE || data.config.nmeaxfertype == USEIQUESER)) {
-//				HostTraceOutputTL(appErrorClass, "Reading iQue Data");
-				GetiQueInfo();
-				readtime = cursecs;
-//				HostTraceOutputTL(appErrorClass, "Setting recv_data=true");
-				recv_data = true;
-				no_read_count = cursecs;
-				nogpstime = 0;
-				device.BTreconnects = 0;
-				if (StrCompare(data.logger.gpsstat, "A") == 0) {
-					nofixtime = cursecs;
-					checkfixtime = true;
+			// IGC simulator mode?
+			if (gps_sim) {
+
+				double gpsvar=0.0,
+						dLat, dLon;
+				char lat[20], lon[20];
+				char dir;
+
+				// get next record from sim database
+				OpenDBQueryRecord(sim_db, gps_idx, &sim_hand, &sim_ptr);
+				MemMove(&simpoint, sim_ptr, sizeof(SimPoint));
+				MemHandleUnlock(sim_hand);
+				
+				if (gps_last_time == 0) {
+					Int8 j=0;
+					// remember time
+					gps_last_time = simpoint.seconds;
+					gps_time = cursecs;
+					// only need to do this once
+					StrCopy(data.logger.gpsstat, "A"); 	// valid fix (Active)
+					StrCopy(data.input.gpsnumsats, "12");// fake valid satelites
+					data.input.siu = 12;
+									
+					// valid 3D fix
+					pvtData->status.fix = gpsFix3D;
+					pvtData->status.mode = gpsModeSim;
+					// fake GPS satellite data
+					for (j=0; j<GPSMAXSATS; j++) {
+						satData[j].svid = j+1;
+						satData[j].status = 0;
+						satData[j].snr = 3000.0 + ((SysRandom(0) * 1500.0) / sysRandomMax);
+						satData[j].elevation = ((SysRandom(0) * 180.0)/sysRandomMax) * degToRad;
+						satData[j].azimuth = ((SysRandom(0) * 180.0) /sysRandomMax) * degToRad;
+					}				
 				} else {
-					checkfixtime = false;
-				}
-				if (data.config.nmeaxfertype == USEIQUESER) {
-					while(RxData(curxfertype)) {
-//						HostTraceOutputTL(appErrorClass, "Reading Serial Data");
+					if (cursecs - gps_time > simpoint.seconds - gps_last_time)
+					{
+						readtime = cursecs;
+						recv_data = true;
+						no_read_count = cursecs;
+						nogpstime = 0;
+						inflight = true;
+						nofixtime = cursecs;
+						checkfixtime = true;
+						
+		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode...%ld of %ld", gps_idx, gps_rec);
+		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode....lat=%s", DblToStr(simpoint.lat,5));
+		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode....lon=%s", DblToStr(simpoint.lon,5));
+		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode....alt=%s", DblToStr(simpoint.alt,5));
+		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode..speed=%s", DblToStr(simpoint.speed,5));
+										
+						data.input.gpslatdbl = dLat = simpoint.lat;
+						data.input.gpslngdbl = dLon = simpoint.lon;
+						data.input.coslat = cos(DegreesToRadians(data.input.gpslatdbl));
+
+						//Altitude in meters divided by ALTMETCONST to convert to feet.
+						data.logger.gpsalt = (double) simpoint.alt/ALTMETCONST;
+						data.logger.pressalt = data.logger.gpsalt;
+						// Have to convert from km/h to knots
+						data.input.ground_speed.value=(double)simpoint.speed*AIRKMHKNCONST;	
+						data.input.ground_speed.valid=VALID;
+						// heading
+						data.input.true_track.value=simpoint.heading;
+						data.input.true_track.valid=VALID;
+						gpsvar = GetDeviation();
+						SecondsToDateOrTimeString(simpoint.seconds, data.logger.gpsutc, 2, 0);
+						SecondsToDateOrTimeString(TimGetSeconds(), data.logger.gpsdtg, 4, 0);
+						CalcLift(data.logger.gpsalt, data.logger.gpsutc, -9999.9, NORESET);
+						data.input.magnetic_track.value = nice_brg(data.input.true_track.value);
+						data.input.magnetic_track.valid=VALID;
+
+						// TODO logger GPS position
+						// if ( simpoint.lat < 0.0 )
+						// {
+						// 	dLat = -dLat;
+						// 	dir = 'S';
+						// }
+						// else
+						// {
+						// 	dir = 'N';
+						// }
+						// deg = (int)(dLat);
+						// min = (dLat - (double)deg) * 60.0;
+						// sprintf( lat, "%02d%07.4f,%c", abs(deg), min, dir);
+						// if ( dLon < 0.0 )
+						// {
+						// 	dLon = -dLon;
+						// 	dir = 'W';
+						// }
+						// else
+						// {
+						// 	dir = 'E';
+						// }
+						// deg = (int)(dLon);
+						// min = (dLon - (double)deg) * 60.0;
+						// sprintf( lon, "%03d%07.4f,%c", abs(deg), min, dir);
+						
+						updatemap = true;
+						updatetime = true;
+						updatewind = true;
+						
+						data.application.changed = 1;						
+						// next record
+						gps_idx++;
+						// done with replay?
+						if (gps_idx >= gps_rec) {
+							// exit sim mode, NO GPS will show eventually
+							gps_sim = false;
+							StrCopy(data.logger.gpsstat, "V"); 	// invalid fix
+						}
 					}
 				}
-			} else {
-				while(RxData(curxfertype)) {
+			}				
+			else
+			{
+				if (device.iQueCapable && data.parser.parser_func == nmea_parser && (data.config.nmeaxfertype == USEIQUE || data.config.nmeaxfertype == USEIQUESER)) {
+	//				HostTraceOutputTL(appErrorClass, "Reading iQue Data");
+					GetiQueInfo();
 					readtime = cursecs;
-//					HostTraceOutputTL(appErrorClass, "Setting recv_data=true");
+	//				HostTraceOutputTL(appErrorClass, "Setting recv_data=true");
 					recv_data = true;
 					no_read_count = cursecs;
 					nogpstime = 0;
@@ -1561,9 +1670,28 @@ Boolean ApplicationHandleEvent(EventPtr event)
 					} else {
 						checkfixtime = false;
 					}
+					if (data.config.nmeaxfertype == USEIQUESER) {
+						while(RxData(curxfertype)) {
+	//						HostTraceOutputTL(appErrorClass, "Reading Serial Data");
+						}
+					}
+				} else {
+					while(RxData(curxfertype)) {
+						readtime = cursecs;
+	//					HostTraceOutputTL(appErrorClass, "Setting recv_data=true");
+						recv_data = true;
+						no_read_count = cursecs;
+						nogpstime = 0;
+						device.BTreconnects = 0;
+						if (StrCompare(data.logger.gpsstat, "A") == 0) {
+							nofixtime = cursecs;
+							checkfixtime = true;
+						} else {
+							checkfixtime = false;
+						}
+					}
 				}
 			}
-
 			// check for newly valid GPS data, if so calc distance and bearing for all waypoints
 			// plus task sector directions if task is active
 			if (checkfixtime) {
@@ -1644,7 +1772,7 @@ Boolean ApplicationHandleEvent(EventPtr event)
 				StringToDateAndTime(data.logger.gpsdtg, data.logger.gpsutc, &gpstime);
 				utcsecs = TimDateTimeToSeconds(&gpstime);
 				TimAdjust(&gpstime, ((Int32)data.config.timezone * 3600 ));
-				if (gpstime.year < 2000) gpstime.year = 2000;   // fixes issue with IGC files played back from SeeYou
+				if (gpstime.year < 2000) gpstime.year = 2000;   // fixes issue with IGC files played back from SeeYou or IGC replay sim mode
 				gpssecs = TimDateTimeToSeconds(&gpstime);
 				// update Palm time if required
 				if (data.config.usegpstime && ((cursecs>gpssecs+10) || (cursecs<gpssecs-10))) {

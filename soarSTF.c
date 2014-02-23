@@ -76,6 +76,7 @@ extern double tskcrashlon;
 extern double *tskterheights;
 extern Int32 numtskter;
 extern Int32 prevnumtskter;
+extern Boolean gps_sim;
 
 static void final_glide_mc(double inputSi, UInt16 speedFieldID, UInt16 altFieldID)
 {
@@ -504,9 +505,15 @@ void final_glide_event()
 			WinEraseRectangle(&rectP, 0);
 			clearrect = false;
 		}
-		StrCopy(tempchar, "G");
-		StrCat(tempchar, data.input.gpsnumsats);
-		field_set_value(form_final_glide_gpsstat, tempchar);
+		if (!gps_sim) {
+			StrCopy(tempchar, "G");
+			StrCat(tempchar, data.input.gpsnumsats);
+			field_set_value(form_final_glide_gpsstat, tempchar);
+		} else {
+			FntSetFont(boldFont);
+			WinDrawInvertedChars(" SIM ", 5, GPSX, GPSY);
+			FntSetFont(stdFont);		
+		}
 	}
 
 	// Update the Headwind Value when it has changed
