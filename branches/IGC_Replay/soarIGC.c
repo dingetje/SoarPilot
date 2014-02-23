@@ -164,7 +164,7 @@ void igc_parser(Char* serinp, UInt32 length, Boolean reset)
 					buf[5] = '\0';	minutes = StrAToI(&buf[3]);
 					buf[3] = '\0';	hours = StrAToI(&buf[1]);
 					simpoint.seconds = (seconds + 60*minutes + 3600*hours);
-					HostTraceOutputTL(appErrorClass, "h=%ld, m=%ld, s=%ld, simpoint.seconds=%lu",hours,minutes,seconds,simpoint.seconds);
+//					HostTraceOutputTL(appErrorClass, "h=%ld, m=%ld, s=%ld, simpoint.seconds=%lu",hours,minutes,seconds,simpoint.seconds);
 
 					// first time here?
 					if (!lastseconds)
