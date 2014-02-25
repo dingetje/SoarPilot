@@ -1552,7 +1552,7 @@ Boolean ApplicationHandleEvent(EventPtr event)
 				OpenDBQueryRecord(sim_db, gps_idx, &sim_hand, &sim_ptr);
 				MemMove(&simpoint, sim_ptr, sizeof(SimPoint));
 				MemHandleUnlock(sim_hand);
-				
+
 				// first point?
 				if (gps_last_time == 0) {
 					Int8 j=0;
@@ -1561,61 +1561,32 @@ Boolean ApplicationHandleEvent(EventPtr event)
 					gps_time = cursecs;
 					// only need to do this once
 					StrCopy(data.logger.gpsstat, "A"); 	// valid fix (Active)
-					StrCopy(data.input.gpsnumsats, "12");// fake valid satelites
-					data.input.siu = 12;
+					StrCopy(data.input.gpsnumsats, "10");// fake valid satelites
+					data.input.siu = 10;
 									
 					// valid 3D fix
 					pvtData->status.fix = gpsFix3D;
 					pvtData->status.mode = gpsModeSim;
 					// fake GPS satellite data
-					for (j=0; j<GPSMAXSATS; j++) {
+					for (j=1; j<GPSMAXSATS-1; j++) {
 						satData[j].svid = j+1;
 						satData[j].status = 0;
 						satData[j].snr = 3000.0 + ((SysRandom(0) * 1500.0) / sysRandomMax);
 						satData[j].elevation = ((SysRandom(0) * 180.0)/sysRandomMax) * degToRad;
 						satData[j].azimuth = ((SysRandom(0) * 180.0) /sysRandomMax) * degToRad;
-					}				
-				} else {
-					if (cursecs - gps_time >= simpoint.seconds - gps_last_time)
+					}
+					// invalid date
+					SecondsToDateOrTimeString(0, data.logger.gpsdtg, 4, 0);	
+				}
+				else
+				{
+					// todo: option for max speed playback or real time
+					if ((cursecs - gps_time) >= (simpoint.seconds - gps_last_time))
 					{						
-						// remember times
+						// remember times for next point
 						gps_last_time = simpoint.seconds;
 						gps_time = cursecs;
 						
-						readtime = cursecs;
-						recv_data = true;
-						no_read_count = cursecs;
-						nogpstime = 0;
-						inflight = true;
-						nofixtime = cursecs;
-						checkfixtime = true;
-						
-		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode...%ld of %ld", gps_idx, gps_rec);
-		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode....lat=%s", DblToStr(simpoint.lat,5));
-		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode....lon=%s", DblToStr(simpoint.lon,5));
-		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode....alt=%s", DblToStr(simpoint.alt,5));
-		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode..speed=%s", DblToStr(simpoint.speed,5));
-										
-						data.input.gpslatdbl = simpoint.lat;
-						data.input.gpslngdbl = simpoint.lon;
-						data.input.coslat = cos(DegreesToRadians(data.input.gpslatdbl));
-
-						//Altitude in meters divided by ALTMETCONST to convert to feet.
-						data.logger.gpsalt = (double) simpoint.alt/ALTMETCONST;
-						data.logger.pressalt = data.logger.gpsalt;
-						// Have to convert from km/h to knots
-						data.input.ground_speed.value=(double)simpoint.speed*AIRKMHKNCONST;	
-						data.input.ground_speed.valid=VALID;
-						// heading
-						data.input.true_track.value=simpoint.heading;
-						data.input.true_track.valid=VALID;
-						gpsvar = GetDeviation();
-						SecondsToDateOrTimeString(simpoint.seconds, data.logger.gpsutc, 2, 0);
-						SecondsToDateOrTimeString(TimGetSeconds(), data.logger.gpsdtg, 4, 0);
-						CalcLift(data.logger.gpsalt, data.logger.gpsutc, -9999.9, NORESET);
-						data.input.magnetic_track.value = nice_brg(data.input.true_track.value);
-						data.input.magnetic_track.valid=VALID;
-
 						// set logger GPS position
 						MemSet(latbuf, sizeof(latbuf), 0);
 						MemSet(lonbuf, sizeof(lonbuf), 0);
@@ -1624,14 +1595,41 @@ Boolean ApplicationHandleEvent(EventPtr event)
 						StrCopy(data.logger.gpslat, latbuf);
 						LLToStringDM(simpoint.lon,lonbuf,false,false,true,3);
 						StrCopy(data.logger.gpslng, lonbuf);
-//						HostTraceOutputTL(appErrorClass, "GPS simulator mode..lat=%s -> lat=%s", DblToStr(simpoint.lat,5),latbuf);
-//						HostTraceOutputTL(appErrorClass, "GPS simulator mode..lon=%s -> lon=%s", DblToStr(simpoint.lon,5),lonbuf);
+		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode..lat=%s -> lat=%s", DblToStr(simpoint.lat,5),latbuf);
+		//				HostTraceOutputTL(appErrorClass, "GPS simulator mode..lon=%s -> lon=%s", DblToStr(simpoint.lon,5),lonbuf);
+
+						data.input.gpslatdbl = simpoint.lat;
+						data.input.gpslngdbl = simpoint.lon;
+						data.input.coslat = cos(DegreesToRadians(data.input.gpslatdbl));
+
+						//Altitude in meters divided by ALTMETCONST to convert to feet.
+						data.input.inusealt = 
+						data.logger.pressalt = 
+						data.logger.gpsalt = (double) simpoint.alt/ALTMETCONST;
+						/* Save Maximum Altitude  in feet*/
+						if (data.input.maxalt < data.logger.gpsalt) {
+							data.input.maxalt = data.logger.gpsalt;
+						}
+						/* Save Minimum Altitude  in feet*/
+						if (data.input.minalt > data.logger.gpsalt) {
+							data.input.minalt = data.logger.gpsalt;
+						}
+
+						// Have to convert from km/h to knots
+						data.input.ground_speed.value=(double)simpoint.speed*AIRKMHKNCONST;	
+						data.input.ground_speed.valid=VALID;
+						// heading
+						data.input.true_track.value=simpoint.heading;
+						data.input.true_track.valid=VALID;
 						
-						updatemap = true;
-						updatetime = true;
-						updatewind = true;
-						
-						data.application.changed = 1;						
+						gpsvar = GetDeviation();
+						SecondsToDateOrTimeString(simpoint.seconds, data.logger.gpsutc, 2, 0);
+
+						CalcLift(data.logger.gpsalt, data.logger.gpsutc, -9999.9, NORESET);
+
+						data.input.magnetic_track.value = nice_brg(data.input.true_track.value);
+						data.input.magnetic_track.valid=VALID;
+		
 						// next record
 						gps_idx++;
 						// done with replay?
@@ -1642,8 +1640,34 @@ Boolean ApplicationHandleEvent(EventPtr event)
 						}
 					}
 				}
+				
+				readtime = cursecs;
+				recv_data = true;
+				no_read_count = cursecs;
+				nogpstime = 0;
+				nofixtime = cursecs;
+				checkfixtime = true;
+				
+//				HostTraceOutputTL(appErrorClass, "GPS sim.mode...cursec=%lu, simpoint=%ld, delta=%lu, next=%ld, gps_last_time=%lu", 
+//									cursecs, 
+//									simpoint.seconds, 
+//									cursecs - gps_time,
+//									simpoint.seconds - gps_last_time,
+//									gps_last_time);
+				
+//				HostTraceOutputTL(appErrorClass, "GPS simulator mode...%ld of %ld", gps_idx, gps_rec);
+//				HostTraceOutputTL(appErrorClass, "GPS simulator mode....lat=%s", DblToStr(simpoint.lat,5));
+//				HostTraceOutputTL(appErrorClass, "GPS simulator mode....lon=%s", DblToStr(simpoint.lon,5));
+//				HostTraceOutputTL(appErrorClass, "GPS simulator mode....alt=%s", DblToStr(simpoint.alt,5));
+//				HostTraceOutputTL(appErrorClass, "GPS simulator mode..speed=%s", DblToStr(simpoint.speed,5));
+				
+				updatemap = true;
+				updatetime = true;
+				updatewind = true;
+				
+				data.application.changed = 1;										
 			}				
-			else
+			else // normal mode read GPS data
 			{
 				if (device.iQueCapable && data.parser.parser_func == nmea_parser && (data.config.nmeaxfertype == USEIQUE || data.config.nmeaxfertype == USEIQUESER)) {
 	//				HostTraceOutputTL(appErrorClass, "Reading iQue Data");
@@ -1665,18 +1689,24 @@ Boolean ApplicationHandleEvent(EventPtr event)
 	//						HostTraceOutputTL(appErrorClass, "Reading Serial Data");
 						}
 					}
-				} else {
-					while(RxData(curxfertype)) {
+				}
+				else
+				{
+					while(RxData(curxfertype))
+					{
 						readtime = cursecs;
 	//					HostTraceOutputTL(appErrorClass, "Setting recv_data=true");
 						recv_data = true;
 						no_read_count = cursecs;
 						nogpstime = 0;
 						device.BTreconnects = 0;
-						if (StrCompare(data.logger.gpsstat, "A") == 0) {
+						if (StrCompare(data.logger.gpsstat, "A") == 0)
+						{
 							nofixtime = cursecs;
 							checkfixtime = true;
-						} else {
+						}
+						else
+						{
 							checkfixtime = false;
 						}
 					}
