@@ -7842,16 +7842,17 @@ Boolean form_transfer_event_handler(EventPtr event)
 								if (data.config.xfertype == USEVFS || 
 									 data.config.xfertype == USEDOC) {
 //									HostTraceOutputTL(appErrorClass, "Opening IGC file");
-									if(XferInit(transfer_filename, IOOPEN, data.config.xfertype)) { 
+									if(XferInit(transfer_filename, IOOPEN, data.config.xfertype)) {
+										char msg[80];
 										//HandleWaitDialog(true);
 										HandleWaitDialogUpdate(SHOWDIALOG, 0, 0, NULL);
 										HandleWaitDialogUpdate(UPDATEDIALOG, 0, -1, "IGC");
 										RxData(data.config.xfertype);
 										//HandleWaitDialog(false);
 										HandleWaitDialogUpdate(STOPDIALOG, 0, 0, NULL);
-										FrmCustomAlert(FinishedAlert, "Finished Receiving Data"," "," ");
 										gps_rec = OpenDBCountRecords(sim_db);
-										HostTraceOutputTL(appErrorClass, "Got %d GPS points for IGC replay", gps_rec);
+										StrPrintF(msg,"Got %d GPS points", gps_rec);
+										FrmCustomAlert(FinishedAlert, msg," for ","IGC Replay");
 										gps_sim = (gps_rec > 0);
 										gps_idx = 0;
 									} else {
