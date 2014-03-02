@@ -14,6 +14,7 @@
 #include "soarWind.h"
 #include "soarWLst.h"
 #include "soarPLst.h"
+#include "soarIGC.h"
 #include "soarTask.h"
 #include "soarGraph.h"
 #include "soarSUA.h"
@@ -38,6 +39,7 @@ static Boolean polartoggle=false;
 static Boolean tasktoggle=false;
 static Boolean configtoggle=false;
 static Boolean suatoggle=false;
+static Boolean igctoggle=false;
 
 Boolean taskpreview = false;
 Boolean clearrect=false;
@@ -183,6 +185,12 @@ extern Int16		*profilescale;
 extern Int16		profilebase;
 extern double		profilestep;
 
+// GPS simulator (IGC replay)
+extern Boolean	sim_gps;
+extern Int32	sim_idx;
+extern UInt16	sim_rec;
+extern UInt32	sim_last_time;
+
 // Main Final Glide Screen
 Boolean form_final_glide_event_handler(EventPtr event)
 {
@@ -284,10 +292,16 @@ Boolean form_final_glide_event_handler(EventPtr event)
 					WinEraseRectangle(&rectP, 0);
 					clearrect = false;
 				}
-				StrCopy(TempChar, "G");
-				StrCat(TempChar, data.input.gpsnumsats);
-				field_set_value(form_final_glide_gpsstat, TempChar);
-//				clearrect = false;
+				if (!sim_gps) {
+					StrCopy(TempChar, "G");
+					StrCat(TempChar, data.input.gpsnumsats);
+					field_set_value(form_final_glide_gpsstat, TempChar);
+//					clearrect = false;
+				} else {
+					FntSetFont(boldFont);
+					WinDrawInvertedChars(" SIM ", 5, GPSX, GPSY);
+					FntSetFont(stdFont);
+				}
 			}
 
 			switch (data.config.altunits) {
@@ -6465,7 +6479,6 @@ Boolean form_transfer_event_handler(EventPtr event)
 	EventType newEvent;
 	UInt16 controlID;
 	UInt32 filename_len;
-
 	pfrm = FrmGetActiveForm();
 
 	switch (event->eType)
@@ -6670,6 +6683,16 @@ Boolean form_transfer_event_handler(EventPtr event)
 					newEvent.data.ctlEnter.controlID = controlID;
 					EvtAddEventToQueue(&newEvent);
 					break;
+				case IGC_FILE: // IGC replay
+					ctl_set_value(form_transfer_flight, true);
+					newEvent.eType = ctlSelectEvent;
+					newEvent.data.ctlEnter.controlID = form_transfer_flight;
+					EvtAddEventToQueue(&newEvent);
+					newEvent.eType = ctlSelectEvent;
+					newEvent.data.ctlEnter.controlID = controlID;
+					EvtAddEventToQueue(&newEvent);
+					break;
+					
 				case NO_FILE_TYPE:
 //					HostTraceOutputTL(appErrorClass, "No File Type");
 				default:
@@ -7586,6 +7609,17 @@ Boolean form_transfer_event_handler(EventPtr event)
 									io_file_type = SUADATA_TNP;
 								}
 								break;
+							case form_transfer_flight:
+								// only supported for SD Card and DOC type
+								if ((data.config.xfertype == USEVFS) || (data.config.xfertype == USEDOC)) {
+									io_file_type = IGC_FILE;
+									database = form_transfer_flight; // IGC replay
+								}
+								else
+								{
+									io_file_type = NO_FILE_TYPE;
+								}
+								break;
 							default:
 								io_file_type = NO_FILE_TYPE;
 								break;
@@ -7604,7 +7638,7 @@ Boolean form_transfer_event_handler(EventPtr event)
 						io_type = IO_NONE;
 					} else {
 						// set default filenames
-					if ((data.config.xfertype != USEVFS) && (data.config.xfertype != USEDOC)) {
+						if ((data.config.xfertype != USEVFS) && (data.config.xfertype != USEDOC)) {
 //						HostTraceOutputTL(appErrorClass, "Setting Default Filenames");
 						switch ( database ) {
 							case form_transfer_config:
@@ -7800,6 +7834,57 @@ Boolean form_transfer_event_handler(EventPtr event)
 							}
 							break;
 						} // case form_transfer_polar:
+						
+						// Receive IGC file for replay
+						case form_transfer_flight:
+						{
+							if (!igctoggle) {
+								XferClose(data.config.nmeaxfertype);
+								igc_parser(NULL, 0, true);
+								data.parser.parser_func = igc_parser;
+								ctl_set_enable(form_transfer_xmitbtn, false);
+								ctl_set_enable(form_transfer_delbtn, false);
+								ctl_set_label(form_transfer_recvbtn, "Stop");
+								if (data.config.xfertype == USEVFS || 
+									 data.config.xfertype == USEDOC) {
+//									HostTraceOutputTL(appErrorClass, "Opening IGC file");
+									if(XferInit(transfer_filename, IOOPEN, data.config.xfertype)) {
+										char msg[80];
+										//HandleWaitDialog(true);
+										HandleWaitDialogUpdate(SHOWDIALOG, 0, 0, NULL);
+										HandleWaitDialogUpdate(UPDATEDIALOG, 0, -1, "IGC");
+										RxData(data.config.xfertype);
+										//HandleWaitDialog(false);
+										HandleWaitDialogUpdate(STOPDIALOG, 0, 0, NULL);
+										sim_rec = OpenDBCountRecords(sim_db);
+										StrPrintF(msg,"Got %d GPS points", sim_rec);
+										FrmCustomAlert(FinishedAlert, msg," for ","IGC Replay");
+										// reset replay, enable sim mode if we have records
+										sim_gps = (sim_rec > 0);
+										sim_idx = 0;
+										sim_last_time = 0;
+									} else {
+										FrmCustomAlert(WarningAlert, "Data Not Found"," "," ");
+									}
+									igctoggle = true;
+								}
+							}
+							if (igctoggle) {
+//								HostTraceOutputTL(appErrorClass, "Closing IGC file");
+								XferClose(data.config.xfertype);
+								SysStringByIndex(form_set_port_speed_table, data.config.nmeaspeed, tempchar, 7);
+								XferInit(tempchar, NFC, data.config.nmeaxfertype);
+								nmea_parser(NULL, 0, true);
+								data.parser.parser_func = nmea_parser;
+								ctl_set_enable(form_transfer_xmitbtn, true);
+								ctl_set_enable(form_transfer_delbtn, true);
+								ctl_set_label(form_transfer_recvbtn, "Receive");
+								igctoggle = false;
+							} else {
+								igctoggle = true;
+							}
+							break;
+						} // case form_transfer_flight: IGC play
 
 						// Receive the Task database
 						case form_transfer_task:
