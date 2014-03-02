@@ -185,10 +185,11 @@ extern Int16		*profilescale;
 extern Int16		profilebase;
 extern double		profilestep;
 
-// GPS simulator flag
-extern Boolean gps_sim;
-extern Int32   gps_idx;
-extern UInt16  gps_rec;
+// GPS simulator (IGC replay)
+extern Boolean	sim_gps;
+extern Int32	sim_idx;
+extern UInt16	sim_rec;
+extern UInt32	sim_last_time;
 
 // Main Final Glide Screen
 Boolean form_final_glide_event_handler(EventPtr event)
@@ -291,7 +292,7 @@ Boolean form_final_glide_event_handler(EventPtr event)
 					WinEraseRectangle(&rectP, 0);
 					clearrect = false;
 				}
-				if (!gps_sim) {
+				if (!sim_gps) {
 					StrCopy(TempChar, "G");
 					StrCat(TempChar, data.input.gpsnumsats);
 					field_set_value(form_final_glide_gpsstat, TempChar);
@@ -7850,11 +7851,13 @@ Boolean form_transfer_event_handler(EventPtr event)
 										RxData(data.config.xfertype);
 										//HandleWaitDialog(false);
 										HandleWaitDialogUpdate(STOPDIALOG, 0, 0, NULL);
-										gps_rec = OpenDBCountRecords(sim_db);
-										StrPrintF(msg,"Got %d GPS points", gps_rec);
+										sim_rec = OpenDBCountRecords(sim_db);
+										StrPrintF(msg,"Got %d GPS points", sim_rec);
 										FrmCustomAlert(FinishedAlert, msg," for ","IGC Replay");
-										gps_sim = (gps_rec > 0);
-										gps_idx = 0;
+										// reset replay, enable sim mode if we have records
+										sim_gps = (sim_rec > 0);
+										sim_idx = 0;
+										sim_last_time = 0;
 									} else {
 										FrmCustomAlert(WarningAlert, "Data Not Found"," "," ");
 									}

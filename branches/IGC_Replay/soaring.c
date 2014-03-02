@@ -105,13 +105,11 @@ UInt32 nogpstime = 0;
 Boolean hadGPSdatavalid = false;
 
 // GPS sim (IGC replay)
-Boolean gps_sim = false;
-Int32	gps_idx = 0;
-UInt32	gps_time = 0;
-UInt32	gps_last_time = 0;
-UInt16  gps_rec = 0;
-char latbuf[21],
-	 lonbuf[21];
+Boolean sim_gps = false;
+Int32	sim_idx = 0;
+UInt32	sim_time = 0;
+UInt32	sim_last_time = 0;
+UInt16  sim_rec = 0;
 SimPoint simpoint;
 
 // Global screen Data
@@ -1544,21 +1542,21 @@ Boolean ApplicationHandleEvent(EventPtr event)
 			// get NMEA data
 
 			// IGC simulator mode?
-			if (gps_sim) {
+			if (sim_gps) {
 
 				double gpsvar=0.0;
 
 				// get next record from sim database
-				OpenDBQueryRecord(sim_db, gps_idx, &sim_hand, &sim_ptr);
+				OpenDBQueryRecord(sim_db, sim_idx, &sim_hand, &sim_ptr);
 				MemMove(&simpoint, sim_ptr, sizeof(SimPoint));
 				MemHandleUnlock(sim_hand);
 
 				// first point?
-				if (gps_last_time == 0) {
+				if (sim_last_time == 0) {
 					Int8 j=0;
 					// remember time
-					gps_last_time = simpoint.seconds;
-					gps_time = cursecs;
+					sim_last_time = simpoint.seconds;
+					sim_time = cursecs;
 					// only need to do this once
 					StrCopy(data.logger.gpsstat, "A"); 	// valid fix (Active)
 					StrCopy(data.input.gpsnumsats, "10");// fake valid satelites
@@ -1577,15 +1575,27 @@ Boolean ApplicationHandleEvent(EventPtr event)
 					}
 					// invalid date
 					SecondsToDateOrTimeString(0, data.logger.gpsdtg, 4, 0);	
+					// stop loging
+					PerformLogging(true);
+					// disable auto QFE zero as logger stopping was due to data loss, not being below log speed
+					saveqfe = true;
+					recv_data = false;
+					recv_palt = false;
+					checkfixtime = false;
+					data.input.ground_speed.value = 0.0;
+					Flarmpresent = false;
 				}
 				else
 				{
 					// todo: option for max speed playback or real time
-					if ((cursecs - gps_time) >= (simpoint.seconds - gps_last_time))
+					if ((cursecs - sim_time) >= (simpoint.seconds - sim_last_time))
 					{						
+						char latbuf[21],
+							 lonbuf[21];
+							 
 						// remember times for next point
-						gps_last_time = simpoint.seconds;
-						gps_time = cursecs;
+						sim_last_time = simpoint.seconds;
+						sim_time = cursecs;
 						
 						// set logger GPS position
 						MemSet(latbuf, sizeof(latbuf), 0);
@@ -1631,11 +1641,11 @@ Boolean ApplicationHandleEvent(EventPtr event)
 						data.input.magnetic_track.valid=VALID;
 		
 						// next record
-						gps_idx++;
+						sim_idx++;
 						// done with replay?
-						if (gps_idx >= gps_rec) {
+						if (sim_idx >= sim_rec) {
 							// exit sim mode, NO GPS will show eventually
-							gps_sim = false;
+							sim_gps = false;
 							StrCopy(data.logger.gpsstat, "V"); 	// invalid fix
 						}
 					}
@@ -1648,14 +1658,14 @@ Boolean ApplicationHandleEvent(EventPtr event)
 				nofixtime = cursecs;
 				checkfixtime = true;
 				
-//				HostTraceOutputTL(appErrorClass, "GPS sim.mode...cursec=%lu, simpoint=%ld, delta=%lu, next=%ld, gps_last_time=%lu", 
+//				HostTraceOutputTL(appErrorClass, "GPS sim.mode...cursec=%lu, simpoint=%ld, delta=%lu, next=%ld, sim_last_time=%lu", 
 //									cursecs, 
 //									simpoint.seconds, 
-//									cursecs - gps_time,
-//									simpoint.seconds - gps_last_time,
-//									gps_last_time);
+//									cursecs - sim_time,
+//									simpoint.seconds - sim_last_time,
+//									sim_last_time);
 				
-//				HostTraceOutputTL(appErrorClass, "GPS simulator mode...%ld of %ld", gps_idx, gps_rec);
+//				HostTraceOutputTL(appErrorClass, "GPS simulator mode...%ld of %ld", sim_idx, sim_rec);
 //				HostTraceOutputTL(appErrorClass, "GPS simulator mode....lat=%s", DblToStr(simpoint.lat,5));
 //				HostTraceOutputTL(appErrorClass, "GPS simulator mode....lon=%s", DblToStr(simpoint.lon,5));
 //				HostTraceOutputTL(appErrorClass, "GPS simulator mode....alt=%s", DblToStr(simpoint.alt,5));
