@@ -6683,7 +6683,7 @@ Boolean form_transfer_event_handler(EventPtr event)
 					newEvent.data.ctlEnter.controlID = controlID;
 					EvtAddEventToQueue(&newEvent);
 					break;
-				case IGC_FILE:
+				case IGC_FILE: // IGC replay
 					ctl_set_value(form_transfer_flight, true);
 					newEvent.eType = ctlSelectEvent;
 					newEvent.data.ctlEnter.controlID = form_transfer_flight;
@@ -7610,9 +7610,14 @@ Boolean form_transfer_event_handler(EventPtr event)
 								}
 								break;
 							case form_transfer_flight:
-								io_file_type = IGC_FILE;
+								// only supported for SD Card and DOC type
 								if ((data.config.xfertype == USEVFS) || (data.config.xfertype == USEDOC)) {
+									io_file_type = IGC_FILE;
 									database = form_transfer_flight; // IGC replay
+								}
+								else
+								{
+									io_file_type = NO_FILE_TYPE;
 								}
 								break;
 							default:

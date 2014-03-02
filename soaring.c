@@ -110,6 +110,7 @@ Int32	sim_idx = 0;
 UInt32	sim_time = 0;
 UInt32	sim_last_time = 0;
 UInt16  sim_rec = 0;
+Boolean sim_full_speed = false;
 SimPoint simpoint;
 
 // Global screen Data
@@ -1475,7 +1476,7 @@ Boolean ApplicationHandleEvent(EventPtr event)
 				case menu_set_qnh:
 					FrmGotoForm(form_set_qnh);
 					break;
-				case menu_replay:
+				case menu_replay: // IGC replay
 					io_type = IO_RECEIVE;
 					io_file_type = IGC_FILE;
 					FrmGotoForm(form_list_files);
@@ -1587,8 +1588,8 @@ Boolean ApplicationHandleEvent(EventPtr event)
 				}
 				else
 				{
-					// todo: option for max speed playback or real time
-					if ((cursecs - sim_time) >= (simpoint.seconds - sim_last_time))
+					// full speed or real time?
+					if (sim_full_speed || (cursecs - sim_time) >= (simpoint.seconds - sim_last_time))
 					{						
 						char latbuf[21],
 							 lonbuf[21];
