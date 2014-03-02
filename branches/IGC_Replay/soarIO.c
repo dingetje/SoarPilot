@@ -62,6 +62,8 @@ Int16 numfilesfound = 0;
 extern Boolean menuopen;
 extern Boolean PrgCancel;
 
+extern Boolean sim_full_speed;
+
 void ClearSerial()
 {
 //	HostTraceOutputTL(appErrorClass, "Clearing Serial Port");
@@ -1889,7 +1891,7 @@ Boolean form_list_files_event_handler(EventPtr event)
 				case IGC_FILE:
 					StrCopy(tempchar2, "Select Flight Log - ");
 					StrCopy(extension, ".igc");
-					ctl_set_visible(form_list_files_deletebtn, false);
+					ctl_set_label(form_list_files_deletebtn, "Full Spd");
 					ctl_set_label(form_list_files_loadbtn, "Play");
 					break;
 				default:
@@ -1982,40 +1984,50 @@ Boolean form_list_files_event_handler(EventPtr event)
 					}
 					break;
 				case form_list_files_deletebtn:
-					StrCopy(transfer_filename, field_get_str(form_list_files_filename));
-					StrCat(transfer_filename, extension);
-					if (StrLen(transfer_filename) > 4) {
-						if (FrmCustomAlert(ConfirmAlert, "Delete", transfer_filename, "?") == OK) {
-							// delete the file
+					if (io_file_type == IGC_FILE) // delete button = Fast Play, max. speed replay
+					{
+						sim_full_speed = true;
+						// return with filename
+						StrCopy(transfer_filename, field_get_str(form_list_files_filename));
+						if (StrLen(transfer_filename) > 0) FrmGotoForm(form_transfer);					
+					}
+					else
+					{
+						StrCopy(transfer_filename, field_get_str(form_list_files_filename));
+						StrCat(transfer_filename, extension);
+						if (StrLen(transfer_filename) > 4) {
+							if (FrmCustomAlert(ConfirmAlert, "Delete", transfer_filename, "?") == OK) {
+								// delete the file
+								switch (data.config.xfertype) {
+									case USEVFS:
+										HandleVFSData(IODELETE, transfer_filename, &numbytes);
+										break;
+									case USEDOC:
+										HandleDOCData(IODELETE, transfer_filename, &numbytes);
+										break;
+									default:
+										break;
+									}
+							}
+							// rebuild directory
+							refresh_files_list(FILEFREE);
+							numfilesfound = 0;
+							selectedFileIndex = -1;
 							switch (data.config.xfertype) {
 								case USEVFS:
-									HandleVFSData(IODELETE, transfer_filename, &numbytes);
+									HandleVFSData(IODIR, extension, &numbytes);
+									refresh_files_list(0);
 									break;
 								case USEDOC:
-									HandleDOCData(IODELETE, transfer_filename, &numbytes);
+									HandleDOCData(IODIR, extension, &numbytes);
+									refresh_files_list(0);
 									break;
 								default:
 									break;
-								}
+							}
+							transfer_filename[0] = 0;
+							field_set_value(form_list_files_filename, transfer_filename);
 						}
-						// rebuild directory
-						refresh_files_list(FILEFREE);
-						numfilesfound = 0;
-						selectedFileIndex = -1;
-						switch (data.config.xfertype) {
-							case USEVFS:
-								HandleVFSData(IODIR, extension, &numbytes);
-								refresh_files_list(0);
-								break;
-							case USEDOC:
-								HandleDOCData(IODIR, extension, &numbytes);
-								refresh_files_list(0);
-								break;
-							default:
-								break;
-						}
-						transfer_filename[0] = 0;
-						field_set_value(form_list_files_filename, transfer_filename);
 					}
 					break;					
 				case form_list_files_closebtn:
