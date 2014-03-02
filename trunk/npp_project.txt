@@ -816,6 +816,8 @@
         <File name="soaring.def" />
         <File name="soaring.h" />
         <File name="soaring.rcp" />
+        <File name="soarIGC.c" />
+        <File name="soarIGC.h" />
         <File name="soarIO.c" />
         <File name="soarIO.h" />
         <File name="soarKeys.h" />

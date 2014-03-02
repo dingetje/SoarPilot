@@ -122,4 +122,7 @@ Boolean OpenAllDatabases(void) SDB;
 void CloseAllDatabases(void) SDB;
 void DebugWriteCheck(MemPtr recordP, UInt32 offset, UInt32 bytes) SDB;
 
+Boolean OpenCreateSimDatabase() SDB;
+void RemoveSimDatabase() SDB;
+
 #endif
