@@ -1,0 +1,62 @@
+Basics of SoarPilot
+
+soaring.c - Main Routines
+
+static int StartApplication(void)
+- Launches SoarPilot, initialises the databases, and sets default values etc
+- Then hands over to the start up form (moving map / final glide / set QNH)
+
+Boolean ApplicationHandleEvent(EventPtr event)
+- This is the main event handler.
+The case frmLoadEvent: statement loads the events that will be repeated based on the particular form being viewed.
+- The case menuEvent: statement handles any interaction with the drop down menus
+- The case nilEvent: handles the tasks that SoarPilot needs to run continuously in the background. ie: the calculations for arrival altitudes, entering sectors, wind etc etc
+
+Boolean PreprocessEvent(EventPtr event)
+- This handles interaction with the hardware and silk screen buttons
+
+soarForm.c
+- This routines are the event handlers for the main forms within SoarPilot
+- These are called by frmLoadEvent: event in the ApplicationHandleEvent routine.
+- The headers for these routine are in the soaring.h file
+
+soarForm.h / soaring.rcp
+- These defines are all the elements on all the forms that are defined in the soaring.rcp file
+
+Other main code files
+soarCAI : to support Cambridge loggers
+soarCOL : to support Colibri / LX loggers
+soarComp : to handle external loggers
+soarConf : to read/write the config file
+soarDB : basic database routines
+soarENL : to support engine noise logging (not implemented yet)
+soarEW : to support EW loggers
+soarFlrm : to support Flarm loggers and traffic warnings
+soarGar : to support specific Garmin devices
+soarGEOMAG : calculations for magnetic variations
+soarGPS : displays the GPS Info screen
+soarGraph : displays the graphs on the Flight Info screen after a flight
+soarIO : basic IO routines for communicating with NMEA data and loggers
+soarKeys : encryption routines for IGC files
+soarLog : the internal flight logger
+soarMap : displays the moving map screen
+soarMath : basic math / trig calculations
+soarMem :  basic memory routines
+soarNMEA : NMEA data handling
+soarPlst : displays the polar list screen
+soarRECO : to support the RECO logger
+soarRSA : encryption routines for IGC files
+soarSHA : encryption routines for IGC files
+soarSHAadd : encryption routines for IGC files
+soarSTF : key speed to fly routines and final glide screen
+soarSUA : airspace routines
+soarTask : task calculations and screens
+soarTer : terrain routines
+soarUGraph : displays the graphs on the Flight Info screen after a flight
+soarUMap : support routines for the moving map screen
+soarUtil : collection of general routines
+soarVolk : to support the volkslogger
+soarWay : waypoint list and display routines
+soarWind : wind calculation and display routines
+soarWlst : displays the waypoint list screen
+ 
