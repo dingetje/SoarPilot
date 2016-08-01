@@ -1,0 +1,36 @@
+
+SoarPilot is written in C using the standard Palm OS APIs based on the CygWin platform. 
+Therefore you will need a Windows PC. I know XP works, but I'm not sure about Vista or Windows 7. 
+
+To install the SoarPilot development environment, please follow the steps below 
+
+Download the following files 
+
+http://dl.dropbox.com/u/40391511/SP_Dev.zip
+- Unzip the SP_Dev.zip file into the root directory of a drive. For example c:\ 
+- Afterwards you should have a directory c:\SP_Dev and a list of folders & files within it. 
+
+The .c and .h files are standard C files. 
+The .rcp file contains the code to create the screens used in SoarPilot 
+The .pfn files are Palm fonts 
+Other files are used my the compiler to build the executable soaring.prc file 
+
+To start the environment run the _cygwin.bat file. This should open a unix terminal and typing the "ls" command should show you the source code files. 
+To compile the code…. 
+"make" - to update for any minor changes 
+"make clean all" - to completly updates the code. Recommended for any major changes, or releases 
+
+After "making" import the new "soaring.prc" file into the Simulator from the windows explorer. Drop and Drop works. 
+Save the memory to keep it next time the simulator starts. 
+
+_PalmSim.bat starts the Palm Simulator with SoarPilot already loaded. 
+_Reporter.bat start the tracing program to see the traces created by the SoarPilot program. 
+The shortcut _SDCard is the virtual SD card can be used to receive and transmit data files. 
+
+http://dl.dropbox.com/u/40391511/PalmOS.zip 
+- This file contains reference documentation and a programming guide to the PalmOS 
+
+http://dl.dropbox.com/u/40391511/ComEmulDrv3.zip 
+- This file contains a virtual COM port driver to install into Windows. 
+- It creates 2 virtual COM ports connected to each other, so you can SeeYou (or similar) to output a NMEA data stream to one, and the Palm Simulator to receive this input in the other. This is a great tool to be able to re-replay flights and be able to monitor SoarPilot's inner workings. 
+
