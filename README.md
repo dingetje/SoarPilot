@@ -1,5 +1,7 @@
 # SoarPilot
 
+![Moving Map](/images/moving_map_dia.jpg)
+
 SoarPilot was designed with both the sport and competition sailplane/paraglider pilots in mind. 
 It enhances a pilot's level of information, helping him/her to make informed speed & distance decisions when flying around the local airfield or going cross-country. 
 In addition, using an attached GPS and the logger function, the pilot can download and plot the flight track information after flying for futher analysis or just for fun!
