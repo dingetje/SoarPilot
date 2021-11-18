@@ -22,3 +22,6 @@ is used to enhance the accuracy of many of the calculated values.
 # Legacy Code
 While the development for Soaring Pilot has stopped for some years now (mainly due to other alternatives running on more modern hardware, like LK8000 and XCSoar), 
 the source code has now been placed in the public domain.
+
+# Credits
+The original developers: Oliver Spatscheck, Mark Hawkins, Paul Gleeson, Marc Ramsey & MANY Others!!!
