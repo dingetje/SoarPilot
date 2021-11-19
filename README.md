@@ -24,4 +24,9 @@ While the development for Soaring Pilot has stopped for some years now (mainly d
 the source code has now been placed in the public domain.
 
 # Credits
-The original developers: Oliver Spatscheck, Mark Hawkins, Paul Gleeson, Marc Ramsey & MANY Others!!!
+The original developers: 
+- Oliver Spatscheck, 
+- Mark Hawkins, 
+- Paul Gleeson, 
+- Marc Ramsey 
+- MANY Others!!!
