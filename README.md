@@ -19,6 +19,9 @@ It can also now parse the proprietary sentences from the Volkslogger, LX, Filser
 other loggers for pressure altitude information. In addition, if connected to a Borgelt B50 or Cambridge 302/302A, all additional information from both units 
 is used to enhance the accuracy of many of the calculated values.
 
+## Manual
+The official DokuWiki community driven user manual is lost of the years, but a backup copy is hosted here: [SoarPilot User Manual](https://soaringpilot.meansolutions.nl/doku.php/soarpilot:sp_intro).
+
 # Legacy Code
 While the development for Soaring Pilot has stopped for some years now (mainly due to other alternatives running on more modern hardware, like LK8000 and XCSoar), 
 the source code has now been placed in the public domain.
