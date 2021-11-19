@@ -20,7 +20,9 @@ other loggers for pressure altitude information. In addition, if connected to a 
 is used to enhance the accuracy of many of the calculated values.
 
 ## Manual
-The official DokuWiki community driven user manual is lost of the years, but a backup copy is hosted here: [SoarPilot User Manual](https://soaringpilot.meansolutions.nl/doku.php/soarpilot:sp_intro).
+The official DokuWiki community driven user manual is lost of the years, but a backup copy is hosted here:
+[SoarPilot User Manual](https://soaringpilot.meansolutions.nl/doku.php/soarpilot:sp_intro).
+(__excuses for the platitude of link rot in the manual__)
 
 # Legacy Code
 While the development for Soaring Pilot has stopped for some years now (mainly due to other alternatives running on more modern hardware, like LK8000 and XCSoar), 
