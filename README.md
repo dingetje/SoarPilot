@@ -24,7 +24,7 @@ The official DokuWiki community driven user manual is lost of the years, but a b
 
 [SoarPilot User Manual](https://soaringpilot.meansolutions.nl/doku.php/soarpilot:sp_intro).
 
-(__excuses for the platitude of link rot in the manual__)
+(_excuses for the platitude of link rot in the manual_)
 
 # Legacy Code
 While the development for Soaring Pilot has stopped for some years now (mainly due to other alternatives running on more modern hardware, like LK8000 and XCSoar), 
