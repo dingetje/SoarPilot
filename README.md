@@ -1,4 +1,4 @@
-# SoarPilot
+# SoarPilot ![](largec325.gif)
 
 ![Moving Map](/images/moving_map_dia.jpg)
 
